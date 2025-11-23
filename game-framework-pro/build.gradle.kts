@@ -49,7 +49,7 @@ publishing {
                 }
                 this.scm {
                     this.connection = "scm:git:git://github.com/Denis535/Kotlin.Libraries.git"
-                    this.developerConnection = "scm:git:ssh://git@github.com:Denis535/Kotlin.Libraries.git"
+                    this.developerConnection = "scm:git:ssh://git@github.com:Denis535/Kotlin-Libraries.git"
                     this.url = "https://github.com/Denis535/Kotlin.Libraries"
                 }
             }
