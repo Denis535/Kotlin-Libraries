@@ -9,10 +9,4 @@ publishing {
             this.from(components["java"])
         }
     }
-    this.repositories {
-        this.maven {
-            this.name = "Local"
-            this.url = uri("distribution")
-        }
-    }
 }

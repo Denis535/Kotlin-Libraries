@@ -11,7 +11,7 @@ public class Tests_00 {
     }
 
 }
-
+// Main
 internal class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     public constructor() {
@@ -173,7 +173,7 @@ internal class Application : AbstractApplication2 {
     }
 
 }
-// Domain
+// Game
 internal class Game : AbstractGame2 {
 
     public constructor()
