@@ -12,4 +12,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "game-framework-pro"
+rootProject.name = "game-framework-pro-extensions"
