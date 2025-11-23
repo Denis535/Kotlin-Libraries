@@ -20,8 +20,8 @@ kotlin {
 }
 
 dependencies {
-    this.api("com.github.Denis535.Kotlin.Libraries:state-machine-pro:v1.0.0")
-    this.api("com.github.Denis535.Kotlin.Libraries:tree-machine-pro:v1.0.0")
+    this.api("com.github.Denis535.Kotlin-Libraries:state-machine-pro:v1.0.0")
+    this.api("com.github.Denis535.Kotlin-Libraries:tree-machine-pro:v1.0.0")
 }
 
 publishing {
