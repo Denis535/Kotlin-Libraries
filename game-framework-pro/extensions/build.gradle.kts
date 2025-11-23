@@ -55,12 +55,6 @@ publishing {
             }
         }
     }
-    this.repositories {
-        this.maven {
-            this.name = "Local"
-            this.url = uri("distribution")
-        }
-    }
 }
 
 tasks.test {

@@ -4,9 +4,15 @@ plugins {
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
+    this.publications {
+        this.create<MavenPublication>("mavenJava") {
+            this.from(components["java"])
+        }
+    }
+    this.repositories {
+        this.maven {
+            this.name = "Local"
+            this.url = uri("distribution")
         }
     }
 }
