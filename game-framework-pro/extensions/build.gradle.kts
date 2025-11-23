@@ -20,7 +20,7 @@ kotlin {
 }
 
 dependencies {
-    this.implementation(this.project(":main"))
+    this.api(this.project(":main"))
     this.testImplementation(this.kotlin("test"))
 }
 
