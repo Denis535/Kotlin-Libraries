@@ -5,4 +5,3 @@ plugins {
 
 group = "com.github.Denis535"
 version = "v1.0.0"
-
