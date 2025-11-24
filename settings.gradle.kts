@@ -21,5 +21,5 @@ println("Version: $version")
 
 include("state-machine-pro")
 include("tree-machine-pro")
-include("game-framework-pro")
-include("game-framework-pro-extensions")
+//include("game-framework-pro")
+//include("game-framework-pro-extensions")
