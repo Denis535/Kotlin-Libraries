@@ -25,13 +25,6 @@ dependencies {
     this.testImplementation(this.kotlin("test"))
 }
 
-//signing {
-//    this.useInMemoryPgpKeys(
-//        File("../0x1F21E44D-sec.asc").readText(), File("../password.txt").readText()
-//    )
-//    this.sign(publishing.publications["mavenJava"])
-//}
-
 publishing {
     this.publications {
         this.create<MavenPublication>("mavenJava") {
@@ -79,6 +72,11 @@ publishing {
 //        }
 //    }
 //}
+
+signing {
+    this.useGpgCmd()
+    this.sign(publishing.publications["mavenJava"])
+}
 
 tasks.test {
     this.useJUnitPlatform()
