@@ -1,6 +1,8 @@
 plugins {
     this.id("org.jetbrains.kotlin.jvm") version "2.2.21"
+    this.id("signing")
     this.id("maven-publish")
+//    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = project.group
@@ -20,7 +22,7 @@ kotlin {
 }
 
 dependencies {
-    this.api("com.github.Denis535.Kotlin-Libraries:game-framework-pro:v1.0.0")
+    this.implementation("io.github.denis535:game-framework-pro:1.0.0")
     this.testImplementation(this.kotlin("test"))
 }
 
@@ -61,6 +63,11 @@ publishing {
             this.url = uri("distribution")
         }
     }
+}
+
+signing {
+    this.useGpgCmd()
+    this.sign(publishing.publications["mavenJava"])
 }
 
 tasks.test {
