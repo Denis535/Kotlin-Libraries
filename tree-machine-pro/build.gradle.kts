@@ -21,10 +21,6 @@ kotlin {
     }
 }
 
-repositories {
-    this.mavenCentral()
-}
-
 dependencies {
     this.testImplementation(this.kotlin("test"))
 }
