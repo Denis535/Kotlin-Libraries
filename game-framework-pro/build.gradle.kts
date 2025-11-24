@@ -1,6 +1,8 @@
 plugins {
     this.id("org.jetbrains.kotlin.jvm") version "2.2.21"
+    this.id("signing")
     this.id("maven-publish")
+//    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = project.group
@@ -20,8 +22,8 @@ kotlin {
 }
 
 dependencies {
-    this.api("com.github.Denis535.Kotlin-Libraries:state-machine-pro:v1.0.0")
-    this.api("com.github.Denis535.Kotlin-Libraries:tree-machine-pro:v1.0.0")
+    this.api("io.github.denis535:state-machine-pro:1.0.0")
+    this.api("io.github.denis535:tree-machine-pro:1.0.0")
 }
 
 publishing {
@@ -61,6 +63,11 @@ publishing {
             this.url = uri("distribution")
         }
     }
+}
+
+signing {
+    this.useGpgCmd()
+    this.sign(publishing.publications["mavenJava"])
 }
 
 tasks.test {
