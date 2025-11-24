@@ -6,12 +6,3 @@ plugins {
 group = "com.github.Denis535"
 version = "v1.0.0"
 
-publishing {
-    publications {
-        create<MavenPublication>("noop") {
-            groupId = project.group.toString()
-            artifactId = rootProject.name
-            version = project.version.toString()
-        }
-    }
-}
