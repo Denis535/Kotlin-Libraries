@@ -3,8 +3,8 @@ rootProject.name = "Kotlin-Libraries"
 val isJitpack = System.getenv("JITPACK") == "true"
 val version = System.getenv("VERSION")
 
-println "IsJitpack $isJitpack"
-println "Version $version"
+println("IsJitpack: $isJitpack")
+println("Version: $version")
 
 if (!isJitpack || version?.startsWith("state-machine-pro~") == true) {
     include("state-machine-pro")
