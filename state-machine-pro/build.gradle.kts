@@ -14,10 +14,20 @@ kotlin {
     this.jvmToolchain {
         this.languageVersion.set(JavaLanguageVersion.of(21))
     }
+    this.js(IR) {
+        this.browser()
+        this.nodejs()
+    }
+    this.mingwX64()
+    this.linuxX64()
+    this.linuxArm64()
+    this.androidNativeArm32()
+    this.androidNativeArm64()
+    this.androidNativeX86()
+    this.androidNativeX64()
     this.sourceSets {
         val commonMain by getting {
-            this.dependencies {
-            }
+            this.dependencies {}
         }
         val jvmTest by getting {
             this.dependencies {
