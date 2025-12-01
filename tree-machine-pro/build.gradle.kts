@@ -1,5 +1,6 @@
 plugins {
     this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC"
+    this.id("org.jetbrains.dokka") version "2.1.0"
     this.id("signing")
     this.id("maven-publish")
 //    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
@@ -14,7 +15,7 @@ kotlin {
     this.jvmToolchain {
         this.languageVersion.set(JavaLanguageVersion.of(21))
     }
-    this.js(IR) {
+    this.js(this.IR) {
         this.browser()
         this.nodejs()
     }
@@ -37,14 +38,22 @@ kotlin {
     }
 }
 
+signing {
+    this.useGpgCmd()
+    this.sign(publishing.publications)
+}
+
 publishing {
-    this.repositories {
-        this.maven {
-            this.name = "Local"
-            this.url = uri("distribution")
-        }
+    val javadocJar = tasks.register("javadocJar", Jar::class) {
+        this.group = "documentation"
+        this.description = "Assembles a JAR containing the Dokka HTML documentation"
+        this.archiveClassifier.set("javadoc")
+        val dokkaTask = tasks.named("dokkaGeneratePublicationHtml")
+        this.dependsOn(dokkaTask)
+        this.from(dokkaTask.map { it.outputs.files })
     }
     this.publications.withType<MavenPublication>().configureEach {
+        this.artifact(javadocJar)
         this.pom {
             this.name.set(project.name)
             this.description.set(project.description)
@@ -68,19 +77,24 @@ publishing {
             }
         }
     }
+    this.repositories {
+        this.maven {
+            this.name = "Local"
+            this.url = uri("distribution")
+        }
+    }
 }
 
-signing {
-    this.useGpgCmd()
-    this.sign(publishing.publications)
-}
-
-tasks.named<Test>("jvmTest") {
-    this.useJUnitPlatform()
+tasks.withType<PublishToMavenRepository>().configureEach {
+    this.dependsOn(tasks.withType<Sign>())
 }
 
 tasks.register("test") {
     this.group = "verification"
     this.description = "Run all tests"
     this.dependsOn("jvmTest")
+}
+
+tasks.named<Test>("jvmTest") {
+    this.useJUnitPlatform()
 }
