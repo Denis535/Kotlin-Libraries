@@ -1,5 +1,5 @@
 plugins {
-    this.id("org.jetbrains.kotlin.jvm") version "2.2.21"
+    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC"
     this.id("signing")
     this.id("maven-publish")
 //    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
@@ -9,67 +9,70 @@ group = project.group
 version = project.version
 description = project.description
 
-java {
-    this.withSourcesJar()
-    this.withJavadocJar()
-}
-
 kotlin {
-    this.jvmToolchain(21)
-    this.compilerOptions {
-        this.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+    this.jvm {}
+    this.jvmToolchain {
+        this.languageVersion.set(JavaLanguageVersion.of(21))
     }
-}
-
-dependencies {
-    this.api("io.github.denis535:state-machine-pro:1.0.0")
-    this.api("io.github.denis535:tree-machine-pro:1.0.0")
-}
-
-publishing {
-    this.publications {
-        this.create<MavenPublication>("mavenJava") {
-            this.from(components["java"])
-            this.groupId = project.group.toString()
-            this.artifactId = rootProject.name
-            this.version = project.version.toString()
-            this.pom {
-                this.name = project.name
-                this.description = project.description
-                this.url = project.findProperty("url").toString()
-                this.licenses {
-                    this.license {
-                        this.name = "MIT License"
-                        this.url = "https://opensource.org/licenses/MIT"
-                    }
-                }
-                this.developers {
-                    this.developer {
-                        this.id = "denis535"
-                        this.name = "Denis535"
-                    }
-                }
-                this.scm {
-                    this.connection = "scm:git:git://github.com/Denis535/Kotlin-Libraries.git"
-                    this.developerConnection = "scm:git:ssh://git@github.com:Denis535/Kotlin-Libraries.git"
-                    this.url = "https://github.com/Denis535/Kotlin-Libraries"
-                }
+    this.sourceSets {
+        val commonMain by getting {
+            this.dependencies {
+                this.implementation("io.github.denis535:state-machine-pro:1.0.0")
+                this.implementation("io.github.denis535:tree-machine-pro:1.0.0")
+            }
+        }
+        val jvmTest by getting {
+            this.dependencies {
+                this.implementation(this.kotlin("test"))
             }
         }
     }
+}
+
+publishing {
     this.repositories {
         this.maven {
             this.name = "Local"
             this.url = uri("distribution")
         }
     }
+    this.publications.withType<MavenPublication>().configureEach {
+        this.pom {
+            this.name.set(project.name)
+            this.description.set(project.description)
+            this.url.set("https://github.com/Denis535/Kotlin-Libraries")
+            this.licenses {
+                this.license {
+                    this.name.set("MIT License")
+                    this.url.set("https://opensource.org/licenses/MIT")
+                }
+            }
+            this.developers {
+                this.developer {
+                    this.id.set("denis535")
+                    this.name.set("Denis535")
+                }
+            }
+            this.scm {
+                this.connection = "scm:git:git://github.com/Denis535/Kotlin-Libraries.git"
+                this.developerConnection = "scm:git:ssh://git@github.com:Denis535/Kotlin-Libraries.git"
+                this.url = "https://github.com/Denis535/Kotlin-Libraries"
+            }
+        }
+    }
 }
 
 signing {
     this.useGpgCmd()
-    this.sign(publishing.publications["mavenJava"])
+    this.sign(publishing.publications)
 }
 
-tasks.test {
+tasks.named<Test>("jvmTest") {
     this.useJUnitPlatform()
+}
+
+tasks.register("test") {
+    this.group = "verification"
+    this.description = "Run all tests"
+    this.dependsOn("jvmTest")
 }
