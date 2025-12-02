@@ -59,7 +59,7 @@ publishing {
         this.pom {
             this.name.set(project.name)
             this.description.set(project.description)
-            this.url.set("https://github.com/Denis535/Kotlin-Libraries")
+            this.url.set(project.property("url").toString())
             this.licenses {
                 this.license {
                     this.name.set("MIT License")
@@ -68,14 +68,14 @@ publishing {
             }
             this.developers {
                 this.developer {
-                    this.id.set("denis535")
-                    this.name.set("Denis535")
+                    this.id.set(project.property("developer.id").toString())
+                    this.name.set(project.property("developer.name").toString())
                 }
             }
             this.scm {
-                this.connection = "scm:git:git://github.com/Denis535/Kotlin-Libraries.git"
-                this.developerConnection = "scm:git:ssh://git@github.com:Denis535/Kotlin-Libraries.git"
-                this.url = "https://github.com/Denis535/Kotlin-Libraries"
+                this.connection = project.property("scm.connection").toString()
+                this.developerConnection = project.property("scm.developerConnection").toString()
+                this.url = project.property("scm.url").toString()
             }
         }
     }
