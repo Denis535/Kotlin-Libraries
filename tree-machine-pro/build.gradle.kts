@@ -95,15 +95,15 @@ nexusPublishing {
 }
 
 tasks.named("publishToMavenLocal") {
-    val url = File(System.getProperty("user.home"), ".m2/repository").toURI()
+    val url = File(System.getProperty("user.home"), ".m2/repository").toString()
     this.doFirst {
         println("Publishing to Maven Local: $url")
     }
     this.doLast {
-        println("Publications successfully published to Maven Local: $url")
         publishing.publications.forEach {
             println("Publication: ${it.name}")
         }
+        println("All publications have been successfully published to Maven Local")
     }
 }
 
