@@ -44,7 +44,7 @@ signing {
 }
 
 publishing {
-    val javadocJar = tasks.register("javadocJar", Jar::class) {
+    val javadocJar = tasks.register<Jar>("javadocJar") {
         this.group = "documentation"
         this.description = "Assembles a JAR containing the Dokka HTML documentation"
         this.archiveClassifier.set("javadoc")
@@ -53,7 +53,9 @@ publishing {
         this.from(dokkaTask.map { it.outputs.files })
     }
     this.publications.withType<MavenPublication>().configureEach {
-        this.artifact(javadocJar)
+        if (this.name == "jvm") {
+            this.artifact(javadocJar)
+        }
         this.pom {
             this.name.set(project.name)
             this.description.set(project.description)
@@ -77,16 +79,19 @@ publishing {
             }
         }
     }
-    this.repositories {
-        this.maven {
-            this.name = "Local"
-            this.url = uri("distribution")
-        }
-    }
 }
 
-tasks.withType<PublishToMavenRepository>().configureEach {
-    this.dependsOn(tasks.withType<Sign>())
+tasks.named("publishToMavenLocal") {
+    val url = File(System.getProperty("user.home"), ".m2/repository").toURI()
+    this.doFirst {
+        println("Publishing to Maven Local: $url")
+    }
+    this.doLast {
+        println("Publications successfully published to Maven Local: $url")
+        publishing.publications.forEach {
+            println("Publication: ${it.name}")
+        }
+    }
 }
 
 tasks.register("test") {
