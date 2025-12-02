@@ -88,8 +88,8 @@ nexusPublishing {
         this.sonatype {
             this.nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
             this.snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
-            this.username = System.getenv("%SONATYPE_USERNAME%")
-            this.password = System.getenv("%SONATYPE_PASSWORD%")
+            this.username = System.getenv("SONATYPE_USERNAME")
+            this.password = System.getenv("SONATYPE_PASSWORD")
         }
     }
 }
