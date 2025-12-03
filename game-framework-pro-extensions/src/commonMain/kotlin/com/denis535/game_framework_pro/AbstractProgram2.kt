@@ -50,15 +50,34 @@ public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> :
         super.OnClose()
     }
 
-    public override fun GetDependency(clazz: KClass<*>, argument: Any?): Any? {
+    public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {
         check(!this.IsClosed)
-        return when {
-            this.Theme != null && clazz.java.isAssignableFrom(this.Theme!!::class.java) -> this.Theme
-            this.Screen != null && clazz.java.isAssignableFrom(this.Screen!!::class.java) -> this.Screen
-            this.Router != null && clazz.java.isAssignableFrom(this.Router!!::class.java) -> this.Router
-            this.Application != null && clazz.java.isAssignableFrom(this.Application!!::class.java) -> this.Application
-            else -> null
+        this.let { program ->
+            if (clazz == program::class || clazz == AbstractProgram::class) {
+                return program
+            }
         }
+        this.Theme?.let { theme ->
+            if (clazz == theme::class || clazz == AbstractTheme::class) {
+                return theme
+            }
+        }
+        this.Screen?.let { screen ->
+            if (clazz == screen::class || clazz == AbstractScreen::class) {
+                return screen
+            }
+        }
+        this.Router?.let { router ->
+            if (clazz == router::class || clazz == AbstractRouter::class) {
+                return router
+            }
+        }
+        this.Application?.let { application ->
+            if (clazz == application::class || clazz == AbstractApplication::class) {
+                return application
+            }
+        }
+        return null
     }
 
 }
