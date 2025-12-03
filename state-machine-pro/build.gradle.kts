@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC"
     this.id("org.jetbrains.dokka") version "2.1.0"
@@ -16,6 +20,10 @@ kotlin {
         this.languageVersion.set(JavaLanguageVersion.of(21))
     }
     this.js(this.IR) {
+        this.browser()
+        this.nodejs()
+    }
+    this.wasmJs {
         this.browser()
         this.nodejs()
     }
@@ -51,6 +59,20 @@ publishing {
         val dokkaTask = tasks.named("dokkaGeneratePublicationHtml")
         this.dependsOn(dokkaTask)
         this.from(dokkaTask.map { it.outputs.files })
+    }
+    this.repositories {
+        this.maven {
+            this.name = "Local"
+            this.url = uri("distribution")
+        }
+//        this.maven {
+//            this.name = "ossrh-staging-api"
+//            this.url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+//            this.credentials {
+//                this.username = System.getenv("SONATYPE_USERNAME")
+//                this.password = System.getenv("SONATYPE_PASSWORD")
+//            }
+//        }
     }
     this.publications.withType<MavenPublication>().configureEach {
         if (this.name == "jvm") {
