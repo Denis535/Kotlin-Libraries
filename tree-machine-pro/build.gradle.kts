@@ -3,7 +3,7 @@ plugins {
     this.id("org.jetbrains.dokka") version "2.1.0"
     this.id("signing")
     this.id("maven-publish")
-    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+//    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = project.group
@@ -81,18 +81,16 @@ publishing {
     }
 }
 
-nexusPublishing {
-    this.packageGroup = "${project.group}.${project.name}"
-    this.repositories {
-        // see https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuration
-        this.sonatype {
-            this.nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
-            this.snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
-            this.username = System.getenv("SONATYPE_USERNAME")
-            this.password = System.getenv("SONATYPE_PASSWORD")
-        }
-    }
-}
+//nexusPublishing {
+//    this.repositories {
+//        this.sonatype {
+//            this.nexusUrl = uri("https://ossrh-staging-api.central.sonatype.com/service/local/")
+//            this.snapshotRepositoryUrl = uri("https://ossrh-stage.sonatype.org/content/repositories/snapshots/")
+//            this.username = System.getenv("SONATYPE_USERNAME")
+//            this.password = System.getenv("SONATYPE_PASSWORD")
+//        }
+//    }
+//}
 
 tasks.named("publishToMavenLocal") {
     val url = File(System.getProperty("user.home"), ".m2/repository").toString()
