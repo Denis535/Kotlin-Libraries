@@ -7,7 +7,27 @@ public class Tests_00 {
 
     @Test
     public fun Test_00() {
-        Program().use {}
+        Program().use {
+            it.RequireDependency<Program>(AbstractProgram::class)
+            it.RequireDependency<Program>(AbstractProgram2::class)
+            it.RequireDependency<Program>(Program::class)
+
+            it.RequireDependency<Theme>(AbstractTheme::class)
+            it.RequireDependency<Theme>(AbstractTheme2::class)
+            it.RequireDependency<Theme>(Theme::class)
+
+            it.RequireDependency<Screen>(AbstractScreen::class)
+            it.RequireDependency<Screen>(AbstractScreen2::class)
+            it.RequireDependency<Screen>(Screen::class)
+
+            it.RequireDependency<Router>(AbstractRouter::class)
+            it.RequireDependency<Router>(AbstractRouter2::class)
+            it.RequireDependency<Router>(Router::class)
+
+            it.RequireDependency<Application>(AbstractApplication::class)
+            it.RequireDependency<Application>(AbstractApplication2::class)
+            it.RequireDependency<Application>(Application::class)
+        }
     }
 
 }

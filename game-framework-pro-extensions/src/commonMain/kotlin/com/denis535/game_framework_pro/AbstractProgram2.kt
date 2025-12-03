@@ -53,27 +53,27 @@ public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> :
     public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {
         check(!this.IsClosed)
         this.let { program ->
-            if (clazz == program::class || clazz == AbstractProgram::class) {
+            if (clazz.isInstance(program)) {
                 return program
             }
         }
         this.Theme?.let { theme ->
-            if (clazz == theme::class || clazz == AbstractTheme::class) {
+            if (clazz.isInstance(theme)) {
                 return theme
             }
         }
         this.Screen?.let { screen ->
-            if (clazz == screen::class || clazz == AbstractScreen::class) {
+            if (clazz.isInstance(screen)) {
                 return screen
             }
         }
         this.Router?.let { router ->
-            if (clazz == router::class || clazz == AbstractRouter::class) {
+            if (clazz.isInstance(router)) {
                 return router
             }
         }
         this.Application?.let { application ->
-            if (clazz == application::class || clazz == AbstractApplication::class) {
+            if (clazz.isInstance(application)) {
                 return application
             }
         }
