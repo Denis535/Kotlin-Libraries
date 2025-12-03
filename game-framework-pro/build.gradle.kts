@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC"
+    this.id("org.jetbrains.dokka") version "2.1.0"
     this.id("signing")
     this.id("maven-publish")
 //    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
@@ -12,13 +17,28 @@ description = project.description
 kotlin {
     this.jvm {}
     this.jvmToolchain {
-        this.languageVersion.set(JavaLanguageVersion.of(21))
+        this.languageVersion = JavaLanguageVersion.of(21)
     }
+    this.js(this.IR) {
+        this.browser()
+        this.nodejs()
+    }
+    this.wasmJs {
+        this.browser()
+        this.nodejs()
+    }
+    this.mingwX64()
+    this.linuxX64()
+    this.linuxArm64()
+    this.androidNativeArm32()
+    this.androidNativeArm64()
+    this.androidNativeX86()
+    this.androidNativeX64()
     this.sourceSets {
         val commonMain by getting {
             this.dependencies {
-                this.implementation("io.github.denis535:state-machine-pro:1.0.0")
-                this.implementation("io.github.denis535:tree-machine-pro:1.0.0")
+                this.api("io.github.denis535:state-machine-pro:1.0.1")
+                this.api("io.github.denis535:tree-machine-pro:1.0.1")
             }
         }
         val jvmTest by getting {
@@ -29,50 +49,93 @@ kotlin {
     }
 }
 
-publishing {
-    this.repositories {
-        this.maven {
-            this.name = "Local"
-            this.url = uri("distribution")
-        }
-    }
-    this.publications.withType<MavenPublication>().configureEach {
-        this.pom {
-            this.name.set(project.name)
-            this.description.set(project.description)
-            this.url.set("https://github.com/Denis535/Kotlin-Libraries")
-            this.licenses {
-                this.license {
-                    this.name.set("MIT License")
-                    this.url.set("https://opensource.org/licenses/MIT")
-                }
-            }
-            this.developers {
-                this.developer {
-                    this.id.set("denis535")
-                    this.name.set("Denis535")
-                }
-            }
-            this.scm {
-                this.connection = "scm:git:git://github.com/Denis535/Kotlin-Libraries.git"
-                this.developerConnection = "scm:git:ssh://git@github.com:Denis535/Kotlin-Libraries.git"
-                this.url = "https://github.com/Denis535/Kotlin-Libraries"
-            }
-        }
-    }
-}
-
 signing {
     this.useGpgCmd()
     this.sign(publishing.publications)
 }
 
-tasks.named<Test>("jvmTest") {
-    this.useJUnitPlatform()
+publishing {
+    val javadocJar = tasks.register<Jar>("javadocJar") {
+        this.group = "documentation"
+        this.description = "Assembles a JAR containing the Dokka HTML documentation"
+        this.archiveClassifier = "javadoc"
+        val dokkaTask = tasks.named("dokkaGeneratePublicationHtml")
+        this.dependsOn(dokkaTask)
+        this.from(dokkaTask.map { it.outputs.files })
+    }
+    this.repositories {
+        this.maven {
+            this.name = "Local"
+            this.url = uri("distribution")
+        }
+//        this.maven {
+//            this.name = "ossrh-staging-api"
+//            this.url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+//            this.credentials {
+//                this.username = System.getenv("SONATYPE_USERNAME")
+//                this.password = System.getenv("SONATYPE_PASSWORD")
+//            }
+//        }
+    }
+    this.publications.withType<MavenPublication>().configureEach {
+        if (this.name == "jvm") {
+            this.artifact(javadocJar)
+        }
+        this.pom {
+            this.name = project.name
+            this.description = project.description
+            this.url = project.property("url").toString()
+            this.licenses {
+                this.license {
+                    this.name = "MIT License"
+                    this.url = "https://opensource.org/licenses/MIT"
+                }
+            }
+            this.developers {
+                this.developer {
+                    this.id = project.property("developer.id").toString()
+                    this.name = project.property("developer.name").toString()
+                }
+            }
+            this.scm {
+                this.url = project.property("scm.url").toString()
+                this.connection = project.property("scm.connection").toString()
+                this.developerConnection = project.property("scm.developerConnection").toString()
+            }
+        }
+    }
+}
+
+//nexusPublishing {
+//    this.repositories {
+//        this.sonatype {
+//            this.nexusUrl = uri("https://ossrh-staging-api.central.sonatype.com/service/local/")
+//            this.snapshotRepositoryUrl = uri("https://ossrh-stage.sonatype.org/content/repositories/snapshots/")
+//            this.username = System.getenv("SONATYPE_USERNAME")
+//            this.password = System.getenv("SONATYPE_PASSWORD")
+//        }
+//    }
+//}
+
+tasks.named("publishToMavenLocal") {
+    val url = File(System.getProperty("user.home"), ".m2/repository").toString()
+    this.doFirst {
+        println("Publishing to Maven Local: $url")
+    }
+    this.doLast {
+        publishing.publications.forEach {
+            println("Publication: ${it.name}")
+        }
+        println("All publications have been successfully published to Maven Local")
+    }
 }
 
 tasks.register("test") {
     this.group = "verification"
     this.description = "Run all tests"
     this.dependsOn("jvmTest")
+}
+
+tasks.named<Test>("jvmTest") {
+    this.useJUnitPlatform()
 }
