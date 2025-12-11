@@ -111,10 +111,6 @@ public abstract class AbstractState : AutoCloseable {
     public final override fun close() {
         check(!this.IsClosing)
         check(!this.IsClosed)
-        when (val owner = this.Owner) {
-            is AbstractStateMachine -> check(owner.IsClosing)
-            is AbstractState -> check(owner.IsClosing)
-        }
         this.Lifecycle = ELifecycle.Closing
         this.OnCloseCallback?.invoke()
         if (this is ChildrenableState) {
