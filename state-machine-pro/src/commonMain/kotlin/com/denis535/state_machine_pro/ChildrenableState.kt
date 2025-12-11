@@ -1,17 +1,6 @@
 package com.denis535.state_machine_pro
 
-public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState<TMachineUserData, TStateUserData> {
-
-    private var Lifecycle = ELifecycle.Alive
-
-    public override val IsClosing: Boolean
-        get() {
-            return this.Lifecycle == ELifecycle.Closing
-        }
-    public override val IsClosed: Boolean
-        get() {
-            return this.Lifecycle == ELifecycle.Closed
-        }
+public class ChildrenableState : AbstractState {
 
     public override var Owner: Any? = null
         get() {
@@ -28,12 +17,12 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
             field = value
         }
 
-    public override val Machine: AbstractStateMachine<TMachineUserData, TStateUserData>?
+    public override val Machine: AbstractStateMachine?
         get() {
             check(!this.IsClosed)
             return when (val owner = this.Owner) {
-                is AbstractStateMachine<*, *> -> owner as AbstractStateMachine<TMachineUserData, TStateUserData>
-                is AbstractState<*, *> -> owner.Machine as AbstractStateMachine<TMachineUserData, TStateUserData>
+                is AbstractStateMachine -> owner
+                is AbstractState -> owner.Machine as AbstractStateMachine
                 else -> null
             }
         }
@@ -43,18 +32,18 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
             check(!this.IsClosed)
             return this.Parent == null
         }
-    public override val Root: AbstractState<TMachineUserData, TStateUserData>
+    public override val Root: AbstractState
         get() {
             check(!this.IsClosed)
             return this.Parent?.Root ?: this
         }
 
-    public override val Parent: AbstractState<TMachineUserData, TStateUserData>?
+    public override val Parent: AbstractState?
         get() {
             check(!this.IsClosed)
-            return this.Owner as? AbstractState<TMachineUserData, TStateUserData>
+            return this.Owner as? AbstractState
         }
-    public override val Ancestors: Sequence<AbstractState<TMachineUserData, TStateUserData>>
+    public override val Ancestors: Sequence<AbstractState>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -64,7 +53,7 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
                 }
             }
         }
-    public override val AncestorsAndSelf: Sequence<AbstractState<TMachineUserData, TStateUserData>>
+    public override val AncestorsAndSelf: Sequence<AbstractState>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -84,18 +73,18 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
             field = value
         }
 
-    public val Children: List<AbstractState<TMachineUserData, TStateUserData>>
+    public val Children: List<AbstractState>
         get() {
             check(!this.IsClosed)
             return this.ChildrenMutable
         }
-    private val ChildrenMutable: MutableList<AbstractState<TMachineUserData, TStateUserData>> = mutableListOf<AbstractState<TMachineUserData, TStateUserData>>()
+    private val ChildrenMutable: MutableList<AbstractState> = mutableListOf<AbstractState>()
         get() {
             check(!this.IsClosed)
             return field
         }
 
-    public var SortDelegate: Proc1<MutableList<AbstractState<TMachineUserData, TStateUserData>>>? = null
+    public var SortDelegate: Proc1<MutableList<AbstractState>>? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -110,25 +99,10 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
             field = value
         }
 
-    public override val UserData: TStateUserData
+    public val UserData: Any?
         get() {
             check(!this.IsClosed)
             return field
-        }
-
-    public var OnCloseCallback: Proc? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
         }
 
     public var OnAttachCallback: Proc1<Any?>? = null
@@ -189,24 +163,11 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
             field = value
         }
 
-    public constructor(userData: TStateUserData) {
+    public constructor(userData: Any?) {
         this.UserData = userData
     }
 
-    public override fun close() {
-        check(!this.IsClosing)
-        check(!this.IsClosed)
-        when (val owner = this.Owner) {
-            is AbstractStateMachine<*, *> -> check(owner.IsClosing)
-            is AbstractState<*, *> -> check(owner.IsClosing)
-        }
-        this.Lifecycle = ELifecycle.Closing
-        this.OnCloseCallback?.invoke()
-        check(this.Children.all { it.IsClosed })
-        this.Lifecycle = ELifecycle.Closed
-    }
-
-    internal override fun Attach(machine: AbstractStateMachine<TMachineUserData, TStateUserData>, argument: Any?) {
+    internal override fun Attach(machine: AbstractStateMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = machine
@@ -216,7 +177,7 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
         }
     }
 
-    internal override fun Attach(parent: AbstractState<TMachineUserData, TStateUserData>, argument: Any?) {
+    internal override fun Attach(parent: AbstractState, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = parent
@@ -226,7 +187,7 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
         }
     }
 
-    internal override fun Detach(machine: AbstractStateMachine<TMachineUserData, TStateUserData>, argument: Any?) {
+    internal override fun Detach(machine: AbstractStateMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == machine)
         if (true) {
@@ -236,7 +197,7 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
         this.Owner = null
     }
 
-    internal override fun Detach(parent: AbstractState<TMachineUserData, TStateUserData>, argument: Any?) {
+    internal override fun Detach(parent: AbstractState, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == parent)
         if (this.Activity == EActivity.Active) {
@@ -264,7 +225,7 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
         this.Activity = EActivity.Inactive
     }
 
-    public fun AddChild(child: AbstractState<TMachineUserData, TStateUserData>, argument: Any?) {
+    public fun AddChild(child: AbstractState, argument: Any?) {
         check(!this.IsClosed)
         check(!this.Children.contains(child))
         this.ChildrenMutable.add(child)
@@ -272,14 +233,14 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
         child.Attach(this, argument)
     }
 
-    public fun AddChildren(children: Array<AbstractState<TMachineUserData, TStateUserData>>, argument: Any?) {
+    public fun AddChildren(children: Array<AbstractState>, argument: Any?) {
         check(!this.IsClosed)
         for (child in children) {
             this.AddChild(child, argument)
         }
     }
 
-    public fun RemoveChild(child: AbstractState<TMachineUserData, TStateUserData>, argument: Any?, callback: Proc2<AbstractState<TMachineUserData, TStateUserData>, Any?>? = null) {
+    public fun RemoveChild(child: AbstractState, argument: Any?, callback: Proc2<AbstractState, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Children.contains(child))
         child.Detach(this, argument)
@@ -291,7 +252,7 @@ public class ChildrenableState<TMachineUserData, TStateUserData> : AbstractState
         }
     }
 
-    public fun RemoveChildren(predicate: Predicate1<AbstractState<TMachineUserData, TStateUserData>>, argument: Any?, callback: Proc2<AbstractState<TMachineUserData, TStateUserData>, Any?>? = null): Int {
+    public fun RemoveChildren(predicate: Predicate1<AbstractState>, argument: Any?, callback: Proc2<AbstractState, Any?>? = null): Int {
         check(!this.IsClosed)
         var count = 0
         for (child in this.Children.reversed().filter(predicate)) {

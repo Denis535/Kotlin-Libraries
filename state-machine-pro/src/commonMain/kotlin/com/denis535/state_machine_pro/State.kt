@@ -1,17 +1,6 @@
 package com.denis535.state_machine_pro
 
-public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUserData, TStateUserData> {
-
-    private var Lifecycle = ELifecycle.Alive
-
-    public override val IsClosing: Boolean
-        get() {
-            return this.Lifecycle == ELifecycle.Closing
-        }
-    public override val IsClosed: Boolean
-        get() {
-            return this.Lifecycle == ELifecycle.Closed
-        }
+public class State : AbstractState {
 
     public override var Owner: Any? = null
         get() {
@@ -28,12 +17,12 @@ public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUse
             field = value
         }
 
-    public override val Machine: AbstractStateMachine<TMachineUserData, TStateUserData>?
+    public override val Machine: AbstractStateMachine?
         get() {
             check(!this.IsClosed)
             return when (val owner = this.Owner) {
-                is AbstractStateMachine<*, *> -> owner as AbstractStateMachine<TMachineUserData, TStateUserData>
-                is AbstractState<*, *> -> owner.Machine as AbstractStateMachine<TMachineUserData, TStateUserData>
+                is AbstractStateMachine -> owner
+                is AbstractState -> owner.Machine as AbstractStateMachine
                 else -> null
             }
         }
@@ -43,18 +32,18 @@ public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUse
             check(!this.IsClosed)
             return this.Parent == null
         }
-    public override val Root: AbstractState<TMachineUserData, TStateUserData>
+    public override val Root: AbstractState
         get() {
             check(!this.IsClosed)
             return this.Parent?.Root ?: this
         }
 
-    public override val Parent: AbstractState<TMachineUserData, TStateUserData>?
+    public override val Parent: AbstractState?
         get() {
             check(!this.IsClosed)
-            return this.Owner as? AbstractState<TMachineUserData, TStateUserData>
+            return this.Owner as? AbstractState
         }
-    public override val Ancestors: Sequence<AbstractState<TMachineUserData, TStateUserData>>
+    public override val Ancestors: Sequence<AbstractState>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -64,7 +53,7 @@ public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUse
                 }
             }
         }
-    public override val AncestorsAndSelf: Sequence<AbstractState<TMachineUserData, TStateUserData>>
+    public override val AncestorsAndSelf: Sequence<AbstractState>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -84,25 +73,10 @@ public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUse
             field = value
         }
 
-    public override val UserData: TStateUserData
+    public val UserData: Any?
         get() {
             check(!this.IsClosed)
             return field
-        }
-
-    public var OnCloseCallback: Proc? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
         }
 
     public var OnAttachCallback: Proc1<Any?>? = null
@@ -163,23 +137,11 @@ public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUse
             field = value
         }
 
-    public constructor(userData: TStateUserData) {
+    public constructor(userData: Any?) {
         this.UserData = userData
     }
 
-    public override fun close() {
-        check(!this.IsClosing)
-        check(!this.IsClosed)
-        when (val owner = this.Owner) {
-            is AbstractStateMachine<*, *> -> check(owner.IsClosing)
-            is AbstractState<*, *> -> check(owner.IsClosing)
-        }
-        this.Lifecycle = ELifecycle.Closing
-        this.OnCloseCallback?.invoke()
-        this.Lifecycle = ELifecycle.Closed
-    }
-
-    internal override fun Attach(machine: AbstractStateMachine<TMachineUserData, TStateUserData>, argument: Any?) {
+    internal override fun Attach(machine: AbstractStateMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = machine
@@ -189,7 +151,7 @@ public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUse
         }
     }
 
-    internal override fun Attach(parent: AbstractState<TMachineUserData, TStateUserData>, argument: Any?) {
+    internal override fun Attach(parent: AbstractState, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = parent
@@ -199,7 +161,7 @@ public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUse
         }
     }
 
-    internal override fun Detach(machine: AbstractStateMachine<TMachineUserData, TStateUserData>, argument: Any?) {
+    internal override fun Detach(machine: AbstractStateMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == machine)
         if (true) {
@@ -209,7 +171,7 @@ public class State<TMachineUserData, TStateUserData> : AbstractState<TMachineUse
         this.Owner = null
     }
 
-    internal override fun Detach(parent: AbstractState<TMachineUserData, TStateUserData>, argument: Any?) {
+    internal override fun Detach(parent: AbstractState, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == parent)
         if (this.Activity == EActivity.Active) {
