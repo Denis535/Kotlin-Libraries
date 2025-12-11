@@ -1,14 +1,13 @@
 # Overview
+
 The library that allows you to easily implement a hierarchical object.
 
 # Reference
 
 ###### com.denis535.tree_machine_pro
 
-- AbstractTreeMachine
-- AbstractNode
 - TreeMachine
-- Node
+- AbstractNode (Node)
 - Activity
 
 # Links
