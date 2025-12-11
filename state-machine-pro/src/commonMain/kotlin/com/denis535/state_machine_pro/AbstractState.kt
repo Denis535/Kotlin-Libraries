@@ -13,17 +13,76 @@ public abstract class AbstractState : AutoCloseable {
             return this.Lifecycle == ELifecycle.Closed
         }
 
-    public abstract val Owner: Any?
-    public abstract val Machine: AbstractStateMachine?
+    public var Owner: Any? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        internal set(value) {
+            check(!this.IsClosed)
+            if (value != null) {
+                check(field == null)
+            } else {
+                check(field != null)
+            }
+            field = value
+        }
 
-    public abstract val IsRoot: Boolean
-    public abstract val Root: AbstractState
+    public val Machine: AbstractStateMachine?
+        get() {
+            check(!this.IsClosed)
+            return when (val owner = this.Owner) {
+                is AbstractStateMachine -> owner
+                is AbstractState -> owner.Machine as AbstractStateMachine
+                else -> null
+            }
+        }
 
-    public abstract val Parent: AbstractState?
-    public abstract val Ancestors: Sequence<AbstractState>
-    public abstract val AncestorsAndSelf: Sequence<AbstractState>
+    public val IsRoot: Boolean
+        get() {
+            check(!this.IsClosed)
+            return this.Parent == null
+        }
+    public val Root: AbstractState
+        get() {
+            check(!this.IsClosed)
+            return this.Parent?.Root ?: this
+        }
 
-    public abstract val Activity: Activity
+    public val Parent: AbstractState?
+        get() {
+            check(!this.IsClosed)
+            return this.Owner as? AbstractState
+        }
+    public val Ancestors: Sequence<AbstractState>
+        get() {
+            check(!this.IsClosed)
+            return sequence {
+                if (this@AbstractState.Parent != null) {
+                    this.yield(this@AbstractState.Parent!!)
+                    this.yieldAll(this@AbstractState.Parent!!.Ancestors)
+                }
+            }
+        }
+    public val AncestorsAndSelf: Sequence<AbstractState>
+        get() {
+            check(!this.IsClosed)
+            return sequence {
+                this.yield(this@AbstractState)
+                this.yieldAll(this@AbstractState.Ancestors)
+            }
+        }
+
+    public var Activity: EActivity = EActivity.Inactive
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        internal set(value) {
+            check(!this.IsClosed)
+            check(field != value)
+            field = value
+        }
 
     internal constructor()
 

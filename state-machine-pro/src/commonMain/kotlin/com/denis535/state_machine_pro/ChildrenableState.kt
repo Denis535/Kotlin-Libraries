@@ -2,101 +2,15 @@ package com.denis535.state_machine_pro
 
 public open class ChildrenableState : AbstractState {
 
-    public final override var Owner: Any? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        private set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-
-    public final override val Machine: AbstractStateMachine?
-        get() {
-            check(!this.IsClosed)
-            return when (val owner = this.Owner) {
-                is AbstractStateMachine -> owner
-                is AbstractState -> owner.Machine as AbstractStateMachine
-                else -> null
-            }
-        }
-
-    public final override val IsRoot: Boolean
-        get() {
-            check(!this.IsClosed)
-            return this.Parent == null
-        }
-    public final override val Root: AbstractState
-        get() {
-            check(!this.IsClosed)
-            return this.Parent?.Root ?: this
-        }
-
-    public final override val Parent: AbstractState?
-        get() {
-            check(!this.IsClosed)
-            return this.Owner as? AbstractState
-        }
-    public final override val Ancestors: Sequence<AbstractState>
-        get() {
-            check(!this.IsClosed)
-            return sequence {
-                if (this@ChildrenableState.Parent != null) {
-                    this.yield(this@ChildrenableState.Parent!!)
-                    this.yieldAll(this@ChildrenableState.Parent!!.Ancestors)
-                }
-            }
-        }
-    public final override val AncestorsAndSelf: Sequence<AbstractState>
-        get() {
-            check(!this.IsClosed)
-            return sequence {
-                this.yield(this@ChildrenableState)
-                this.yieldAll(this@ChildrenableState.Ancestors)
-            }
-        }
-
-    public final override var Activity: EActivity = EActivity.Inactive
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        private set(value) {
-            check(!this.IsClosed)
-            check(field != value)
-            field = value
-        }
-
-    public final val Children: List<AbstractState>
+    public val Children: List<AbstractState>
         get() {
             check(!this.IsClosed)
             return this.ChildrenMutable
         }
-    private final val ChildrenMutable: MutableList<AbstractState> = mutableListOf()
+    private val ChildrenMutable: MutableList<AbstractState> = mutableListOf()
         get() {
             check(!this.IsClosed)
             return field
-        }
-
-    public final var SortDelegate: Proc1<MutableList<AbstractState>>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
         }
 
     public constructor()
@@ -163,7 +77,7 @@ public open class ChildrenableState : AbstractState {
         check(!this.IsClosed)
         check(!this.Children.contains(child))
         this.ChildrenMutable.add(child)
-        this.SortDelegate?.invoke(this.ChildrenMutable)
+        this.Sort(this.ChildrenMutable)
         child.Attach(this, argument)
     }
 
@@ -194,6 +108,9 @@ public open class ChildrenableState : AbstractState {
             count++
         }
         return count
+    }
+
+    protected open fun Sort(children: MutableList<AbstractState>) {
     }
 
 }

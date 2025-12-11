@@ -13,7 +13,20 @@ public abstract class AbstractStateMachine : AutoCloseable {
             return this.Lifecycle == ELifecycle.Closed
         }
 
-    public abstract val Root: AbstractState?
+    public var Root: AbstractState? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        internal set(value) {
+            check(!this.IsClosed)
+            if (value != null) {
+                check(field == null)
+            } else {
+                check(field != null)
+            }
+            field = value
+        }
 
     internal constructor()
 
