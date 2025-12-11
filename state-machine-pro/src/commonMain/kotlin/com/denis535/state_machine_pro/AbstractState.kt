@@ -25,98 +25,20 @@ public abstract class AbstractState : AutoCloseable {
 
     public abstract val Activity: Activity
 
-    public val UserData: Any?
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public var OnCloseCallback: Proc? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-
-    public var OnAttachCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-    public var OnDetachCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-
-    public var OnActivateCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-    public var OnDeactivateCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-
-    internal constructor(userData: Any?) {
-        this.UserData = userData
-    }
+    internal constructor()
 
     public final override fun close() {
         check(!this.IsClosing)
         check(!this.IsClosed)
         this.Lifecycle = ELifecycle.Closing
-        this.OnCloseCallback?.invoke()
+        this.OnClose()
         if (this is ChildrenableState) {
             check(this.Children.all { it.IsClosed })
         }
         this.Lifecycle = ELifecycle.Closed
+    }
+
+    protected open fun OnClose() {
     }
 
     internal abstract fun Attach(machine: AbstractStateMachine, argument: Any?)
@@ -125,8 +47,20 @@ public abstract class AbstractState : AutoCloseable {
     internal abstract fun Detach(machine: AbstractStateMachine, argument: Any?)
     internal abstract fun Detach(parent: AbstractState, argument: Any?)
 
+    protected open fun OnAttach(argument: Any?) {
+    }
+
+    protected open fun OnDetach(argument: Any?) {
+    }
+
     internal abstract fun Activate(argument: Any?)
     internal abstract fun Deactivate(argument: Any?)
+
+    protected open fun OnActivate(argument: Any?) {
+    }
+
+    protected open fun OnDeactivate(argument: Any?) {
+    }
 
     public final override fun toString(): String {
         return super.toString()

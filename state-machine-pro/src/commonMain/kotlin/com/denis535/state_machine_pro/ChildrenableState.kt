@@ -1,8 +1,8 @@
 package com.denis535.state_machine_pro
 
-public class ChildrenableState : AbstractState {
+public open class ChildrenableState : AbstractState {
 
-    public override var Owner: Any? = null
+    public final override var Owner: Any? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -17,7 +17,7 @@ public class ChildrenableState : AbstractState {
             field = value
         }
 
-    public override val Machine: AbstractStateMachine?
+    public final override val Machine: AbstractStateMachine?
         get() {
             check(!this.IsClosed)
             return when (val owner = this.Owner) {
@@ -27,23 +27,23 @@ public class ChildrenableState : AbstractState {
             }
         }
 
-    public override val IsRoot: Boolean
+    public final override val IsRoot: Boolean
         get() {
             check(!this.IsClosed)
             return this.Parent == null
         }
-    public override val Root: AbstractState
+    public final override val Root: AbstractState
         get() {
             check(!this.IsClosed)
             return this.Parent?.Root ?: this
         }
 
-    public override val Parent: AbstractState?
+    public final override val Parent: AbstractState?
         get() {
             check(!this.IsClosed)
             return this.Owner as? AbstractState
         }
-    public override val Ancestors: Sequence<AbstractState>
+    public final override val Ancestors: Sequence<AbstractState>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -53,7 +53,7 @@ public class ChildrenableState : AbstractState {
                 }
             }
         }
-    public override val AncestorsAndSelf: Sequence<AbstractState>
+    public final override val AncestorsAndSelf: Sequence<AbstractState>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -62,7 +62,7 @@ public class ChildrenableState : AbstractState {
             }
         }
 
-    public override var Activity: EActivity = EActivity.Inactive
+    public final override var Activity: EActivity = EActivity.Inactive
         get() {
             check(!this.IsClosed)
             return field
@@ -73,18 +73,18 @@ public class ChildrenableState : AbstractState {
             field = value
         }
 
-    public val Children: List<AbstractState>
+    public final val Children: List<AbstractState>
         get() {
             check(!this.IsClosed)
             return this.ChildrenMutable
         }
-    private val ChildrenMutable: MutableList<AbstractState> = mutableListOf()
+    private final val ChildrenMutable: MutableList<AbstractState> = mutableListOf()
         get() {
             check(!this.IsClosed)
             return field
         }
 
-    public var SortDelegate: Proc1<MutableList<AbstractState>>? = null
+    public final var SortDelegate: Proc1<MutableList<AbstractState>>? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -99,13 +99,13 @@ public class ChildrenableState : AbstractState {
             field = value
         }
 
-    public constructor(userData: Any?) : super(userData)
+    public constructor()
 
     internal override fun Attach(machine: AbstractStateMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = machine
-        this.OnAttachCallback?.invoke(argument)
+        this.OnAttach(argument)
         if (true) {
             this.Activate(argument)
         }
@@ -115,7 +115,7 @@ public class ChildrenableState : AbstractState {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = parent
-        this.OnAttachCallback?.invoke(argument)
+        this.OnAttach(argument)
         if (this.Parent!!.Activity == EActivity.Active) {
             this.Activate(argument)
         }
@@ -127,7 +127,7 @@ public class ChildrenableState : AbstractState {
         if (true) {
             this.Deactivate(argument)
         }
-        this.OnDetachCallback?.invoke(argument)
+        this.OnDetach(argument)
         this.Owner = null
     }
 
@@ -137,13 +137,13 @@ public class ChildrenableState : AbstractState {
         if (this.Activity == EActivity.Active) {
             this.Deactivate(argument)
         }
-        this.OnDetachCallback?.invoke(argument)
+        this.OnDetach(argument)
         this.Owner = null
     }
 
     internal override fun Activate(argument: Any?) {
         this.Activity = EActivity.Activating
-        this.OnActivateCallback?.invoke(argument)
+        this.OnActivate(argument)
         for (child in this.Children.toList()) {
             child.Activate(argument)
         }
@@ -155,7 +155,7 @@ public class ChildrenableState : AbstractState {
         for (child in this.Children.toList().asReversed()) {
             child.Deactivate(argument)
         }
-        this.OnDeactivateCallback?.invoke(argument)
+        this.OnDeactivate(argument)
         this.Activity = EActivity.Inactive
     }
 
