@@ -93,9 +93,7 @@ public abstract class AbstractState : AutoCloseable {
         check(!this.IsClosed)
         this.Lifecycle = ELifecycle.Closing
         this.OnClose()
-        if (this is ChildrenableState) {
-            check(this.Children.all { it.IsClosed })
-        }
+        check(this.Children.all { it.IsClosed })
         this.Lifecycle = ELifecycle.Closed
     }
 
