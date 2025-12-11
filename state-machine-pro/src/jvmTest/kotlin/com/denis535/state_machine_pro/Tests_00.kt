@@ -39,6 +39,7 @@ public class Tests_00 {
             assertEquals(machine.Root!!.Activity, Activity.Active)
             // machine.Root.close
             machine.Root!!.close()
+            assertEquals(machine.Root!!.IsClosed, true)
         }
     }
 
