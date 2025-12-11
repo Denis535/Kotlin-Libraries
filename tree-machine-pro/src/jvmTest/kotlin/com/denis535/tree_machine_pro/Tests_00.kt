@@ -3,16 +3,13 @@ package com.denis535.tree_machine_pro
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 
-typealias TreeMachine2 = TreeMachine<Any?, String>
-typealias Node2 = Node<Any?, String>
-
 public class Tests_00 {
 
     @Test
     fun Test_00() {
-        TreeMachine2(null).use { machine ->
+        TreeMachine().use { machine ->
             // machine.SetRoot root
-            machine.SetRoot(Node2("root"), null, null)
+            machine.SetRoot(Node("root"), null, null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -27,7 +24,7 @@ public class Tests_00 {
             assertEquals(machine.Root!!.DescendantsAndSelf.count(), 1)
 
             // machine.Root.AddChildren a, b
-            (machine.Root as Node2).AddChildren(arrayOf(Node("a"), Node("b")), null)
+            (machine.Root as Node).AddChildren(arrayOf(Node("a"), Node("b")), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -55,7 +52,7 @@ public class Tests_00 {
             }
 
             // machine.Root.RemoveChildren a, b
-            (machine.Root as Node2).RemoveChildren({ true }, null, null)
+            (machine.Root as Node).RemoveChildren({ true }, null, null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -77,13 +74,13 @@ public class Tests_00 {
 
     @Test
     fun Test_01() {
-        TreeMachine2(null).apply {
+        TreeMachine().apply {
             this.OnCloseCallback = {
                 this.SetRoot(null, null, null)
             }
         }.use { machine ->
             // machine.SetRoot root
-            machine.SetRoot(Node2("root").apply {
+            machine.SetRoot(Node("root").apply {
                 this.OnCloseCallback = {
                     this.RemoveChildren({ true }, null, null)
                 }
@@ -102,7 +99,7 @@ public class Tests_00 {
             assertEquals(machine.Root!!.DescendantsAndSelf.count(), 1)
 
             // machine.Root.AddChildren a, b
-            (machine.Root as Node2).AddChildren(arrayOf(Node("a"), Node("b")), null)
+            (machine.Root as Node).AddChildren(arrayOf(Node("a"), Node("b")), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -133,13 +130,13 @@ public class Tests_00 {
 
     @Test
     fun Test_02() {
-        TreeMachine2(null).apply {
+        TreeMachine().apply {
             this.OnCloseCallback = {
                 this.Root!!.close()
             }
         }.use { machine ->
             // machine.SetRoot root
-            machine.SetRoot(Node2("root").apply {
+            machine.SetRoot(Node("root").apply {
                 this.OnCloseCallback = {
                     for (child in this.Children.reversed()) {
                         child.close()
@@ -160,7 +157,7 @@ public class Tests_00 {
             assertEquals(machine.Root!!.DescendantsAndSelf.count(), 1)
 
             // machine.Root.AddChildren a, b
-            (machine.Root as Node2).AddChildren(arrayOf(Node("a"), Node("b")), null)
+            (machine.Root as Node).AddChildren(arrayOf(Node("a"), Node("b")), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -191,17 +188,17 @@ public class Tests_00 {
 
     @Test
     public fun Test_10() {
-        TreeMachine2(null).apply {
+        TreeMachine().apply {
             this.OnCloseCallback = {
                 this.SetRoot(null, null, null)
             }
         }.use { machine ->
             // machine.SetRoot root
-            machine.SetRoot(Node2("root").apply {
+            machine.SetRoot(Node("root").apply {
                 this.OnCloseCallback = {
                 }
                 this.OnAttachCallback = { arg ->
-                    this.AddChildren(arrayOf(Node2("a"), Node2("b")), null)
+                    this.AddChildren(arrayOf(Node("a"), Node("b")), null)
                 }
                 this.OnDetachCallback = { arg ->
                     this.RemoveChildren({ true }, null, null)
@@ -237,17 +234,17 @@ public class Tests_00 {
 
     @Test
     public fun Test_20() {
-        TreeMachine2(null).apply {
+        TreeMachine().apply {
             this.OnCloseCallback = {
                 this.SetRoot(null, null, null)
             }
         }.use { machine ->
             // machine.SetRoot root
-            machine.SetRoot(Node2("root").apply {
+            machine.SetRoot(Node("root").apply {
                 this.OnCloseCallback = {
                 }
                 this.OnActivateCallback = { arg ->
-                    this.AddChildren(arrayOf(Node2("a"), Node2("b")), null)
+                    this.AddChildren(arrayOf(Node("a"), Node("b")), null)
                 }
                 this.OnDeactivateCallback = { arg ->
                     this.RemoveChildren({ true }, null, null)

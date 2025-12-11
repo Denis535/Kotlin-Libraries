@@ -1,17 +1,6 @@
 package com.denis535.tree_machine_pro
 
-public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserData, TNodeUserData> {
-
-    private var Lifecycle = ELifecycle.Alive
-
-    public override val IsClosing: Boolean
-        get() {
-            return this.Lifecycle == ELifecycle.Closing
-        }
-    public override val IsClosed: Boolean
-        get() {
-            return this.Lifecycle == ELifecycle.Closed
-        }
+public class Node : AbstractNode {
 
     public override var Owner: Any? = null
         get() {
@@ -28,12 +17,12 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
             field = value
         }
 
-    public override val Machine: AbstractTreeMachine<TMachineUserData, TNodeUserData>?
+    public override val Machine: AbstractTreeMachine?
         get() {
             check(!this.IsClosed)
             return when (val owner = this.Owner) {
-                is AbstractTreeMachine<*, *> -> owner as AbstractTreeMachine<TMachineUserData, TNodeUserData>
-                is AbstractNode<*, *> -> owner.Machine as AbstractTreeMachine<TMachineUserData, TNodeUserData>
+                is AbstractTreeMachine -> owner
+                is AbstractNode -> owner.Machine as AbstractTreeMachine
                 else -> null
             }
         }
@@ -43,18 +32,18 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
             check(!this.IsClosed)
             return this.Parent == null
         }
-    public override val Root: AbstractNode<TMachineUserData, TNodeUserData>
+    public override val Root: AbstractNode
         get() {
             check(!this.IsClosed)
             return this.Parent?.Root ?: this
         }
 
-    public override val Parent: AbstractNode<TMachineUserData, TNodeUserData>?
+    public override val Parent: AbstractNode?
         get() {
             check(!this.IsClosed)
-            return this.Owner as? AbstractNode<TMachineUserData, TNodeUserData>
+            return this.Owner as? AbstractNode
         }
-    public override val Ancestors: Sequence<AbstractNode<TMachineUserData, TNodeUserData>>
+    public override val Ancestors: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -64,7 +53,7 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
                 }
             }
         }
-    public override val AncestorsAndSelf: Sequence<AbstractNode<TMachineUserData, TNodeUserData>>
+    public override val AncestorsAndSelf: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -84,17 +73,17 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
             field = value
         }
 
-    public override val Children: List<AbstractNode<TMachineUserData, TNodeUserData>>
+    public override val Children: List<AbstractNode>
         get() {
             check(!this.IsClosed)
             return this.ChildrenMutable
         }
-    private val ChildrenMutable: MutableList<AbstractNode<TMachineUserData, TNodeUserData>> = mutableListOf<AbstractNode<TMachineUserData, TNodeUserData>>()
+    private val ChildrenMutable: MutableList<AbstractNode> = mutableListOf()
         get() {
             check(!this.IsClosed)
             return field
         }
-    public override val Descendants: Sequence<AbstractNode<TMachineUserData, TNodeUserData>>
+    public override val Descendants: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -104,7 +93,7 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
                 }
             }
         }
-    public override val DescendantsAndSelf: Sequence<AbstractNode<TMachineUserData, TNodeUserData>>
+    public override val DescendantsAndSelf: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -113,7 +102,7 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
             }
         }
 
-    public var SortDelegate: Proc1<MutableList<AbstractNode<TMachineUserData, TNodeUserData>>>? = null
+    public var SortDelegate: Proc1<MutableList<AbstractNode>>? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -128,25 +117,10 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
             field = value
         }
 
-    public override val UserData: TNodeUserData
+    public val UserData: Any?
         get() {
             check(!this.IsClosed)
             return field
-        }
-
-    public var OnCloseCallback: Proc? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
         }
 
     public var OnAttachCallback: Proc1<Any?>? = null
@@ -207,24 +181,11 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
             field = value
         }
 
-    public constructor(userData: TNodeUserData) {
+    public constructor(userData: Any?) {
         this.UserData = userData
     }
 
-    public override fun close() {
-        check(!this.IsClosing)
-        check(!this.IsClosed)
-        when (val owner = this.Owner) {
-            is AbstractTreeMachine<*, *> -> check(owner.IsClosing)
-            is AbstractNode<*, *> -> check(owner.IsClosing)
-        }
-        this.Lifecycle = ELifecycle.Closing
-        this.OnCloseCallback?.invoke()
-        check(this.Children.all { it.IsClosed })
-        this.Lifecycle = ELifecycle.Closed
-    }
-
-    internal override fun Attach(machine: AbstractTreeMachine<TMachineUserData, TNodeUserData>, argument: Any?) {
+    internal override fun Attach(machine: AbstractTreeMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = machine
@@ -234,7 +195,7 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
         }
     }
 
-    internal override fun Attach(parent: AbstractNode<TMachineUserData, TNodeUserData>, argument: Any?) {
+    internal override fun Attach(parent: AbstractNode, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = parent
@@ -244,7 +205,7 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
         }
     }
 
-    internal override fun Detach(machine: AbstractTreeMachine<TMachineUserData, TNodeUserData>, argument: Any?) {
+    internal override fun Detach(machine: AbstractTreeMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == machine)
         if (true) {
@@ -254,7 +215,7 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
         this.Owner = null
     }
 
-    internal override fun Detach(parent: AbstractNode<TMachineUserData, TNodeUserData>, argument: Any?) {
+    internal override fun Detach(parent: AbstractNode, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == parent)
         if (this.Activity == EActivity.Active) {
@@ -282,7 +243,7 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
         this.Activity = EActivity.Inactive
     }
 
-    public fun AddChild(child: AbstractNode<TMachineUserData, TNodeUserData>, argument: Any?) {
+    public fun AddChild(child: AbstractNode, argument: Any?) {
         check(!this.IsClosed)
         check(!this.Children.contains(child))
         this.ChildrenMutable.add(child)
@@ -290,14 +251,14 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
         child.Attach(this, argument)
     }
 
-    public fun AddChildren(children: Array<AbstractNode<TMachineUserData, TNodeUserData>>, argument: Any?) {
+    public fun AddChildren(children: Array<AbstractNode>, argument: Any?) {
         check(!this.IsClosed)
         for (child in children) {
             this.AddChild(child, argument)
         }
     }
 
-    public fun RemoveChild(child: AbstractNode<TMachineUserData, TNodeUserData>, argument: Any?, callback: Proc2<AbstractNode<TMachineUserData, TNodeUserData>, Any?>? = null) {
+    public fun RemoveChild(child: AbstractNode, argument: Any?, callback: Proc2<AbstractNode, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Children.contains(child))
         child.Detach(this, argument)
@@ -309,7 +270,7 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
         }
     }
 
-    public fun RemoveChildren(predicate: Predicate1<AbstractNode<TMachineUserData, TNodeUserData>>, argument: Any?, callback: Proc2<AbstractNode<TMachineUserData, TNodeUserData>, Any?>? = null): Int {
+    public fun RemoveChildren(predicate: Predicate1<AbstractNode>, argument: Any?, callback: Proc2<AbstractNode, Any?>? = null): Int {
         check(!this.IsClosed)
         var count = 0
         for (child in this.Children.reversed().filter(predicate)) {
@@ -319,12 +280,12 @@ public class Node<TMachineUserData, TNodeUserData> : AbstractNode<TMachineUserDa
         return count
     }
 
-    public fun RemoveSelf(argument: Any?, callback: Proc2<AbstractNode<TMachineUserData, TNodeUserData>, Any?>? = null) {
+    public fun RemoveSelf(argument: Any?, callback: Proc2<AbstractNode, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Owner != null)
         when (val owner = this.Owner) {
-            is TreeMachine<*, *> -> (owner as TreeMachine<TMachineUserData, TNodeUserData>).SetRoot(null, argument, callback)
-            is Node<*, *> -> (owner as Node<TMachineUserData, TNodeUserData>).RemoveChild(this, argument, callback)
+            is TreeMachine -> owner.SetRoot(null, argument, callback)
+            is Node -> owner.RemoveChild(this, argument, callback)
         }
     }
 

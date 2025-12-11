@@ -1,18 +1,49 @@
 package com.denis535.tree_machine_pro
 
-public abstract class AbstractTreeMachine<TMachineUserData, TNodeUserData> : AutoCloseable {
+public abstract class AbstractTreeMachine : AutoCloseable {
 
-    public abstract val IsClosing: Boolean
-    public abstract val IsClosed: Boolean
+    private var Lifecycle = ELifecycle.Alive
 
-    public abstract val Root: AbstractNode<TMachineUserData, TNodeUserData>?
+    public val IsClosing: Boolean
+        get() {
+            return this.Lifecycle == ELifecycle.Closing
+        }
+    public val IsClosed: Boolean
+        get() {
+            return this.Lifecycle == ELifecycle.Closed
+        }
 
-    public abstract val UserData: TMachineUserData
+    public abstract val Root: AbstractNode?
+
+    public var OnCloseCallback: Proc? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value != null) {
+                check(field == null)
+            } else {
+                check(field != null)
+            }
+            field = value
+        }
 
     public constructor()
 
+    public final override fun close() {
+        check(!this.IsClosing)
+        check(!this.IsClosed)
+        this.Lifecycle = ELifecycle.Closing
+        this.OnCloseCallback?.invoke()
+        check(this.Root == null || this.Root!!.IsClosed)
+//        this.Root?.let { check(it.IsClosed) }
+        this.Lifecycle = ELifecycle.Closed
+    }
+
     public final override fun toString(): String {
-        return this.UserData?.toString() ?: super.toString()
+        return super.toString()
     }
 
 }
