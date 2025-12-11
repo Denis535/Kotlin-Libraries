@@ -1,15 +1,13 @@
 # Overview
+
 The library that allows you to easily implement a stateful object.
 
 # Reference
 
 ###### com.denis535.state_machine_pro
 
-- AbstractStateMachine
-- AbstractState
 - StateMachine
-- State
-- ChildrenableState
+- AbstractState (State, ChildrenableState)
 - Activity
 
 # Links

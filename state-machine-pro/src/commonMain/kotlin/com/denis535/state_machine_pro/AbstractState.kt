@@ -100,20 +100,69 @@ public abstract class AbstractState : AutoCloseable {
     protected open fun OnClose() {
     }
 
-    internal abstract fun Attach(machine: StateMachine, argument: Any?)
-    internal abstract fun Attach(parent: AbstractState, argument: Any?)
+    internal fun Attach(machine: StateMachine, argument: Any?) {
+        check(!this.IsClosed)
+        check(this.Owner == null)
+        this.Owner = machine
+        this.OnAttach(argument)
+        if (true) {
+            this.Activate(argument)
+        }
+    }
 
-    internal abstract fun Detach(machine: StateMachine, argument: Any?)
-    internal abstract fun Detach(parent: AbstractState, argument: Any?)
+    internal fun Attach(parent: AbstractState, argument: Any?) {
+        check(!this.IsClosed)
+        check(this.Owner == null)
+        this.Owner = parent
+        this.OnAttach(argument)
+        if (this.Parent!!.Activity == EActivity.Active) {
+            this.Activate(argument)
+        }
+    }
+
+    internal fun Detach(machine: StateMachine, argument: Any?) {
+        check(!this.IsClosed)
+        check(this.Owner == machine)
+        if (true) {
+            this.Deactivate(argument)
+        }
+        this.OnDetach(argument)
+        this.Owner = null
+    }
+
+    internal fun Detach(parent: AbstractState, argument: Any?) {
+        check(!this.IsClosed)
+        check(this.Owner == parent)
+        if (this.Activity == EActivity.Active) {
+            this.Deactivate(argument)
+        }
+        this.OnDetach(argument)
+        this.Owner = null
+    }
+
+    internal fun Activate(argument: Any?) {
+        this.Activity = EActivity.Activating
+        this.OnActivate(argument)
+        for (child in this.Children.toList()) {
+            child.Activate(argument)
+        }
+        this.Activity = EActivity.Active
+    }
+
+    internal fun Deactivate(argument: Any?) {
+        this.Activity = EActivity.Deactivating
+        for (child in this.Children.toList().asReversed()) {
+            child.Deactivate(argument)
+        }
+        this.OnDeactivate(argument)
+        this.Activity = EActivity.Inactive
+    }
 
     protected open fun OnAttach(argument: Any?) {
     }
 
     protected open fun OnDetach(argument: Any?) {
     }
-
-    internal abstract fun Activate(argument: Any?)
-    internal abstract fun Deactivate(argument: Any?)
 
     protected open fun OnActivate(argument: Any?) {
     }
