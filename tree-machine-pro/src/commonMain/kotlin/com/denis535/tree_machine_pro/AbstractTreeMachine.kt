@@ -15,30 +15,13 @@ public abstract class AbstractTreeMachine : AutoCloseable {
 
     public abstract val Root: AbstractNode?
 
-    public var OnCloseCallback: Proc? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-
     internal constructor()
 
     public final override fun close() {
         check(!this.IsClosing)
         check(!this.IsClosed)
         this.Lifecycle = ELifecycle.Closing
-        this.OnCloseCallback?.invoke()
-        check(this.Root == null || this.Root!!.IsClosed)
-//        this.Root?.let { check(it.IsClosed) }
+        check(this.Root.let { it == null || it.IsClosed })
         this.Lifecycle = ELifecycle.Closed
     }
 

@@ -115,10 +115,6 @@ public abstract class AbstractNode : AutoCloseable {
     public final override fun close() {
         check(!this.IsClosing)
         check(!this.IsClosed)
-        when (val owner = this.Owner) {
-            is AbstractTreeMachine -> check(owner.IsClosing)
-            is AbstractNode -> check(owner.IsClosing)
-        }
         this.Lifecycle = ELifecycle.Closing
         this.OnCloseCallback?.invoke()
         check(this.Children.all { it.IsClosed })
