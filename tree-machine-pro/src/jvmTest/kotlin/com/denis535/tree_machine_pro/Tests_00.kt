@@ -118,7 +118,7 @@ public class Tests_00 {
                 assertEquals(child.DescendantsAndSelf.count(), 1)
             }
 
-            // machine.Root.Children.closes
+            // machine.Root.Children.close
             for (child in machine.Root!!.Children) {
                 child.close()
                 assertEquals(child.IsClosed, true)
