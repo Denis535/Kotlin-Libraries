@@ -13,34 +13,12 @@ public abstract class AbstractNode : AutoCloseable {
             return this.Lifecycle == ELifecycle.Closed
         }
 
-    public abstract val Owner: Any?
-    public abstract val Machine: AbstractTreeMachine?
-
-    public abstract val IsRoot: Boolean
-    public abstract val Root: AbstractNode
-
-    public abstract val Parent: AbstractNode?
-    public abstract val Ancestors: Sequence<AbstractNode>
-    public abstract val AncestorsAndSelf: Sequence<AbstractNode>
-
-    public abstract val Activity: Activity
-
-    public abstract val Children: List<AbstractNode>
-    public abstract val Descendants: Sequence<AbstractNode>
-    public abstract val DescendantsAndSelf: Sequence<AbstractNode>
-
-    public val UserData: Any?
+    public var Owner: Any? = null
         get() {
             check(!this.IsClosed)
             return field
         }
-
-    public var OnCloseCallback: Proc? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
+        internal set(value) {
             check(!this.IsClosed)
             if (value != null) {
                 check(field == null)
@@ -50,75 +28,103 @@ public abstract class AbstractNode : AutoCloseable {
             field = value
         }
 
-    public var OnAttachCallback: Proc1<Any?>? = null
+    public val Machine: AbstractTreeMachine?
+        get() {
+            check(!this.IsClosed)
+            return when (val owner = this.Owner) {
+                is AbstractTreeMachine -> owner
+                is AbstractNode -> owner.Machine as AbstractTreeMachine
+                else -> null
+            }
+        }
+
+    public val IsRoot: Boolean
+        get() {
+            check(!this.IsClosed)
+            return this.Parent == null
+        }
+    public val Root: AbstractNode
+        get() {
+            check(!this.IsClosed)
+            return this.Parent?.Root ?: this
+        }
+
+    public val Parent: AbstractNode?
+        get() {
+            check(!this.IsClosed)
+            return this.Owner as? AbstractNode
+        }
+    public val Ancestors: Sequence<AbstractNode>
+        get() {
+            check(!this.IsClosed)
+            return sequence {
+                if (this@AbstractNode.Parent != null) {
+                    this.yield(this@AbstractNode.Parent!!)
+                    this.yieldAll(this@AbstractNode.Parent!!.Ancestors)
+                }
+            }
+        }
+    public val AncestorsAndSelf: Sequence<AbstractNode>
+        get() {
+            check(!this.IsClosed)
+            return sequence {
+                this.yield(this@AbstractNode)
+                this.yieldAll(this@AbstractNode.Ancestors)
+            }
+        }
+
+    public var Activity: EActivity = EActivity.Inactive
         get() {
             check(!this.IsClosed)
             return field
         }
-        set(value) {
+        internal set(value) {
             check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-    public var OnDetachCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
+            check(field != value)
             field = value
         }
 
-    public var OnActivateCallback: Proc1<Any?>? = null
+    public val Children: List<AbstractNode>
+        get() {
+            check(!this.IsClosed)
+            return this.ChildrenMutable
+        }
+    internal val ChildrenMutable: MutableList<AbstractNode> = mutableListOf()
         get() {
             check(!this.IsClosed)
             return field
         }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-    public var OnDeactivateCallback: Proc1<Any?>? = null
+    public val Descendants: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
+            return sequence {
+                for (child in this@AbstractNode.Children) {
+                    this.yield(child)
+                    this.yieldAll(child.Descendants)
+                }
             }
-            field = value
+        }
+    public val DescendantsAndSelf: Sequence<AbstractNode>
+        get() {
+            check(!this.IsClosed)
+            return sequence {
+                this.yield(this@AbstractNode)
+                this.yieldAll(this@AbstractNode.Descendants)
+            }
         }
 
-    internal constructor(userData: Any?) {
-        this.UserData = userData
-    }
+    internal constructor()
 
     public final override fun close() {
         check(!this.IsClosing)
         check(!this.IsClosed)
         this.Lifecycle = ELifecycle.Closing
-        this.OnCloseCallback?.invoke()
+        this.OnClose()
         check(this.Children.all { it.IsClosed })
         this.Lifecycle = ELifecycle.Closed
+    }
+
+    protected open fun OnClose() {
     }
 
     internal abstract fun Attach(machine: AbstractTreeMachine, argument: Any?)
@@ -127,8 +133,20 @@ public abstract class AbstractNode : AutoCloseable {
     internal abstract fun Detach(machine: AbstractTreeMachine, argument: Any?)
     internal abstract fun Detach(parent: AbstractNode, argument: Any?)
 
+    protected open fun OnAttach(argument: Any?) {
+    }
+
+    protected open fun OnDetach(argument: Any?) {
+    }
+
     internal abstract fun Activate(argument: Any?)
     internal abstract fun Deactivate(argument: Any?)
+
+    protected open fun OnActivate(argument: Any?) {
+    }
+
+    protected open fun OnDeactivate(argument: Any?) {
+    }
 
     public final override fun toString(): String {
         return super.toString()

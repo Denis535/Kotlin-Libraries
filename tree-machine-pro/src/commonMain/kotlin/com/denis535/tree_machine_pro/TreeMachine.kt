@@ -2,21 +2,6 @@ package com.denis535.tree_machine_pro
 
 public class TreeMachine : AbstractTreeMachine {
 
-    public override var Root: AbstractNode? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        private set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-
     public constructor()
 
     public fun SetRoot(root: AbstractNode?, argument: Any?, callback: Proc2<AbstractNode, Any?>? = null) {

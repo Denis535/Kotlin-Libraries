@@ -8,8 +8,8 @@ public class Tests_00 {
     @Test
     fun Test_00() {
         TreeMachine().use { machine ->
-            // machine.SetRoot root
-            machine.SetRoot(Node("root"), null, null)
+            // machine.SetRoot Node
+            machine.SetRoot(Node(), null, null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -23,8 +23,8 @@ public class Tests_00 {
             assertEquals(machine.Root!!.Descendants.count(), 0)
             assertEquals(machine.Root!!.DescendantsAndSelf.count(), 1)
 
-            // machine.Root.AddChildren a, b
-            (machine.Root as Node).AddChildren(arrayOf(Node("a"), Node("b")), null)
+            // machine.Root.AddChildren Node, Node
+            (machine.Root as Node).AddChildren(arrayOf(Node(), Node()), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -51,7 +51,7 @@ public class Tests_00 {
                 assertEquals(child.DescendantsAndSelf.count(), 1)
             }
 
-            // machine.Root.RemoveChildren a, b
+            // machine.Root.RemoveChildren
             (machine.Root as Node).RemoveChildren({ true }, null, null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
@@ -75,8 +75,8 @@ public class Tests_00 {
     @Test
     fun Test_01() {
         TreeMachine().use { machine ->
-            // machine.SetRoot root
-            machine.SetRoot(Node("root"), null, null)
+            // machine.SetRoot Node
+            machine.SetRoot(Node(), null, null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -90,8 +90,8 @@ public class Tests_00 {
             assertEquals(machine.Root!!.Descendants.count(), 0)
             assertEquals(machine.Root!!.DescendantsAndSelf.count(), 1)
 
-            // machine.Root.AddChildren a, b
-            (machine.Root as Node).AddChildren(arrayOf(Node("a"), Node("b")), null)
+            // machine.Root.AddChildren Node, Node
+            (machine.Root as Node).AddChildren(arrayOf(Node(), Node()), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
