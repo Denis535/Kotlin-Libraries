@@ -2,9 +2,15 @@ package com.denis535.state_machine_pro
 
 public open class State : AbstractState {
 
+    public final override val Children: List<AbstractState>
+        get() {
+            check(!this.IsClosed)
+            return listOf()
+        }
+
     public constructor()
 
-    internal override fun Attach(machine: AbstractStateMachine, argument: Any?) {
+    internal override fun Attach(machine: StateMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = machine
@@ -24,7 +30,7 @@ public open class State : AbstractState {
         }
     }
 
-    internal override fun Detach(machine: AbstractStateMachine, argument: Any?) {
+    internal override fun Detach(machine: StateMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == machine)
         if (true) {

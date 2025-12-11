@@ -28,12 +28,12 @@ public abstract class AbstractState : AutoCloseable {
             field = value
         }
 
-    public val Machine: AbstractStateMachine?
+    public val Machine: StateMachine?
         get() {
             check(!this.IsClosed)
             return when (val owner = this.Owner) {
-                is AbstractStateMachine -> owner
-                is AbstractState -> owner.Machine as AbstractStateMachine
+                is StateMachine -> owner
+                is AbstractState -> owner.Machine as StateMachine
                 else -> null
             }
         }
@@ -84,6 +84,8 @@ public abstract class AbstractState : AutoCloseable {
             field = value
         }
 
+    public abstract val Children: List<AbstractState>
+
     internal constructor()
 
     public final override fun close() {
@@ -100,10 +102,10 @@ public abstract class AbstractState : AutoCloseable {
     protected open fun OnClose() {
     }
 
-    internal abstract fun Attach(machine: AbstractStateMachine, argument: Any?)
+    internal abstract fun Attach(machine: StateMachine, argument: Any?)
     internal abstract fun Attach(parent: AbstractState, argument: Any?)
 
-    internal abstract fun Detach(machine: AbstractStateMachine, argument: Any?)
+    internal abstract fun Detach(machine: StateMachine, argument: Any?)
     internal abstract fun Detach(parent: AbstractState, argument: Any?)
 
     protected open fun OnAttach(argument: Any?) {
@@ -119,10 +121,6 @@ public abstract class AbstractState : AutoCloseable {
     }
 
     protected open fun OnDeactivate(argument: Any?) {
-    }
-
-    public final override fun toString(): String {
-        return super.toString()
     }
 
 }
