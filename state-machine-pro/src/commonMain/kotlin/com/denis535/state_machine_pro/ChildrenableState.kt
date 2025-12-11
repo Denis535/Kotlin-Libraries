@@ -99,73 +99,7 @@ public class ChildrenableState : AbstractState {
             field = value
         }
 
-    public val UserData: Any?
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public var OnAttachCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-    public var OnDetachCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-
-    public var OnActivateCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-    public var OnDeactivateCallback: Proc1<Any?>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value != null) {
-                check(field == null)
-            } else {
-                check(field != null)
-            }
-            field = value
-        }
-
-    public constructor(userData: Any?) {
-        this.UserData = userData
-    }
+    public constructor(userData: Any?) : super(userData)
 
     internal override fun Attach(machine: AbstractStateMachine, argument: Any?) {
         check(!this.IsClosed)

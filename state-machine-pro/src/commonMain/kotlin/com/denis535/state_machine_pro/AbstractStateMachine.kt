@@ -30,7 +30,7 @@ public abstract class AbstractStateMachine : AutoCloseable {
             field = value
         }
 
-    public constructor()
+    internal constructor()
 
     public final override fun close() {
         check(!this.IsClosing)

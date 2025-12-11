@@ -25,6 +25,12 @@ public abstract class AbstractState : AutoCloseable {
 
     public abstract val Activity: Activity
 
+    public val UserData: Any?
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
     public var OnCloseCallback: Proc? = null
         get() {
             check(!this.IsClosed)
@@ -40,7 +46,67 @@ public abstract class AbstractState : AutoCloseable {
             field = value
         }
 
-    public constructor()
+    public var OnAttachCallback: Proc1<Any?>? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value != null) {
+                check(field == null)
+            } else {
+                check(field != null)
+            }
+            field = value
+        }
+    public var OnDetachCallback: Proc1<Any?>? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value != null) {
+                check(field == null)
+            } else {
+                check(field != null)
+            }
+            field = value
+        }
+
+    public var OnActivateCallback: Proc1<Any?>? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value != null) {
+                check(field == null)
+            } else {
+                check(field != null)
+            }
+            field = value
+        }
+    public var OnDeactivateCallback: Proc1<Any?>? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value != null) {
+                check(field == null)
+            } else {
+                check(field != null)
+            }
+            field = value
+        }
+
+    internal constructor(userData: Any?) {
+        this.UserData = userData
+    }
 
     public final override fun close() {
         check(!this.IsClosing)
