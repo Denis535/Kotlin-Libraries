@@ -28,12 +28,12 @@ public abstract class AbstractNode : AutoCloseable {
             field = value
         }
 
-    public val Machine: AbstractTreeMachine?
+    public val Machine: TreeMachine?
         get() {
             check(!this.IsClosed)
             return when (val owner = this.Owner) {
-                is AbstractTreeMachine -> owner
-                is AbstractNode -> owner.Machine as AbstractTreeMachine
+                is TreeMachine -> owner
+                is AbstractNode -> owner.Machine as TreeMachine
                 else -> null
             }
         }
@@ -127,10 +127,10 @@ public abstract class AbstractNode : AutoCloseable {
     protected open fun OnClose() {
     }
 
-    internal abstract fun Attach(machine: AbstractTreeMachine, argument: Any?)
+    internal abstract fun Attach(machine: TreeMachine, argument: Any?)
     internal abstract fun Attach(parent: AbstractNode, argument: Any?)
 
-    internal abstract fun Detach(machine: AbstractTreeMachine, argument: Any?)
+    internal abstract fun Detach(machine: TreeMachine, argument: Any?)
     internal abstract fun Detach(parent: AbstractNode, argument: Any?)
 
     protected open fun OnAttach(argument: Any?) {
@@ -146,10 +146,6 @@ public abstract class AbstractNode : AutoCloseable {
     }
 
     protected open fun OnDeactivate(argument: Any?) {
-    }
-
-    public final override fun toString(): String {
-        return super.toString()
     }
 
 }

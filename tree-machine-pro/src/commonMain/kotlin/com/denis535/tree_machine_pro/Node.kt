@@ -4,7 +4,7 @@ public open class Node : AbstractNode {
 
     public constructor()
 
-    internal override fun Attach(machine: AbstractTreeMachine, argument: Any?) {
+    internal override fun Attach(machine: TreeMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = machine
@@ -24,7 +24,7 @@ public open class Node : AbstractNode {
         }
     }
 
-    internal override fun Detach(machine: AbstractTreeMachine, argument: Any?) {
+    internal override fun Detach(machine: TreeMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == machine)
         if (true) {
