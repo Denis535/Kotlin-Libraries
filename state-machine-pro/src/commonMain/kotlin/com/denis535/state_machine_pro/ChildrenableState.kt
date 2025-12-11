@@ -78,7 +78,7 @@ public class ChildrenableState : AbstractState {
             check(!this.IsClosed)
             return this.ChildrenMutable
         }
-    private val ChildrenMutable: MutableList<AbstractState> = mutableListOf<AbstractState>()
+    private val ChildrenMutable: MutableList<AbstractState> = mutableListOf()
         get() {
             check(!this.IsClosed)
             return field
