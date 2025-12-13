@@ -37,8 +37,8 @@ kotlin {
     this.sourceSets {
         val commonMain by getting {
             this.dependencies {
-                this.api("io.github.denis535:state-machine-pro:1.0.1")
-                this.api("io.github.denis535:tree-machine-pro:1.0.1")
+                this.api("io.github.denis535:state-machine-pro:1.1.0")
+                this.api("io.github.denis535:tree-machine-pro:1.1.0")
             }
         }
         val jvmTest by getting {

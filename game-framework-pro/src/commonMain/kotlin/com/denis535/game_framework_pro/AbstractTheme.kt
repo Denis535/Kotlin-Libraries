@@ -4,18 +4,34 @@ import com.denis535.state_machine_pro.*
 
 public abstract class AbstractTheme : AbstractCloseable {
 
-    protected val Machine: StateMachine<AbstractTheme, AbstractPlayList>
+    protected val Machine: StateMachine
         get() {
             check(!this.IsClosed)
             return field
         }
 
     public constructor() {
-        this.Machine = StateMachine<AbstractTheme, AbstractPlayList>(this)
+        this.Machine = StateMachine()
     }
 
     protected override fun OnClose() {
         this.Machine.close()
+    }
+
+}
+
+internal class State(public val PlayList: AbstractPlayList) : com.denis535.state_machine_pro.State() {
+
+    protected override fun OnClose() {
+        this.PlayList.OnCloseInternal()
+    }
+
+    protected override fun OnActivate(argument: Any?) {
+        this.PlayList.OnActivateInternal(argument)
+    }
+
+    protected override fun OnDeactivate(argument: Any?) {
+        this.PlayList.OnDeactivateInternal(argument)
     }
 
 }
@@ -31,42 +47,36 @@ public abstract class AbstractPlayList {
             return this.StateMutable.IsClosed
         }
 
-    protected val Theme: AbstractTheme?
-        get() {
-            check(!this.IsClosed)
-            return this.StateMutable.Machine?.UserData
-        }
-    public val State: AbstractState<AbstractTheme, AbstractPlayList>
+    public val State: AbstractState
         get() {
             check(!this.IsClosed)
             return this.StateMutable
         }
-    protected val StateMutable: State<AbstractTheme, AbstractPlayList>
+    protected val StateMutable: com.denis535.state_machine_pro.State
         get() {
             check(!field.IsClosed)
             return field
         }
 
     public constructor() {
-        this.StateMutable = State<AbstractTheme, AbstractPlayList>(this).apply {
-            this.OnCloseCallback = this@AbstractPlayList::OnClose
-            this.OnActivateCallback = this@AbstractPlayList::OnActivate
-            this.OnDeactivateCallback = this@AbstractPlayList::OnDeactivate
-        }
+        this.StateMutable = State(this)
     }
 
+    internal fun OnCloseInternal() = this.OnClose()
     protected abstract fun OnClose()
 
+    internal fun OnActivateInternal(argument: Any?) = this.OnActivate(argument)
+    internal fun OnDeactivateInternal(argument: Any?) = this.OnDeactivate(argument)
     protected abstract fun OnActivate(argument: Any?)
     protected abstract fun OnDeactivate(argument: Any?)
 
 }
 
-public val AbstractState<AbstractTheme, AbstractPlayList>.PlayList: AbstractPlayList
+public val AbstractState.PlayList: AbstractPlayList
     get() {
-        return this.UserData
+        return (this as State).PlayList
     }
 
-public fun <T> AbstractState<AbstractTheme, AbstractPlayList>.PlayList(): T where  T : AbstractPlayList {
-    return this.UserData as T
+public inline fun <reified T> AbstractState.PlayList(): T where  T : AbstractPlayList {
+    return this.PlayList as T
 }
