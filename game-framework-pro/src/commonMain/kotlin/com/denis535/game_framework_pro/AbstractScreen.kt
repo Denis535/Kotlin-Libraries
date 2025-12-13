@@ -14,7 +14,7 @@ public abstract class AbstractScreen : AbstractCloseable {
         this.Machine = TreeMachine()
     }
 
-    protected override fun OnClose() {
+    internal override fun OnCloseInternal() {
         this.Machine.close()
     }
 

@@ -14,7 +14,7 @@ public abstract class AbstractTheme : AbstractCloseable {
         this.Machine = StateMachine()
     }
 
-    protected override fun OnClose() {
+    internal override fun OnCloseInternal() {
         this.Machine.close()
     }
 

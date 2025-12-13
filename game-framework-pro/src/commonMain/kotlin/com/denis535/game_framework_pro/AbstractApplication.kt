@@ -4,7 +4,7 @@ public abstract class AbstractApplication : AbstractCloseable {
 
     public constructor()
 
-    protected override fun OnClose() {
+    internal override fun OnCloseInternal() {
     }
 
 }
