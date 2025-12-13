@@ -4,6 +4,10 @@ import kotlin.reflect.KClass
 
 public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> : AbstractProgram, AbstractDependencyProvider where TTheme : AbstractTheme, TScreen : AbstractScreen, TRouter : AbstractRouter, TApplication : AbstractApplication {
 
+    protected val Provider: AbstractDependencyProvider
+        get() {
+            return AbstractDependencyProvider.Instance!!
+        }
     protected var Theme: TTheme? = null
         get() {
             check(!this.IsClosed)

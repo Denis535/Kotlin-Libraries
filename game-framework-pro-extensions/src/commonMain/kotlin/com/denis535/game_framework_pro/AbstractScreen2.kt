@@ -18,8 +18,8 @@ public abstract class AbstractScreen2<TRouter, TApplication> : AbstractScreen wh
         }
 
     public constructor() {
-        this.Router = this.Provider.RequireDependency<TRouter>(AbstractRouter::class)
-        this.Application = this.Provider.RequireDependency<TApplication>(AbstractApplication::class)
+        this.Router = this.Provider.RequireDependency(AbstractRouter::class)
+        this.Application = this.Provider.RequireDependency(AbstractApplication::class)
     }
 
     protected override fun OnClose() {

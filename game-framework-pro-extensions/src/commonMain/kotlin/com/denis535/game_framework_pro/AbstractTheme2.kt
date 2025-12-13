@@ -18,8 +18,8 @@ public abstract class AbstractTheme2<TRouter, TApplication> : AbstractTheme wher
         }
 
     public constructor() {
-        this.Router = this.Provider.RequireDependency<TRouter>(AbstractRouter::class)
-        this.Application = this.Provider.RequireDependency<TApplication>(AbstractApplication::class)
+        this.Router = this.Provider.RequireDependency(AbstractRouter::class)
+        this.Application = this.Provider.RequireDependency(AbstractApplication::class)
     }
 
     protected override fun OnClose() {

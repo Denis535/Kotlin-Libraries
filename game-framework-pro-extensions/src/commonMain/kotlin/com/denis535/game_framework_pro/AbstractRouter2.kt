@@ -23,7 +23,7 @@ public abstract class AbstractRouter2<TTheme, TScreen, TApplication> : AbstractR
         }
 
     public constructor() {
-        this.Application = this.Provider.RequireDependency<TApplication>(AbstractApplication::class)
+        this.Application = this.Provider.RequireDependency(AbstractApplication::class)
     }
 
     protected override fun OnClose() {

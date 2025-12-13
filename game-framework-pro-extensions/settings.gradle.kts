@@ -1,7 +1,6 @@
 pluginManagement {
     this.repositories {
         this.gradlePluginPortal()
-        this.mavenLocal()
         this.mavenCentral()
     }
 }
