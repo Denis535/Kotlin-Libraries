@@ -9,8 +9,4 @@ public abstract class AbstractPlayer2 : AbstractPlayer {
 
     public constructor()
 
-    protected override fun OnClose() {
-        super.OnClose()
-    }
-
 }

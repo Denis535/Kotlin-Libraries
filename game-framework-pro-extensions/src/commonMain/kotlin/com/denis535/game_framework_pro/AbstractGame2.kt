@@ -9,8 +9,4 @@ public abstract class AbstractGame2 : AbstractGame {
 
     public constructor()
 
-    protected override fun OnClose() {
-        super.OnClose()
-    }
-
 }

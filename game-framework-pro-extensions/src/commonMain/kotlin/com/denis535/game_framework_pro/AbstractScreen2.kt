@@ -22,10 +22,6 @@ public abstract class AbstractScreen2<TRouter, TApplication> : AbstractScreen wh
         this.Application = this.Provider.RequireDependency(AbstractApplication::class)
     }
 
-    protected override fun OnClose() {
-        super.OnClose()
-    }
-
 }
 
 public abstract class AbstractWidget2 : AbstractWidget {

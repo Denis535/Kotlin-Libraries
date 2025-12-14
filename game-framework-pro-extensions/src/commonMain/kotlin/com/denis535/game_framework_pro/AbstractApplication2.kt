@@ -9,8 +9,4 @@ public abstract class AbstractApplication2 : AbstractApplication {
 
     public constructor()
 
-    protected override fun OnClose() {
-        super.OnClose()
-    }
-
 }

@@ -9,8 +9,4 @@ public abstract class AbstractEntity2 : AbstractEntity {
 
     public constructor()
 
-    protected override fun OnClose() {
-        super.OnClose()
-    }
-
 }

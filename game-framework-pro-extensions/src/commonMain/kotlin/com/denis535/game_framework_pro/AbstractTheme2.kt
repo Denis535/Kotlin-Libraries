@@ -22,10 +22,6 @@ public abstract class AbstractTheme2<TRouter, TApplication> : AbstractTheme wher
         this.Application = this.Provider.RequireDependency(AbstractApplication::class)
     }
 
-    protected override fun OnClose() {
-        super.OnClose()
-    }
-
 }
 
 public abstract class AbstractPlayList2 : AbstractPlayList {

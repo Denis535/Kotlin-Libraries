@@ -51,7 +51,6 @@ public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> :
 
     protected override fun OnClose() {
         AbstractDependencyProvider.Instance = null
-        super.OnClose()
     }
 
     public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {

@@ -60,7 +60,6 @@ internal class Theme : AbstractTheme2<Router, Application> {
 
     protected override fun OnClose() {
         this.Machine.Root!!.close()
-        super.OnClose()
     }
 
 }
@@ -103,7 +102,6 @@ internal class Screen : AbstractScreen2<Router, Application> {
 
     protected override fun OnClose() {
         this.Machine.Root!!.close()
-        super.OnClose()
     }
 
 }
@@ -174,7 +172,6 @@ internal class Router : AbstractRouter2<Theme, Screen, Application> {
     public constructor()
 
     protected override fun OnClose() {
-        super.OnClose()
     }
 
 }
@@ -189,7 +186,6 @@ internal class Application : AbstractApplication2 {
 
     protected override fun OnClose() {
         this.Game.close()
-        super.OnClose()
     }
 
 }
@@ -199,7 +195,6 @@ internal class Game : AbstractGame2 {
     public constructor()
 
     protected override fun OnClose() {
-        super.OnClose()
     }
 
 }
