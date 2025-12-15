@@ -51,7 +51,7 @@ public class Tests_00 {
                 assertEquals(child.DescendantsAndSelf.count(), 1)
             }
 
-            // machine.Root.RemoveChildren
+            // machine.Root.RemoveChildren true
             (machine.Root as Node).RemoveChildren({ true }, null, null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
@@ -118,8 +118,8 @@ public class Tests_00 {
                 assertEquals(child.DescendantsAndSelf.count(), 1)
             }
 
-            // machine.Root.Children.close
-            for (child in machine.Root!!.Children) {
+            // machine.Root.Children.asReversed.close
+            for (child in machine.Root!!.Children.asReversed()) {
                 child.close()
                 assertEquals(child.IsClosed, true)
             }
