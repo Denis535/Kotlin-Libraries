@@ -114,7 +114,7 @@ internal class RootWidget : AbstractWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.Children.asReversed().forEach { it.close() }
+        this.NodeMutable.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -135,7 +135,7 @@ internal class MainWidget : AbstractViewableWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.Children.asReversed().forEach { it.close() }
+        this.NodeMutable.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -156,7 +156,7 @@ internal class GameWidget : AbstractViewableWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.Children.asReversed().forEach { it.close() }
+        this.NodeMutable.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {
