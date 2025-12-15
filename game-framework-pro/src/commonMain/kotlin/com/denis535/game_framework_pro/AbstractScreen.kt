@@ -27,21 +27,21 @@ internal class Node(public val Widget: AbstractWidget) : com.denis535.tree_machi
     }
 
     protected override fun OnActivate(argument: Any?) {
-        for (ancestor in this.Ancestors.toList().asReversed()) { // top-down
+        for (ancestor in this.Ancestors.map { it as Node }.toList().asReversed()) { // top-down
             ancestor.Widget.OnBeforeDescendantActivateInternal(this, argument)
         }
         this.Widget.OnActivateInternal(argument)
-        for (ancestor in this.Ancestors.toList()) { // down-top
+        for (ancestor in this.Ancestors.map { it as Node }.toList()) { // down-top
             ancestor.Widget.OnAfterDescendantActivateInternal(this, argument)
         }
     }
 
     protected override fun OnDeactivate(argument: Any?) {
-        for (ancestor in this.Ancestors.toList().asReversed()) { // top-down
+        for (ancestor in this.Ancestors.map { it as Node }.toList().asReversed()) { // top-down
             ancestor.Widget.OnBeforeDescendantDeactivateInternal(this, argument)
         }
         this.Widget.OnDeactivateInternal(argument)
-        for (ancestor in this.Ancestors.toList()) { // down-top
+        for (ancestor in this.Ancestors.map { it as Node }.toList()) { // down-top
             ancestor.Widget.OnAfterDescendantDeactivateInternal(this, argument)
         }
     }

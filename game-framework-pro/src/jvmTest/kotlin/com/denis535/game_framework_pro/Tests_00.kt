@@ -8,31 +8,17 @@ public class Tests_00 {
     @Test
     public fun Test_00() {
         Program().use {
-            it.RequireDependency<Program>(AbstractProgram::class)
-            it.RequireDependency<Program>(AbstractProgram2::class)
-            it.RequireDependency<Program>(Program::class)
-
-            it.RequireDependency<Theme>(AbstractTheme::class)
-            it.RequireDependency<Theme>(AbstractTheme2::class)
-            it.RequireDependency<Theme>(Theme::class)
-
-            it.RequireDependency<Screen>(AbstractScreen::class)
-            it.RequireDependency<Screen>(AbstractScreen2::class)
-            it.RequireDependency<Screen>(Screen::class)
-
-            it.RequireDependency<Router>(AbstractRouter::class)
-            it.RequireDependency<Router>(AbstractRouter2::class)
-            it.RequireDependency<Router>(Router::class)
-
-            it.RequireDependency<Application>(AbstractApplication::class)
-            it.RequireDependency<Application>(AbstractApplication2::class)
-            it.RequireDependency<Application>(Application::class)
         }
     }
 
 }
 // Main
-internal class Program : AbstractProgram2<Theme, Screen, Router, Application> {
+internal class Program : AbstractProgram {
+
+    private val Theme: Theme
+    private val Screen: Screen
+    private val Router: Router
+    private val Application: Application
 
     public constructor() {
         this.Application = Application()
@@ -42,16 +28,15 @@ internal class Program : AbstractProgram2<Theme, Screen, Router, Application> {
     }
 
     protected override fun OnClose() {
-        this.Theme!!.close()
-        this.Screen!!.close()
-        this.Router!!.close()
-        this.Application!!.close()
-        super.OnClose()
+        this.Theme.close()
+        this.Screen.close()
+        this.Router.close()
+        this.Application.close()
     }
 
 }
 // UI
-internal class Theme : AbstractTheme2<Router, Application> {
+internal class Theme : AbstractTheme {
 
     public constructor() {
         this.Machine.SetRoot(MainPlayList().State, null, null)
@@ -64,7 +49,7 @@ internal class Theme : AbstractTheme2<Router, Application> {
 
 }
 
-internal class MainPlayList : AbstractPlayList2 {
+internal class MainPlayList : AbstractPlayList {
 
     public constructor()
 
@@ -79,7 +64,7 @@ internal class MainPlayList : AbstractPlayList2 {
 
 }
 
-internal class GamePlayList : AbstractPlayList2 {
+internal class GamePlayList : AbstractPlayList {
 
     public constructor()
 
@@ -94,7 +79,7 @@ internal class GamePlayList : AbstractPlayList2 {
 
 }
 // UI
-internal class Screen : AbstractScreen2<Router, Application> {
+internal class Screen : AbstractScreen {
 
     public constructor() {
         this.Machine.SetRoot(RootWidget().Node, null, null)
@@ -106,7 +91,7 @@ internal class Screen : AbstractScreen2<Router, Application> {
 
 }
 
-internal class RootWidget : AbstractWidget2 {
+internal class RootWidget : AbstractWidget {
 
     public constructor() {
         this.NodeMutable.AddChild(MainWidget().Node, null)
@@ -114,7 +99,7 @@ internal class RootWidget : AbstractWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.Children.asReversed().forEach { it.close() }
+        this.NodeMutable.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -125,7 +110,7 @@ internal class RootWidget : AbstractWidget2 {
 
 }
 
-internal class MainWidget : AbstractViewableWidget2 {
+internal class MainWidget : AbstractViewableWidget {
     internal class View {
         public constructor()
     }
@@ -135,7 +120,7 @@ internal class MainWidget : AbstractViewableWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.Children.asReversed().forEach { it.close() }
+        this.NodeMutable.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -146,7 +131,7 @@ internal class MainWidget : AbstractViewableWidget2 {
 
 }
 
-internal class GameWidget : AbstractViewableWidget2 {
+internal class GameWidget : AbstractViewableWidget {
     internal class View {
         public constructor()
     }
@@ -156,7 +141,7 @@ internal class GameWidget : AbstractViewableWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.Children.asReversed().forEach { it.close() }
+        this.NodeMutable.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -167,7 +152,7 @@ internal class GameWidget : AbstractViewableWidget2 {
 
 }
 // UI
-internal class Router : AbstractRouter2<Theme, Screen, Application> {
+internal class Router : AbstractRouter {
 
     public constructor()
 
@@ -176,7 +161,7 @@ internal class Router : AbstractRouter2<Theme, Screen, Application> {
 
 }
 // App
-internal class Application : AbstractApplication2 {
+internal class Application : AbstractApplication {
 
     public val Game: Game
 
@@ -190,7 +175,7 @@ internal class Application : AbstractApplication2 {
 
 }
 // Game
-internal class Game : AbstractGame2 {
+internal class Game : AbstractGame {
 
     public constructor()
 

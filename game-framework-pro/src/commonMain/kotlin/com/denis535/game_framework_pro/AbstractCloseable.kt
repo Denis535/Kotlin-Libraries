@@ -31,3 +31,9 @@ public abstract class AbstractCloseable : AutoCloseable {
     internal abstract fun OnCloseInternal()
 
 }
+
+public fun Iterable<AutoCloseable>.CloseAll() {
+    for (closeable in this) {
+        closeable.close()
+    }
+}
