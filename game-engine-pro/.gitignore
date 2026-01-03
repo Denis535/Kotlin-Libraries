@@ -1,0 +1,9 @@
+### Kotlin ###
+.kotlin
+
+### Gradle ###
+.gradle
+
+### Misc ###
+build/
+dist/

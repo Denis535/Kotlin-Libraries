@@ -1,0 +1,5 @@
+package = com.denis535.sdl
+
+headers.linux = SDL3/SDL.h
+compilerOpts.linux = -ISDL/aarch64-linux-gnu/include
+linkerOpts.linux = sdl/SDL/aarch64-linux-gnu/lib/libSDL3.so
