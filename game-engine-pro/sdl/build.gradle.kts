@@ -3,8 +3,7 @@
 import org.jetbrains.kotlin.gradle.*
 
 plugins {
-    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC"
-    this.id("org.jetbrains.dokka") version "2.1.0"
+    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0"
     this.id("signing")
     this.id("maven-publish")
 //    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
@@ -53,14 +52,6 @@ signing {
 }
 
 publishing {
-    val javadocJar = tasks.register<Jar>("javadocJar") {
-        this.group = "documentation"
-        this.description = "Assembles a JAR containing the Dokka HTML documentation"
-        this.archiveClassifier = "javadoc"
-        val dokkaTask = tasks.named("dokkaGeneratePublicationHtml")
-        this.dependsOn(dokkaTask)
-        this.from(dokkaTask.map { it.outputs.files })
-    }
     this.repositories {
         this.maven {
             this.name = "Local"
@@ -76,9 +67,6 @@ publishing {
 //        }
     }
     this.publications.withType<MavenPublication>().configureEach {
-        if (this.name == "jvm") {
-            this.artifact(javadocJar)
-        }
         this.pom {
             this.name = project.name
             this.description = project.description
@@ -115,15 +103,15 @@ publishing {
 //    }
 //}
 
-tasks.named("publishToMavenLocal") {
-    val url = File(System.getProperty("user.home"), ".m2/repository").toString()
-    this.doFirst {
-        println("Publishing to Maven Local: $url")
-    }
-    this.doLast {
-        publishing.publications.forEach {
-            println("Publication: ${it.name}")
-        }
-        println("All publications have been successfully published to Maven Local")
-    }
-}
+//tasks.named("publishToMavenLocal") {
+//    val url = File(System.getProperty("user.home"), ".m2/repository").toString()
+//    this.doFirst {
+//        println("Publishing to Maven Local: $url")
+//    }
+//    this.doLast {
+//        publishing.publications.forEach {
+//            println("Publication: ${it.name}")
+//        }
+//        println("All publications have been successfully published to Maven Local")
+//    }
+//}

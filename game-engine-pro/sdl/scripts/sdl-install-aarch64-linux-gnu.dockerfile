@@ -18,7 +18,7 @@ WORKDIR /SDL
 ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
     " \
     BUILD_DIR='build/aarch64-linux-gnu'; \
-    INSTALL_DIR='aarch64-linux-gnu'; \
+    INSTALL_DIR='dist/aarch64-linux-gnu'; \
     cmake -S . -B \"$BUILD_DIR\" \
         -DCMAKE_BUILD_TYPE=Release \
         -DSDL_SHARED=ON \

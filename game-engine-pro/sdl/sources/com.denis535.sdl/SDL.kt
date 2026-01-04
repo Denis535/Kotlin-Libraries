@@ -2,7 +2,7 @@ package com.denis535.sdl
 
 import kotlinx.cinterop.*
 
-public object Sdl {
+public object SDL {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun ThrowErrorIfNeeded() {

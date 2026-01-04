@@ -18,7 +18,7 @@ WORKDIR /SDL
 ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
     " \
     BUILD_DIR='build/x86_64-linux-gnu'; \
-    INSTALL_DIR='x86_64-linux-gnu'; \
+    INSTALL_DIR='dist/x86_64-linux-gnu'; \
     export CC=x86_64-linux-gnu-gcc; \
     export CXX=x86_64-linux-gnu-g++; \
     cmake -S . -B \"$BUILD_DIR\" \
