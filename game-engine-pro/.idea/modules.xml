@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/game-engine-pro.iml" filepath="$PROJECT_DIR$/.idea/modules/game-engine-pro.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.commonMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxArm64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxArm64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxArm64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxArm64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxMain.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxTest.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxX64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxX64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.linuxX64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.mingwMain.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.mingwMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.mingwTest.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.mingwTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.mingwX64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.mingwX64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.mingwX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.mingwX64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/main/game-engine-pro.main.nativeTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.commonMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxArm64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxArm64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxArm64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxArm64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxMain.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxTest.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxX64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxX64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.linuxX64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.mingwMain.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.mingwMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.mingwTest.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.mingwTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.mingwX64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.mingwX64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.mingwX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.mingwX64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/sdl/game-engine-pro.sdl.nativeTest.iml" />
+    </modules>
+  </component>
+</project>
