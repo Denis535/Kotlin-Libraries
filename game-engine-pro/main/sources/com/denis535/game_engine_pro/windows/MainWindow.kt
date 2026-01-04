@@ -196,7 +196,7 @@ public open class MainWindow : AutoCloseable {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
             event.window.windowID = SDL_GetWindowID(this@MainWindow.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
-            SDL_PushEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_PushEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }
         }
     }
 
