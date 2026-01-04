@@ -11,7 +11,7 @@ kotlin {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
             this.dependencies {
-                this.implementation("io.github.denis535:sdl:3.4.0")
+                this.implementation(this.project(":sdl"))
             }
         }
         val mingwX64Main by getting {}
