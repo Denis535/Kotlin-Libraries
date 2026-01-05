@@ -33,7 +33,6 @@ signing {
 
 publishing {
     this.publications.withType<MavenPublication>().configureEach {
-        this.artifactId = rootProject.name
         this.pom {
             this.name = rootProject.name
             this.description = project.description
