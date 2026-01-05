@@ -59,7 +59,7 @@ public abstract class ClientEngine : Engine {
                 val cursorY = event.y
                 val cursorDeltaX = event.xrel
                 val cursorDeltaY = event.yrel
-                this.OnMouseCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
+                this.Mouse.OnCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val event = event.pointed.button
@@ -70,9 +70,9 @@ public abstract class ClientEngine : Engine {
                 val clicks = event.clicks.toInt()
                 if (button != null) {
                     if (isPressed) {
-                        this.OnMouseButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
+                        this.Mouse.OnButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
                     } else {
-                        this.OnMouseButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
+                        this.Mouse.OnButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
                     }
                 }
             }
@@ -96,7 +96,7 @@ public abstract class ClientEngine : Engine {
                     scrollIntegerX = -event.integer_x
                     scrollIntegerY = -event.integer_y
                 }
-                this.OnMouseWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
+                this.Mouse.OnWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
             }
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val event = event.pointed.key
@@ -106,71 +106,74 @@ public abstract class ClientEngine : Engine {
                 if (key != null) {
                     if (isPressed) {
                         if (!isRepeated) {
-                            this.OnKeyboardKeyPress(KeyboardKeyActionEvent(key))
+                            this.Keyboard.OnKeyPress(KeyboardKeyActionEvent(key))
                         } else {
-                            this.OnKeyboardKeyRepeat(KeyboardKeyActionEvent(key))
+                            this.Keyboard.OnKeyRepeat(KeyboardKeyActionEvent(key))
                         }
                     } else {
-                        this.OnKeyboardKeyRelease(KeyboardKeyActionEvent(key))
+                        this.Keyboard.OnKeyRelease(KeyboardKeyActionEvent(key))
                     }
-                }
-            }
-            SDL_EVENT_JOYSTICK_ADDED, SDL_EVENT_JOYSTICK_REMOVED, SDL_EVENT_JOYSTICK_UPDATE_COMPLETE -> {
-
-            }
-            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
-                val event = event.pointed.jhat
-                val id = event.which
-                val hat = event.hat
-                val value = event.value
-                when (value.toUInt()) {
-                    SDL_HAT_LEFT -> {
-
-                    }
-                    SDL_HAT_RIGHT -> {
-
-                    }
-                    SDL_HAT_UP -> {
-
-                    }
-                    SDL_HAT_DOWN -> {
-
-                    }
-                    SDL_HAT_LEFTUP -> {
-
-                    }
-                    SDL_HAT_RIGHTUP -> {
-
-                    }
-                    SDL_HAT_LEFTDOWN -> {
-
-                    }
-                    SDL_HAT_RIGHTDOWN -> {
-
-                    }
-                }
-            }
-            SDL_EVENT_JOYSTICK_BUTTON_DOWN, SDL_EVENT_JOYSTICK_BUTTON_UP -> {
-                val event = event.pointed.jbutton
-                val id = event.which
-                val button = event.button
-                val isPressed = event.down
-            }
-            SDL_EVENT_JOYSTICK_AXIS_MOTION -> {
-                val event = event.pointed.jaxis
-                val id = event.which
-                val axis = event.axis
-                val value = event.value.let {
-                    Lerp(-1f, 1f, InvLerp(-32768f, 32767f, it.toFloat()))
                 }
             }
             SDL_EVENT_TEXT_INPUT -> {
                 val event = event.pointed.text
                 val text = event.text?.toKStringFromUtf8()
                 if (text != null) {
-                    this.OnTextInput(text)
+                    this.Keyboard.OnTextInput(text)
                 }
             }
+//            SDL_EVENT_JOYSTICK_ADDED -> {
+//
+//            }
+//            SDL_EVENT_JOYSTICK_REMOVED -> {
+//
+//            }
+//            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
+//                val event = event.pointed.jhat
+//                val id = event.which
+//                val hat = event.hat
+//                val value = event.value
+//                when (value.toUInt()) {
+//                    SDL_HAT_LEFT -> {
+//
+//                    }
+//                    SDL_HAT_RIGHT -> {
+//
+//                    }
+//                    SDL_HAT_UP -> {
+//
+//                    }
+//                    SDL_HAT_DOWN -> {
+//
+//                    }
+//                    SDL_HAT_LEFTUP -> {
+//
+//                    }
+//                    SDL_HAT_RIGHTUP -> {
+//
+//                    }
+//                    SDL_HAT_LEFTDOWN -> {
+//
+//                    }
+//                    SDL_HAT_RIGHTDOWN -> {
+//
+//                    }
+//                }
+//            }
+//            SDL_EVENT_JOYSTICK_BUTTON_DOWN, SDL_EVENT_JOYSTICK_BUTTON_UP -> {
+//                val event = event.pointed.jbutton
+//                val id = event.which
+//                val button = event.button
+//                val isPressed = event.down
+//            }
+//            SDL_EVENT_JOYSTICK_AXIS_MOTION -> {
+//                val event = event.pointed.jaxis
+//                val id = event.which
+//                val axis = event.axis
+//                val value = event.value.let {
+//                    Lerp(-1f, 1f, InvLerp(-32768f, 32767f, it.toFloat()))
+//                }
+//            }
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
                 return true
             }
@@ -186,45 +189,7 @@ public abstract class ClientEngine : Engine {
 
     protected abstract fun OnDraw(info: FrameInfo)
 
-    protected abstract fun OnMouseCursorMove(event: MouseCursorMoveEvent)
-    protected abstract fun OnMouseButtonPress(event: MouseButtonActionEvent)
-    protected abstract fun OnMouseButtonRelease(event: MouseButtonActionEvent)
-    protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
-
-    protected abstract fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent)
-    protected abstract fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent)
-    protected abstract fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent)
-
-    protected abstract fun OnTextInput(text: String)
-
 }
-
-public class MouseCursorMoveEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
-    public val CursorDeltaX: Float,
-    public val CursorDeltaY: Float,
-)
-
-public class MouseButtonActionEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
-    public val Button: MouseButton,
-    public val Clicks: Int,
-)
-
-public class MouseWheelScrollEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
-    public val ScrollX: Float,
-    public val ScrollY: Float,
-    public val ScrollIntegerX: Int,
-    public val ScrollIntegerY: Int,
-)
-
-public class KeyboardKeyActionEvent(
-    public val Key: KeyboardKey
-)
 
 private fun Lerp(a: Float, b: Float, t: Float): Float {
     return a + (b - a) * t
