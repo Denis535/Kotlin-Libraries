@@ -123,10 +123,12 @@ public abstract class ClientEngine : Engine {
                 }
             }
 //            SDL_EVENT_JOYSTICK_ADDED -> {
-//
+//                val event = event.pointed.jdevice
+//                val id = event.which
 //            }
 //            SDL_EVENT_JOYSTICK_REMOVED -> {
-//
+//                val event = event.pointed.jdevice
+//                val id = event.which
 //            }
 //            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
 //                val event = event.pointed.jhat
