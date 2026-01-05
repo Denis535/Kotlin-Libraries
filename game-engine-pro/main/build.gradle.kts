@@ -32,15 +32,10 @@ signing {
 }
 
 publishing {
-    this.repositories {
-        this.maven {
-            this.name = "Local"
-            this.url = uri("dist")
-        }
-    }
     this.publications.withType<MavenPublication>().configureEach {
+        this.artifactId = rootProject.name
         this.pom {
-            this.name = project.name
+            this.name = rootProject.name
             this.description = project.description
             this.url = project.property("url").toString()
             this.licenses {
@@ -60,6 +55,12 @@ publishing {
                 this.connection = project.property("scm.connection").toString()
                 this.developerConnection = project.property("scm.developerConnection").toString()
             }
+        }
+    }
+    this.repositories {
+        this.maven {
+            this.name = "Local"
+            this.url = uri("dist")
         }
     }
 }

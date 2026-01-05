@@ -52,20 +52,6 @@ signing {
 }
 
 publishing {
-    this.repositories {
-        this.maven {
-            this.name = "Local"
-            this.url = uri("dist")
-        }
-//        this.maven {
-//            this.name = "ossrh-staging-api"
-//            this.url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
-//            this.credentials {
-//                this.username = System.getenv("SONATYPE_USERNAME")
-//                this.password = System.getenv("SONATYPE_PASSWORD")
-//            }
-//        }
-    }
     this.publications.withType<MavenPublication>().configureEach {
         this.pom {
             this.name = project.name
@@ -89,6 +75,20 @@ publishing {
                 this.developerConnection = project.property("scm.developerConnection").toString()
             }
         }
+    }
+    this.repositories {
+        this.maven {
+            this.name = "Local"
+            this.url = uri("dist")
+        }
+//        this.maven {
+//            this.name = "ossrh-staging-api"
+//            this.url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+//            this.credentials {
+//                this.username = System.getenv("SONATYPE_USERNAME")
+//                this.password = System.getenv("SONATYPE_PASSWORD")
+//            }
+//        }
     }
 }
 
