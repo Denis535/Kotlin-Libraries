@@ -73,26 +73,6 @@ public class Mouse : AutoCloseable {
         this.IsClosed = true
     }
 
-    internal fun OnCursorMove(event: MouseCursorMoveEvent) {
-        check(!this.IsClosed)
-        this.OnCursorMove?.invoke(event)
-    }
-
-    internal fun OnButtonPress(event: MouseButtonActionEvent) {
-        check(!this.IsClosed)
-        this.OnButtonPress?.invoke(event)
-    }
-
-    internal fun OnButtonRelease(event: MouseButtonActionEvent) {
-        check(!this.IsClosed)
-        this.OnButtonRelease?.invoke(event)
-    }
-
-    internal fun OnWheelScroll(event: MouseWheelScrollEvent) {
-        check(!this.IsClosed)
-        this.OnWheelScroll?.invoke(event)
-    }
-
     @OptIn(ExperimentalForeignApi::class)
     public fun GetCursorPosition(): Pair<Float, Float> {
         check(!this.IsClosed)

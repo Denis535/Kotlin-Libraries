@@ -193,31 +193,31 @@ public abstract class ClientEngine : Engine {
     }
 
     protected open fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
-        this.Mouse.OnCursorMove(event)
+        this.Mouse.OnCursorMove?.invoke(event)
     }
 
     protected open fun OnMouseButtonPress(event: MouseButtonActionEvent) {
-        this.Mouse.OnButtonPress(event)
+        this.Mouse.OnButtonPress?.invoke(event)
     }
 
     protected open fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
-        this.Mouse.OnButtonRelease(event)
+        this.Mouse.OnButtonRelease?.invoke(event)
     }
 
     protected open fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
-        this.Mouse.OnWheelScroll(event)
+        this.Mouse.OnWheelScroll?.invoke(event)
     }
 
     protected open fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
-        this.Keyboard.OnKeyPress(event)
+        this.Keyboard.OnKeyPress?.invoke(event)
     }
 
     protected open fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
-        this.Keyboard.OnKeyRepeat(event)
+        this.Keyboard.OnKeyRepeat?.invoke(event)
     }
 
     protected open fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
-        this.Keyboard.OnKeyRelease(event)
+        this.Keyboard.OnKeyRelease?.invoke(event)
     }
 
     protected open fun OnTextInput(text: String) {

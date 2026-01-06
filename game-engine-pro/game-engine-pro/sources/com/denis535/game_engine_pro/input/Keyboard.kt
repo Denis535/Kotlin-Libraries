@@ -59,21 +59,6 @@ public class Keyboard : AutoCloseable {
         this.IsClosed = true
     }
 
-    internal fun OnKeyPress(event: KeyboardKeyActionEvent) {
-        check(!this.IsClosed)
-        this.OnKeyPress?.invoke(event)
-    }
-
-    internal fun OnKeyRepeat(event: KeyboardKeyActionEvent) {
-        check(!this.IsClosed)
-        this.OnKeyRepeat?.invoke(event)
-    }
-
-    internal fun OnKeyRelease(event: KeyboardKeyActionEvent) {
-        check(!this.IsClosed)
-        this.OnKeyRelease?.invoke(event)
-    }
-
     @OptIn(ExperimentalForeignApi::class)
     public fun IsKeyPressed(key: KeyboardKey): Boolean {
         check(!this.IsClosed)
