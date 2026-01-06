@@ -7,6 +7,16 @@ import kotlinx.cinterop.*
 
 public abstract class ClientEngine : Engine {
 
+    public var Window: MainWindow? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        protected set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+
     public val Mouse: Mouse
         get() {
             check(!this.IsClosed)
@@ -17,16 +27,6 @@ public abstract class ClientEngine : Engine {
         get() {
             check(!this.IsClosed)
             return field
-        }
-
-    public var Window: MainWindow? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        protected set(value) {
-            check(!this.IsClosed)
-            field = value
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -42,6 +42,7 @@ public abstract class ClientEngine : Engine {
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
+        this.Window?.close()
         this.Keyboard.close()
         this.Mouse.close()
         SDL_Quit().also { SDL.ThrowErrorIfNeeded() }
