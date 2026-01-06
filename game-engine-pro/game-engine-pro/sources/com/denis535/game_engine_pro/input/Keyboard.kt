@@ -50,20 +50,6 @@ public class Keyboard : AutoCloseable {
             }
             field = value
         }
-    public var OnTextInput: ((String) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
 
     internal constructor() {
     }
@@ -86,11 +72,6 @@ public class Keyboard : AutoCloseable {
     internal fun OnKeyRelease(event: KeyboardKeyActionEvent) {
         check(!this.IsClosed)
         this.OnKeyRelease?.invoke(event)
-    }
-
-    internal fun OnTextInput(text: String) {
-        check(!this.IsClosed)
-        this.OnTextInput?.invoke(text)
     }
 
     @OptIn(ExperimentalForeignApi::class)

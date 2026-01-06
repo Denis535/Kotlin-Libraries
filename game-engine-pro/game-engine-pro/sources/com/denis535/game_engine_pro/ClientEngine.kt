@@ -31,7 +31,7 @@ public abstract class ClientEngine : Engine {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest) {
-        SDL_Init(SDL_INIT_VIDEO or SDL_INIT_JOYSTICK).also { SDL.ThrowErrorIfNeeded() }
+        SDL_Init(SDL_INIT_VIDEO).also { SDL.ThrowErrorIfNeeded() }
         SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { SDL.ThrowErrorIfNeeded() }
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { SDL.ThrowErrorIfNeeded() }
         this.Mouse = Mouse()
@@ -59,7 +59,7 @@ public abstract class ClientEngine : Engine {
                 val cursorY = event.y
                 val cursorDeltaX = event.xrel
                 val cursorDeltaY = event.yrel
-                this.Mouse.OnCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
+                this.OnMouseCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val event = event.pointed.button
@@ -70,9 +70,9 @@ public abstract class ClientEngine : Engine {
                 val clicks = event.clicks.toInt()
                 if (button != null) {
                     if (isPressed) {
-                        this.Mouse.OnButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
+                        this.OnMouseButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
                     } else {
-                        this.Mouse.OnButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
+                        this.OnMouseButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
                     }
                 }
             }
@@ -96,7 +96,7 @@ public abstract class ClientEngine : Engine {
                     scrollIntegerX = -event.integer_x
                     scrollIntegerY = -event.integer_y
                 }
-                this.Mouse.OnWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
+                this.OnMouseWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
             }
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val event = event.pointed.key
@@ -106,12 +106,12 @@ public abstract class ClientEngine : Engine {
                 if (key != null) {
                     if (isPressed) {
                         if (!isRepeated) {
-                            this.Keyboard.OnKeyPress(KeyboardKeyActionEvent(key))
+                            this.OnKeyboardKeyPress(KeyboardKeyActionEvent(key))
                         } else {
-                            this.Keyboard.OnKeyRepeat(KeyboardKeyActionEvent(key))
+                            this.OnKeyboardKeyRepeat(KeyboardKeyActionEvent(key))
                         }
                     } else {
-                        this.Keyboard.OnKeyRelease(KeyboardKeyActionEvent(key))
+                        this.OnKeyboardKeyRelease(KeyboardKeyActionEvent(key))
                     }
                 }
             }
@@ -119,7 +119,7 @@ public abstract class ClientEngine : Engine {
                 val event = event.pointed.text
                 val text = event.text?.toKStringFromUtf8()
                 if (text != null) {
-                    this.Keyboard.OnTextInput(text)
+                    this.OnTextInput(text)
                 }
             }
 //            SDL_EVENT_JOYSTICK_ADDED -> {
@@ -173,7 +173,7 @@ public abstract class ClientEngine : Engine {
 //                val id = event.which
 //                val axis = event.axis
 //                val value = event.value.let {
-//                    Lerp(-1f, 1f, InvLerp(-32768f, 32767f, it.toFloat()))
+//                    Lerp(-1f, 1f, InvLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
 //                }
 //            }
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
@@ -184,9 +184,43 @@ public abstract class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float) {
-        super.ProcessFrame(info, fixedDeltaTime)
+    internal override fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float): Boolean {
+        if (super.ProcessFrame(info, fixedDeltaTime)) {
+            return true
+        }
         this.OnDraw(info)
+        return false
+    }
+
+    protected open fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
+        this.Mouse.OnCursorMove(event)
+    }
+
+    protected open fun OnMouseButtonPress(event: MouseButtonActionEvent) {
+        this.Mouse.OnButtonPress(event)
+    }
+
+    protected open fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
+        this.Mouse.OnButtonRelease(event)
+    }
+
+    protected open fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
+        this.Mouse.OnWheelScroll(event)
+    }
+
+    protected open fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
+        this.Keyboard.OnKeyPress(event)
+    }
+
+    protected open fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
+        this.Keyboard.OnKeyRepeat(event)
+    }
+
+    protected open fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
+        this.Keyboard.OnKeyRelease(event)
+    }
+
+    protected open fun OnTextInput(text: String) {
     }
 
     protected abstract fun OnDraw(info: FrameInfo)

@@ -47,7 +47,9 @@ public abstract class Engine : AutoCloseable {
             if (this.ProcessEvents()) {
                 break
             }
-            this.ProcessFrame(info, fixedDeltaTime)
+            if (this.ProcessFrame(info, fixedDeltaTime)) {
+                break
+            }
             val endTime = this.Time
             val deltaTime = (endTime - startTime).toFloat()
             info.Number++
@@ -82,7 +84,7 @@ public abstract class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float) {
+    internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float): Boolean {
         if (info.FixedFrameInfo.Number == 0) {
             this.OnFixedUpdate(info)
             info.FixedFrameInfo.Number++
@@ -95,6 +97,7 @@ public abstract class Engine : AutoCloseable {
             }
         }
         this.OnUpdate(info)
+        return false
     }
 
     protected abstract fun OnStart(info: FrameInfo)
