@@ -49,6 +49,15 @@ public abstract class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
+    internal override fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float): Boolean {
+        if (super.ProcessFrame(info, fixedDeltaTime)) {
+            return true
+        }
+        this.OnDraw(info)
+        return false
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
     internal override fun ProcessEvent(event: CPointer<SDL_Event>): Boolean {
         if (super.ProcessEvent(event)) {
             return true
@@ -181,15 +190,6 @@ public abstract class ClientEngine : Engine {
                 return true
             }
         }
-        return false
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float): Boolean {
-        if (super.ProcessFrame(info, fixedDeltaTime)) {
-            return true
-        }
-        this.OnDraw(info)
         return false
     }
 

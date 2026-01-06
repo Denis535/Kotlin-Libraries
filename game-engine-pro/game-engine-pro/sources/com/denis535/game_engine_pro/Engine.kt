@@ -44,9 +44,6 @@ public abstract class Engine : AutoCloseable {
         this.OnStart(info)
         while (true) {
             val startTime = this.Time
-            if (this.ProcessEvents()) {
-                break
-            }
             if (this.ProcessFrame(info, fixedDeltaTime)) {
                 break
             }
@@ -61,7 +58,7 @@ public abstract class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun ProcessEvents(): Boolean {
+    internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float): Boolean {
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
@@ -70,21 +67,6 @@ public abstract class Engine : AutoCloseable {
                 }
             }
         }
-        return false
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvent(event: CPointer<SDL_Event>): Boolean {
-        when (event.pointed.type) {
-            SDL_EVENT_QUIT -> {
-                return true
-            }
-        }
-        return false
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float): Boolean {
         if (info.FixedFrameInfo.Number == 0) {
             this.OnFixedUpdate(info)
             info.FixedFrameInfo.Number++
@@ -97,6 +79,16 @@ public abstract class Engine : AutoCloseable {
             }
         }
         this.OnUpdate(info)
+        return false
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    internal open fun ProcessEvent(event: CPointer<SDL_Event>): Boolean {
+        when (event.pointed.type) {
+            SDL_EVENT_QUIT -> {
+                return true
+            }
+        }
         return false
     }
 
