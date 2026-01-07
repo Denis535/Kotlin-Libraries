@@ -5,9 +5,9 @@ import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
 public open class MainWindow : AutoCloseable {
-    public sealed class Desc(public val Title: String) {
-        public class FullScreen(title: String) : Desc(title)
-        public class Window(title: String, public val Width: Int = 1280, public val Height: Int = 720, public val IsResizable: Boolean = false) : Desc(title)
+    public sealed class Description(public val Title: String) {
+        public class FullScreen(title: String) : Description(title)
+        public class Window(title: String, public val Width: Int = 1280, public val Height: Int = 720, public val IsResizable: Boolean = false) : Description(title)
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -155,17 +155,17 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(desc: Desc) {
+    public constructor(description: Description) {
         this._NativeWindow = run {
-            when (desc) {
-                is Desc.FullScreen -> {
+            when (description) {
+                is Description.FullScreen -> {
                     var flags = SDL_WINDOW_VULKAN or SDL_WINDOW_FULLSCREEN
-                    SDL_CreateWindow(desc.Title, 0, 0, flags).also { SDL.ThrowErrorIfNeeded() }
+                    SDL_CreateWindow(description.Title, 0, 0, flags).also { SDL.ThrowErrorIfNeeded() }
                 }
-                is Desc.Window -> {
+                is Description.Window -> {
                     var flags = SDL_WINDOW_VULKAN
-                    if (desc.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
-                    SDL_CreateWindow(desc.Title, desc.Width, desc.Height, flags).also { SDL.ThrowErrorIfNeeded() }.also {
+                    if (description.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
+                    SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }.also {
                         SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { SDL.ThrowErrorIfNeeded() }
                     }
                 }
