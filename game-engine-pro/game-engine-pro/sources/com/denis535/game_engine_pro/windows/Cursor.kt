@@ -1,8 +1,8 @@
 package com.denis535.game_engine_pro.windows
 
+import kotlinx.cinterop.*
 import cnames.structs.*
 import com.denis535.sdl.*
-import kotlinx.cinterop.*
 
 public class Cursor : AutoCloseable {
 

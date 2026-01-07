@@ -1,7 +1,7 @@
 package com.denis535.game_engine_pro.windows
 
-import com.denis535.sdl.*
 import kotlinx.cinterop.*
+import com.denis535.sdl.*
 
 public object DialogWindow {
 

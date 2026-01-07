@@ -1,8 +1,8 @@
 package com.denis535.game_engine_pro.windows
 
+import kotlinx.cinterop.*
 import cnames.structs.*
 import com.denis535.sdl.*
-import kotlinx.cinterop.*
 
 public open class MainWindow : AutoCloseable {
     public sealed class Description(public val Title: String) {
