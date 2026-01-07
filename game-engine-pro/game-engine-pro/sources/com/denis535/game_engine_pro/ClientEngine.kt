@@ -49,19 +49,14 @@ public abstract class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float): Boolean {
-        if (super.ProcessFrame(info, fixedDeltaTime)) {
-            return true
-        }
+    internal override fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float) {
+        super.ProcessFrame(info, fixedDeltaTime)
         this.OnDraw(info)
-        return false
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessEvent(event: CPointer<SDL_Event>): Boolean {
-        if (super.ProcessEvent(event)) {
-            return true
-        }
+    internal override fun ProcessEvent(event: CPointer<SDL_Event>) {
+        super.ProcessEvent(event)
         when (event.pointed.type) {
             SDL_EVENT_MOUSE_MOTION -> {
                 val event = event.pointed.motion
@@ -187,10 +182,9 @@ public abstract class ClientEngine : Engine {
 //                }
 //            }
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-                return true
+                this.IsRunning = false
             }
         }
-        return false
     }
 
     protected open fun OnMouseCursorMove(event: MouseCursorMoveEvent) {

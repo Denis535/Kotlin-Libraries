@@ -25,7 +25,7 @@ public abstract class Engine : AutoCloseable {
             check(!this.IsClosed)
             return field
         }
-        private set(value) {
+        protected set(value) {
             check(!this.IsClosed)
             field = value
         }
@@ -40,13 +40,11 @@ public abstract class Engine : AutoCloseable {
         check(!this.IsClosed)
         check(!this.IsRunning)
         val info = FrameInfo()
-        this.IsRunning = true
         this.OnStart(info)
-        while (true) {
+        this.IsRunning = true
+        while (this.IsRunning) {
             val startTime = this.Time
-            if (this.ProcessFrame(info, fixedDeltaTime)) {
-                break
-            }
+            this.ProcessFrame(info, fixedDeltaTime)
             val endTime = this.Time
             val deltaTime = (endTime - startTime).toFloat()
             info.Number++
@@ -54,17 +52,14 @@ public abstract class Engine : AutoCloseable {
             info.DeltaTime = deltaTime
         }
         this.OnStop(info)
-        this.IsRunning = false
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float): Boolean {
+    internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float) {
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
-                if (this@Engine.ProcessEvent(event.ptr)) {
-                    return true
-                }
+                this@Engine.ProcessEvent(event.ptr)
             }
         }
         if (info.FixedFrameInfo.Number == 0) {
@@ -79,17 +74,15 @@ public abstract class Engine : AutoCloseable {
             }
         }
         this.OnUpdate(info)
-        return false
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvent(event: CPointer<SDL_Event>): Boolean {
+    internal open fun ProcessEvent(event: CPointer<SDL_Event>) {
         when (event.pointed.type) {
             SDL_EVENT_QUIT -> {
-                return true
+                this.IsRunning = false
             }
         }
-        return false
     }
 
     protected abstract fun OnStart(info: FrameInfo)
