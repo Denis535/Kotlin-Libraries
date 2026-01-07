@@ -59,6 +59,7 @@ public abstract class Engine : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float) {
+        check(!this.IsClosed)
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
@@ -81,6 +82,7 @@ public abstract class Engine : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal open fun ProcessEvent(event: CPointer<SDL_Event>) {
+        check(!this.IsClosed)
         when (event.pointed.type) {
             SDL_EVENT_QUIT -> {
                 this.IsRunning = false
@@ -97,7 +99,6 @@ public abstract class Engine : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public fun RequestQuit() {
         check(!this.IsClosed)
-        check(this.IsRunning)
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_QUIT

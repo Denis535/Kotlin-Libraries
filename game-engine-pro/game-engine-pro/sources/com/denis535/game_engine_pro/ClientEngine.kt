@@ -7,14 +7,10 @@ import kotlinx.cinterop.*
 
 public abstract class ClientEngine : Engine {
 
-    public var Window: MainWindow? = null
+    public val Window: MainWindow
         get() {
             check(!this.IsClosed)
             return field
-        }
-        protected set(value) {
-            check(!this.IsClosed)
-            field = value
         }
 
     public val Mouse: Mouse
@@ -30,10 +26,11 @@ public abstract class ClientEngine : Engine {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest) {
+    public constructor(manifest: Manifest, windowProvider: () -> MainWindow) {
         SDL_Init(SDL_INIT_VIDEO).also { SDL.ThrowErrorIfNeeded() }
         SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { SDL.ThrowErrorIfNeeded() }
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { SDL.ThrowErrorIfNeeded() }
+        this.Window = windowProvider()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
     }
@@ -42,9 +39,9 @@ public abstract class ClientEngine : Engine {
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        this.Window?.close()
         this.Keyboard.close()
         this.Mouse.close()
+        this.Window.close()
         SDL_Quit().also { SDL.ThrowErrorIfNeeded() }
     }
 
