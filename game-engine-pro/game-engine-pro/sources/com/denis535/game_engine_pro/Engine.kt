@@ -45,11 +45,11 @@ public abstract class Engine : AutoCloseable {
         while (true) {
             val startTime = this.Time
             this.ProcessFrame(info, fixedDeltaTime)
-            val endTime = this.Time
-            val deltaTime = (endTime - startTime).toFloat()
             if (!this.IsRunning) {
                 break
             }
+            val endTime = this.Time
+            val deltaTime = (endTime - startTime).toFloat()
             info.Number++
             info.Time += deltaTime
             info.DeltaTime = deltaTime
