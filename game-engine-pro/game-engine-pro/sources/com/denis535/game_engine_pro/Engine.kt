@@ -40,13 +40,16 @@ public abstract class Engine : AutoCloseable {
         check(!this.IsClosed)
         check(!this.IsRunning)
         val info = FrameInfo()
-        this.OnStart(info)
         this.IsRunning = true
-        while (this.IsRunning) {
+        this.OnStart(info)
+        while (true) {
             val startTime = this.Time
             this.ProcessFrame(info, fixedDeltaTime)
             val endTime = this.Time
             val deltaTime = (endTime - startTime).toFloat()
+            if (!this.IsRunning) {
+                break
+            }
             info.Number++
             info.Time += deltaTime
             info.DeltaTime = deltaTime
