@@ -175,7 +175,7 @@ public abstract class ClientEngine : Engine {
 //                val id = event.which
 //                val axis = event.axis
 //                val value = event.value.let {
-//                    Lerp(-1f, 1f, InvLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
+//                    MathUtils.Lerp(-1f, 1f, MathUtils.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
 //                }
 //            }
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
@@ -217,12 +217,4 @@ public abstract class ClientEngine : Engine {
 
     protected abstract fun OnDraw(info: FrameInfo)
 
-}
-
-private fun Lerp(a: Float, b: Float, t: Float): Float {
-    return a + (b - a) * t
-}
-
-private fun InvLerp(a: Float, b: Float, value: Float): Float {
-    return (value - a) / (b - a)
 }
