@@ -133,4 +133,116 @@ public object Math {
         return (value - t0) / (t1 - t0);
     }
 
+    public fun Min(v0: Float, v1: Float): Float {
+        return if (v0 <= v1) v0 else v1
+    }
+
+    public fun Min(v0: Float, v1: Float, v2: Float): Float {
+        return Min(Min(v0, v1), v2)
+    }
+
+    public fun Min(v0: Float, v1: Float, v2: Float, v3: Float): Float {
+        return Min(Min(v0, v1, v2), v3)
+    }
+
+    public fun Min(v0: Float, v1: Float, v2: Float, v3: Float, v4: Float): Float {
+        return Min(Min(v0, v1, v2, v3), v4)
+    }
+
+    public fun Min(v0: Float, v1: Float, v2: Float, v3: Float, v4: Float, v5: Float): Float {
+        return Min(Min(v0, v1, v2, v3, v4), v5)
+    }
+
+    public fun Min(v0: Float, v1: Float, v2: Float, v3: Float, v4: Float, v5: Float, v6: Float): Float {
+        return Min(Min(v0, v1, v2, v3, v4, v5), v6)
+    }
+
+    public fun Min(v0: Float, v1: Float, v2: Float, v3: Float, v4: Float, v5: Float, v6: Float, v7: Float): Float {
+        return Min(Min(v0, v1, v2, v3, v4, v5, v6), v7)
+    }
+
+    public fun Min(v0: Int, v1: Int): Int {
+        return if (v0 < v1) v0 else v1
+    }
+
+    public fun Min(v0: Int, v1: Int, v2: Int): Int {
+        return Min(Min(v0, v1), v2)
+    }
+
+    public fun Min(v0: Int, v1: Int, v2: Int, v3: Int): Int {
+        return Min(Min(v0, v1, v2), v3)
+    }
+
+    public fun Min(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int): Int {
+        return Min(Min(v0, v1, v2, v3), v4)
+    }
+
+    public fun Min(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int, v5: Int): Int {
+        return Min(Min(v0, v1, v2, v3, v4), v5)
+    }
+
+    public fun Min(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int, v5: Int, v6: Int): Int {
+        return Min(Min(v0, v1, v2, v3, v4, v5), v6)
+    }
+
+    public fun Min(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int, v5: Int, v6: Int, v7: Int): Int {
+        return Min(Min(v0, v1, v2, v3, v4, v5, v6), v7)
+    }
+
+    public fun Max(v0: Float, v1: Float): Float {
+        return if (v0 >= v1) v0 else v1
+    }
+
+    public fun Max(v0: Float, v1: Float, v2: Float): Float {
+        return Max(Max(v0, v1), v2)
+    }
+
+    public fun Max(v0: Float, v1: Float, v2: Float, v3: Float): Float {
+        return Max(Max(v0, v1, v2), v3)
+    }
+
+    public fun Max(v0: Float, v1: Float, v2: Float, v3: Float, v4: Float): Float {
+        return Max(Max(v0, v1, v2, v3), v4)
+    }
+
+    public fun Max(v0: Float, v1: Float, v2: Float, v3: Float, v4: Float, v5: Float): Float {
+        return Max(Max(v0, v1, v2, v3, v4), v5)
+    }
+
+    public fun Max(v0: Float, v1: Float, v2: Float, v3: Float, v4: Float, v5: Float, v6: Float): Float {
+        return Max(Max(v0, v1, v2, v3, v4, v5), v6)
+    }
+
+    public fun Max(v0: Float, v1: Float, v2: Float, v3: Float, v4: Float, v5: Float, v6: Float, v7: Float): Float {
+        return Max(Max(v0, v1, v2, v3, v4, v5, v6), v7)
+    }
+
+    public fun Max(v0: Int, v1: Int): Int {
+        return if (v0 > v1) v0 else v1
+    }
+
+    public fun Max(v0: Int, v1: Int, v2: Int): Int {
+        return Max(Max(v0, v1), v2)
+    }
+
+    public fun Max(v0: Int, v1: Int, v2: Int, v3: Int): Int {
+        return Max(Max(v0, v1, v2), v3)
+    }
+
+    public fun Max(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int): Int {
+        return Max(Max(v0, v1, v2, v3), v4)
+    }
+
+    public fun Max(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int, v5: Int): Int {
+        return Max(Max(v0, v1, v2, v3, v4), v5)
+    }
+
+    public fun Max(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int, v5: Int, v6: Int): Int {
+        return Max(Max(v0, v1, v2, v3, v4, v5), v6)
+    }
+
+    public fun Max(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int, v5: Int, v6: Int, v7: Int): Int {
+        return Max(Max(v0, v1, v2, v3, v4, v5, v6), v7)
+    }
+
 }
