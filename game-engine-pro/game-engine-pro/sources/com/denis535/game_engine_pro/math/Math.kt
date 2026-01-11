@@ -124,13 +124,12 @@ public object Math {
         return length - Abs(value - length)
     }
 
-    public fun Lerp(v0: Float, v2: Float, t: Float): Float {
-        return v0 + (v2 - v0) * t;
+    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
+        return v0 + (v1 - v0) * t;
     }
 
-    public fun InverseLerp(t0: Float, t1: Float, value: Float): Float {
-        if (t0 == t1) return 0f
-        return (value - t0) / (t1 - t0);
+    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
+        return (value - v0) / (v1 - v0);
     }
 
     public fun Min(v0: Float, v1: Float): Float {
