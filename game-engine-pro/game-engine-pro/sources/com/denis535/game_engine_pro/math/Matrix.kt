@@ -35,11 +35,11 @@ public data class Matrix(
             0f, 0f, 0f, 1f,
         );
 
-        public fun Translation(position: Position): Matrix {
+        public fun Translation(translation: Position): Matrix {
             return Matrix(
-                1f, 0f, 0f, position.X,
-                0f, 1f, 0f, position.Y,
-                0f, 0f, 1f, position.Z,
+                1f, 0f, 0f, translation.X,
+                0f, 1f, 0f, translation.Y,
+                0f, 0f, 1f, translation.Z,
                 0f, 0f, 0f, 1f,
             );
         }
@@ -86,7 +86,7 @@ public data class Matrix(
             );
         }
 
-        public fun TRS(position: Position, rotation: Rotation, scale: Scale): Matrix {
+        public fun TRS(translation: Position, rotation: Rotation, scale: Scale): Matrix {
             val xx = rotation.X * rotation.X * 2f;
             val xy = rotation.X * rotation.Y * 2f;
             val xz = rotation.X * rotation.Z * 2f;
@@ -112,11 +112,15 @@ public data class Matrix(
             val m22 = 1f - (xx + yy);
 
             return Matrix(
-                m00 * scale.X, m10 * scale.X, m20 * scale.X, position.X,
-                m01 * scale.Y, m11 * scale.Y, m21 * scale.Y, position.Y,
-                m02 * scale.Z, m12 * scale.Z, m22 * scale.Z, position.Z,
+                m00 * scale.X, m10 * scale.X, m20 * scale.X, translation.X,
+                m01 * scale.Y, m11 * scale.Y, m21 * scale.Y, translation.Y,
+                m02 * scale.Z, m12 * scale.Z, m22 * scale.Z, translation.Z,
                 0f, 0f, 0f, 1f,
             )
+        }
+
+        public fun TRS(translation: Matrix, rotation: Matrix, scale: Matrix): Matrix {
+            return translation * rotation * scale
         }
 
         public fun Ortho(
@@ -244,7 +248,7 @@ public data class Matrix(
             )
         }
 
-    public fun TransformPoint(position: Position): Position {
+    public fun TransformPosition(position: Position): Position {
         val x = this.m00 * position.X + this.m01 * position.Y + this.m02 * position.Z + this.m03;
         val y = this.m10 * position.X + this.m11 * position.Y + this.m12 * position.Z + this.m13;
         val z = this.m20 * position.X + this.m21 * position.Y + this.m22 * position.Z + this.m23;
