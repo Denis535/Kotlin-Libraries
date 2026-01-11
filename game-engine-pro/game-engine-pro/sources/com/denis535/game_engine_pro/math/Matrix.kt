@@ -147,8 +147,8 @@ public data class Matrix(
             zNear: Float,
             zFar: Float,
         ): Matrix {
-            val tanX = Math.Tan(fov * (Math.PI / 360f)) * aspect
-            val tanY = Math.Tan(fov * (Math.PI / 360f))
+            val tanX = Math.Tan(fov * Math.DegToRad / 2) * aspect
+            val tanY = Math.Tan(fov * Math.DegToRad / 2)
             val left = -tanX * zNear
             val right = +tanX * zNear
             val bottom = -tanY * zNear

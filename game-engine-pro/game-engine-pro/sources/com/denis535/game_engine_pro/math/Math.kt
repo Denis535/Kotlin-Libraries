@@ -5,8 +5,8 @@ import kotlin.math.*
 public object Math {
 
     public const val PI: Float = kotlin.math.PI.toFloat()
-    public const val Deg2Rad: Float = PI * 2f / 360f;
-    public const val Rad2Deg: Float = 1f / Deg2Rad;
+    public const val DegToRad: Float = PI / 180f
+    public const val RadToDeg: Float = 180f / PI
 
     public fun Sign(value: Float): Float {
         return sign(value)
