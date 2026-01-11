@@ -5,6 +5,8 @@ import kotlin.math.*
 public object Math {
 
     public const val PI = kotlin.math.PI
+    public const val Deg2Rad = PI * 2f / 360f;
+    public const val Rad2Deg = 1f / Deg2Rad;
 
     public fun Sign(value: Float): Float {
         return sign(value)
@@ -76,30 +78,6 @@ public object Math {
         return sqrt(value)
     }
 
-    public fun Clamp(value: Float, min: Float, max: Float): Float {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
-    }
-
-    public fun Clamp(value: Int, min: Int, max: Int): Int {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
-    }
-
-    public fun Clamp01(value: Float): Float {
-        if (value < 0f) return 0f;
-        if (value > 1f) return 1f;
-        return value;
-    }
-
-    public fun Clamp01(value: Int): Int {
-        if (value < 0) return 0;
-        if (value > 1) return 1;
-        return value;
-    }
-
     public fun Repeat(value: Float, length: Float): Float {
         require(length > 0)
         val mod = value % length
@@ -124,12 +102,28 @@ public object Math {
         return length - Abs(value - length)
     }
 
-    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
-        return v0 + (v1 - v0) * t;
+    public fun Clamp(value: Float, min: Float, max: Float): Float {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 
-    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
-        return (value - v0) / (v1 - v0);
+    public fun Clamp(value: Int, min: Int, max: Int): Int {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
+    public fun Clamp01(value: Float): Float {
+        if (value < 0f) return 0f;
+        if (value > 1f) return 1f;
+        return value;
+    }
+
+    public fun Clamp01(value: Int): Int {
+        if (value < 0) return 0;
+        if (value > 1) return 1;
+        return value;
     }
 
     public fun Min(v0: Float, v1: Float): Float {
@@ -242,6 +236,14 @@ public object Math {
 
     public fun Max(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int, v5: Int, v6: Int, v7: Int): Int {
         return Max(Max(v0, v1, v2, v3, v4, v5, v6), v7)
+    }
+
+    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
+        return v0 + (v1 - v0) * t;
+    }
+
+    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
+        return (value - v0) / (v1 - v0);
     }
 
 }
