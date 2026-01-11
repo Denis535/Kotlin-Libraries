@@ -9,7 +9,11 @@ public data class Scale(
         public val One: Scale = Scale(1f, 1f, 1f)
 
         public fun Lerp(v0: Scale, v1: Scale, t: Float): Scale {
-            return v0 + (v1 - v0) * t;
+            return Scale(
+                v0.X + (v1.X - v0.X) * t, //
+                v0.Y + (v1.Y - v0.Y) * t, //
+                v0.Z + (v1.Z - v0.Z) * t  //
+            );
         }
 
     }
@@ -18,14 +22,7 @@ public data class Scale(
 
     public operator fun plus(scalar: Float): Scale = Scale(this.X + scalar, this.Y + scalar, this.Z + scalar)
     public operator fun minus(scalar: Float): Scale = Scale(this.X - scalar, this.Y - scalar, this.Z - scalar)
-
     public operator fun times(scalar: Float): Scale = Scale(this.X * scalar, this.Y * scalar, this.Z * scalar)
     public operator fun div(scalar: Float): Scale = Scale(this.X / scalar, this.Y / scalar, this.Z / scalar)
-
-    public operator fun plus(other: Scale): Scale = Scale(this.X + other.X, this.Y + other.Y, this.Z + other.Z)
-    public operator fun minus(other: Scale): Scale = Scale(this.X - other.X, this.Y - other.Y, this.Z - other.Z)
-
-    public operator fun times(other: Scale): Scale = Scale(this.X * other.X, this.Y * other.Y, this.Z * other.Z)
-    public operator fun div(other: Scale): Scale = Scale(this.X / other.X, this.Y / other.Y, this.Z / other.Z)
 
 }

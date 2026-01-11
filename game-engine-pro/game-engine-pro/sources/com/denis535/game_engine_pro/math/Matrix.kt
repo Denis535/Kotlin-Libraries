@@ -35,12 +35,12 @@ public data class Matrix(
             0f, 0f, 0f, 1f, //
         );
 
-        public fun Translation(point: Point): Matrix {
+        public fun Translation(position: Position): Matrix {
             return Matrix(
-                1f, 0f, 0f, point.X, //
-                0f, 1f, 0f, point.Y, //
-                0f, 0f, 1f, point.Z, //
-                0f, 0f, 0f, 1f,      //
+                1f, 0f, 0f, position.X, //
+                0f, 1f, 0f, position.Y, //
+                0f, 0f, 1f, position.Z, //
+                0f, 0f, 0f, 1f,         //
             );
         }
 
@@ -88,12 +88,12 @@ public data class Matrix(
 
     }
 
-    public fun TransformPoint(point: Point): Point {
-        val x = this.m00 * point.X + this.m01 * point.Y + this.m02 * point.Z + this.m03;
-        val y = this.m10 * point.X + this.m11 * point.Y + this.m12 * point.Z + this.m13;
-        val z = this.m20 * point.X + this.m21 * point.Y + this.m22 * point.Z + this.m23;
-        val w = this.m30 * point.X + this.m31 * point.Y + this.m32 * point.Z + this.m33;
-        return Point(
+    public fun TransformPosition(position: Position): Position {
+        val x = this.m00 * position.X + this.m01 * position.Y + this.m02 * position.Z + this.m03;
+        val y = this.m10 * position.X + this.m11 * position.Y + this.m12 * position.Z + this.m13;
+        val z = this.m20 * position.X + this.m21 * position.Y + this.m22 * position.Z + this.m23;
+        val w = this.m30 * position.X + this.m31 * position.Y + this.m32 * position.Z + this.m33;
+        return Position(
             x / w, y / w, z / w
         )
     }

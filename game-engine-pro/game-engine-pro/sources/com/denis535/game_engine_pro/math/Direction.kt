@@ -15,7 +15,11 @@ public data class Direction(
         public val Backward: Direction = Direction(0f, 0f, -1f)
 
         public fun Lerp(v0: Direction, v1: Direction, t: Float): Direction {
-            return v0 + (v1 - v0) * t;
+            return Direction(
+                v0.X + (v1.X - v0.X) * t, //
+                v0.Y + (v1.Y - v0.Y) * t, //
+                v0.Z + (v1.Z - v0.Z) * t  //
+            );
         }
 
         public fun Dot(v0: Direction, v1: Direction): Float {
@@ -48,14 +52,7 @@ public data class Direction(
 
     public operator fun plus(scalar: Float): Direction = Direction(this.X + scalar, this.Y + scalar, this.Z + scalar)
     public operator fun minus(scalar: Float): Direction = Direction(this.X - scalar, this.Y - scalar, this.Z - scalar)
-
     public operator fun times(scalar: Float): Direction = Direction(this.X * scalar, this.Y * scalar, this.Z * scalar)
     public operator fun div(scalar: Float): Direction = Direction(this.X / scalar, this.Y / scalar, this.Z / scalar)
-
-    public operator fun plus(other: Direction): Direction = Direction(this.X + other.X, this.Y + other.Y, this.Z + other.Z)
-    public operator fun minus(other: Direction): Direction = Direction(this.X - other.X, this.Y - other.Y, this.Z - other.Z)
-
-    public operator fun times(other: Direction): Direction = Direction(this.X * other.X, this.Y * other.Y, this.Z * other.Z)
-    public operator fun div(other: Direction): Direction = Direction(this.X / other.X, this.Y / other.Y, this.Z / other.Z)
 
 }
