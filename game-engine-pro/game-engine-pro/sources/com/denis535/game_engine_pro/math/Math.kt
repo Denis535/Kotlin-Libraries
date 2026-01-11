@@ -4,9 +4,9 @@ import kotlin.math.*
 
 public object Math {
 
-    public const val PI = kotlin.math.PI
-    public const val Deg2Rad = PI * 2f / 360f;
-    public const val Rad2Deg = 1f / Deg2Rad;
+    public const val PI: Float = kotlin.math.PI.toFloat()
+    public const val Deg2Rad: Float = PI * 2f / 360f;
+    public const val Rad2Deg: Float = 1f / Deg2Rad;
 
     public fun Sign(value: Float): Float {
         return sign(value)

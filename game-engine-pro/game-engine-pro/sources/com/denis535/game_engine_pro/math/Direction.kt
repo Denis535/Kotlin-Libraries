@@ -1,7 +1,9 @@
 package com.denis535.game_engine_pro.math
 
 public data class Direction(
-    public val X: Float, public val Y: Float, public val Z: Float
+    public val X: Float,
+    public val Y: Float,
+    public val Z: Float,
 ) {
     public companion object {
 
@@ -16,9 +18,9 @@ public data class Direction(
 
         public fun Lerp(v0: Direction, v1: Direction, t: Float): Direction {
             return Direction(
-                v0.X + (v1.X - v0.X) * t, //
-                v0.Y + (v1.Y - v0.Y) * t, //
-                v0.Z + (v1.Z - v0.Z) * t  //
+                v0.X + (v1.X - v0.X) * t,
+                v0.Y + (v1.Y - v0.Y) * t,
+                v0.Z + (v1.Z - v0.Z) * t,
             );
         }
 
