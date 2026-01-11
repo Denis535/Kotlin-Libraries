@@ -3,6 +3,15 @@ package com.denis535.game_engine_pro.math
 public class Vector3 {
     public companion object {
 
+        public val Left: Vector3 = Vector3(-1f, 0f, 0f)
+        public val Right: Vector3 = Vector3(+1f, 0f, 0f)
+
+        public val Up: Vector3 = Vector3(0f, +1f, 0f)
+        public val Down: Vector3 = Vector3(0f, -1f, 0f)
+
+        public val Forward: Vector3 = Vector3(0f, 0f, +1f)
+        public val Backward: Vector3 = Vector3(0f, 0f, -1f)
+
         public fun Dot(v0: Vector3, v1: Vector3): Float {
             return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
         }
