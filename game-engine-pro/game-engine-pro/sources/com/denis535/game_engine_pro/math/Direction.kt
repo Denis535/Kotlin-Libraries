@@ -55,4 +55,10 @@ public data class Direction(
     public operator fun times(scalar: Float): Direction = Direction(this.X * scalar, this.Y * scalar, this.Z * scalar)
     public operator fun div(scalar: Float): Direction = Direction(this.X / scalar, this.Y / scalar, this.Z / scalar)
 
+    public operator fun plus(direction: Direction): Direction = Direction(this.X + direction.X, this.Y + direction.Y, this.Z + direction.Z)
+    public operator fun minus(direction: Direction): Direction = Direction(this.X - direction.X, this.Y - direction.Y, this.Z - direction.Z)
+
+    public operator fun times(scale: Scale): Position = Position(this.X * scale.X, this.Y * scale.Y, this.Z * scale.Z)
+    public operator fun div(scale: Scale): Position = Position(this.X / scale.X, this.Y / scale.Y, this.Z / scale.Z)
+
 }
