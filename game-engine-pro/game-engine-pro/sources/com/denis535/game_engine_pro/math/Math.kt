@@ -78,52 +78,12 @@ public object Math {
         return sqrt(value)
     }
 
-    public fun Repeat(value: Float, length: Float): Float {
-        require(length > 0)
-        val mod = value % length
-        return if (mod < 0f) mod + length else mod
+    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
+        return v0 + (v1 - v0) * t;
     }
 
-    public fun Repeat(value: Int, length: Int): Int {
-        require(length > 0)
-        val mod = value % length
-        return if (mod < 0) mod + length else mod
-    }
-
-    public fun PingPong(value: Float, length: Float): Float {
-        require(length > 0)
-        val value = Repeat(value, length * 2f)
-        return length - Abs(value - length)
-    }
-
-    public fun PingPong(value: Int, length: Int): Int {
-        require(length > 0)
-        val value = Repeat(value, length * 2)
-        return length - Abs(value - length)
-    }
-
-    public fun Clamp(value: Float, min: Float, max: Float): Float {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
-    }
-
-    public fun Clamp(value: Int, min: Int, max: Int): Int {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
-    }
-
-    public fun Clamp01(value: Float): Float {
-        if (value < 0f) return 0f;
-        if (value > 1f) return 1f;
-        return value;
-    }
-
-    public fun Clamp01(value: Int): Int {
-        if (value < 0) return 0;
-        if (value > 1) return 1;
-        return value;
+    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
+        return (value - v0) / (v1 - v0);
     }
 
     public fun Min(v0: Float, v1: Float): Float {
@@ -238,12 +198,52 @@ public object Math {
         return Max(Max(v0, v1, v2, v3, v4, v5, v6), v7)
     }
 
-    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
-        return v0 + (v1 - v0) * t;
+    public fun Clamp(value: Float, min: Float, max: Float): Float {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 
-    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
-        return (value - v0) / (v1 - v0);
+    public fun Clamp(value: Int, min: Int, max: Int): Int {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
+    public fun Clamp01(value: Float): Float {
+        if (value < 0f) return 0f;
+        if (value > 1f) return 1f;
+        return value;
+    }
+
+    public fun Clamp01(value: Int): Int {
+        if (value < 0) return 0;
+        if (value > 1) return 1;
+        return value;
+    }
+
+    public fun Repeat(value: Float, length: Float): Float {
+        require(length > 0)
+        val mod = value % length
+        return if (mod < 0f) mod + length else mod
+    }
+
+    public fun Repeat(value: Int, length: Int): Int {
+        require(length > 0)
+        val mod = value % length
+        return if (mod < 0) mod + length else mod
+    }
+
+    public fun PingPong(value: Float, length: Float): Float {
+        require(length > 0)
+        val value = Repeat(value, length * 2f)
+        return length - Abs(value - length)
+    }
+
+    public fun PingPong(value: Int, length: Int): Int {
+        require(length > 0)
+        val value = Repeat(value, length * 2)
+        return length - Abs(value - length)
     }
 
 }
