@@ -67,29 +67,29 @@ public data class Rotation(
             return FromAxes(right, up, forward)
         }
 
-        public fun FromAxisAngle(direction: Direction, angle: Float): Rotation {
+        public fun FromAxisAngle(axis: Direction, angle: Float): Rotation {
             val sin = Math.Sin(angle * Math.DegToRad / 2f)
             val cos = Math.Cos(angle * Math.DegToRad / 2f)
             return Rotation(
-                direction.X * sin,
-                direction.Y * sin,
-                direction.Z * sin,
+                axis.X * sin,
+                axis.Y * sin,
+                axis.Z * sin,
                 cos,
             )
         }
 
-        public fun FromEulerAngles(x: Float, y: Float, z: Float): Rotation {
-            val sinX = Math.Sin(x * Math.DegToRad / 2f)
-            val cosX = Math.Cos(x * Math.DegToRad / 2f)
-            val sinY = Math.Sin(y * Math.DegToRad / 2f)
-            val cosY = Math.Cos(y * Math.DegToRad / 2f)
-            val sinZ = Math.Sin(z * Math.DegToRad / 2f)
-            val cosZ = Math.Cos(z * Math.DegToRad / 2f)
+        public fun FromEulerAngles(angleX: Float, angleY: Float, angleZ: Float): Rotation {
+            val sinX = Math.Sin(angleX * Math.DegToRad / 2f)
+            val cosX = Math.Cos(angleX * Math.DegToRad / 2f)
+            val sinY = Math.Sin(angleY * Math.DegToRad / 2f)
+            val cosY = Math.Cos(angleY * Math.DegToRad / 2f)
+            val sinZ = Math.Sin(angleZ * Math.DegToRad / 2f)
+            val cosZ = Math.Cos(angleZ * Math.DegToRad / 2f)
             return Rotation(
-                sinX * cosY * cosZ + cosX * sinY * sinZ,
-                cosX * sinY * cosZ - sinX * cosY * sinZ,
-                cosX * cosY * sinZ + sinX * sinY * cosZ,
-                cosX * cosY * cosZ - sinX * sinY * sinZ,
+                cosX * cosY * cosZ - sinX * cosY * sinZ - cosX * sinY * sinZ - sinX * sinY * cosZ,
+                sinX * cosY * cosZ + cosX * cosY * sinZ + sinX * sinY * sinZ - cosX * sinY * cosZ,
+                cosX * sinY * cosZ + sinX * sinY * sinZ + cosX * cosY * sinZ - sinX * cosY * cosZ,
+                cosX * cosY * sinZ - sinX * cosY * cosZ + cosX * sinY * cosZ + sinX * sinY * sinZ,
             )
         }
 
