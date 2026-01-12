@@ -162,8 +162,8 @@ public data class Matrix(
             return Matrix(
                 xScale, 0.00000f, 0.0000f, 0f,
                 0.0000f, yScale, 0.00000f, 0f,
-                0.0000f, 0.0000f, zScale, -1f,
-                xOffset, yOffset, zOffset, 1f,
+                xOffset, yOffset, zScale, -1f,
+                0.0000f, 0.0000f, zOffset, 1f,
             )
         }
 

@@ -20,6 +20,8 @@ public data class Rotation(
 
     }
 
+    public operator fun unaryMinus(): Rotation = Rotation(-this.X, -this.Y, -this.Z, this.W)
+
     public fun TransformPosition(position: Position): Position {
         val x = this.X
         val y = this.Y
