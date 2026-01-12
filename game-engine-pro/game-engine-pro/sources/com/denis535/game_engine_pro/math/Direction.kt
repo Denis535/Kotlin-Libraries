@@ -7,14 +7,9 @@ public data class Direction(
 ) {
     public companion object {
 
-        public val Left: Direction = Direction(-1f, 0f, 0f)
-        public val Right: Direction = Direction(+1f, 0f, 0f)
-
-        public val Up: Direction = Direction(0f, +1f, 0f)
-        public val Down: Direction = Direction(0f, -1f, 0f)
-
-        public val Forward: Direction = Direction(0f, 0f, +1f)
-        public val Backward: Direction = Direction(0f, 0f, -1f)
+        public val Right: Direction = Direction(1f, 0f, 0f)
+        public val Up: Direction = Direction(0f, 1f, 0f)
+        public val Forward: Direction = Direction(0f, 0f, 1f)
 
         public fun Lerp(v0: Direction, v1: Direction, t: Float): Direction {
             return Direction(
@@ -62,7 +57,7 @@ public data class Direction(
     public operator fun times(scalar: Float): Direction = Direction(this.X * scalar, this.Y * scalar, this.Z * scalar)
     public operator fun div(scalar: Float): Direction = Direction(this.X / scalar, this.Y / scalar, this.Z / scalar)
 
-    public operator fun times(scale: Scale): Position = Position(this.X * scale.X, this.Y * scale.Y, this.Z * scale.Z)
-    public operator fun div(scale: Scale): Position = Position(this.X / scale.X, this.Y / scale.Y, this.Z / scale.Z)
+    public operator fun times(scale: Scale): Direction = Direction(this.X * scale.X, this.Y * scale.Y, this.Z * scale.Z)
+    public operator fun div(scale: Scale): Direction = Direction(this.X / scale.X, this.Y / scale.Y, this.Z / scale.Z)
 
 }

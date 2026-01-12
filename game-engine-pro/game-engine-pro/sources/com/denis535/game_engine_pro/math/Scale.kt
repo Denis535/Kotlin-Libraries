@@ -28,7 +28,7 @@ public data class Scale(
     public operator fun times(scalar: Float): Scale = Scale(this.X * scalar, this.Y * scalar, this.Z * scalar)
     public operator fun div(scalar: Float): Scale = Scale(this.X / scalar, this.Y / scalar, this.Z / scalar)
 
-    public operator fun times(scale: Scale): Position = Position(this.X * scale.X, this.Y * scale.Y, this.Z * scale.Z)
-    public operator fun div(scale: Scale): Position = Position(this.X / scale.X, this.Y / scale.Y, this.Z / scale.Z)
+    public operator fun times(scale: Scale): Scale = Scale(this.X * scale.X, this.Y * scale.Y, this.Z * scale.Z)
+    public operator fun div(scale: Scale): Scale = Scale(this.X / scale.X, this.Y / scale.Y, this.Z / scale.Z)
 
 }
