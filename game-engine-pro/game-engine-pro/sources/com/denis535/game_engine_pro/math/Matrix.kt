@@ -163,7 +163,7 @@ public data class Matrix(
                 xScale, 0.00000f, 0.0000f, 0f,
                 0.0000f, yScale, 0.00000f, 0f,
                 xOffset, yOffset, zScale, -1f,
-                0.0000f, 0.0000f, zOffset, 1f,
+                0.0000f, 0.0000f, zOffset, 0f,
             )
         }
 
