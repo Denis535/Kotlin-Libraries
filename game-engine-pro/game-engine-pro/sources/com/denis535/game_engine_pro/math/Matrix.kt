@@ -86,10 +86,6 @@ public data class Matrix(
             );
         }
 
-        public fun TRS(translation: Matrix, rotation: Matrix, scale: Matrix): Matrix {
-            return translation * rotation * scale
-        }
-
         public fun TRS(translation: Position, rotation: Rotation, scale: Scale): Matrix {
             val xx = rotation.X * rotation.X * 2f;
             val xy = rotation.X * rotation.Y * 2f;
@@ -123,6 +119,10 @@ public data class Matrix(
             )
         }
 
+        public fun TRS(translation: Matrix, rotation: Matrix, scale: Matrix): Matrix {
+            return translation.Mul(rotation).Mul(scale)
+        }
+
         public fun Ortho(
             left: Float,
             right: Float,
@@ -138,9 +138,9 @@ public data class Matrix(
             val yOffset = -(top + bottom) / (top - bottom)
             val zOffset = -(zFar + zNear) / (zFar - zNear)
             return Matrix(
-                xScale, 0.00000f, 0.0000f, 0f,
-                0.0000f, yScale, 0.00000f, 0f,
-                0.0000f, 0.0000f, zScale, +0f,
+                xScale, 0f, 0f, 0f,
+                0f, yScale, 0f, 0f,
+                0f, 0f, zScale, 0f,
                 xOffset, yOffset, zOffset, 1f,
             )
         }
@@ -160,10 +160,10 @@ public data class Matrix(
             val yOffset = (top + bottom) / (top - bottom)
             val zOffset = -2f * zFar * zNear / (zFar - zNear)
             return Matrix(
-                xScale, 0.00000f, 0.0000f, 0f,
-                0.0000f, yScale, 0.00000f, 0f,
+                xScale, 0f, 0f, 0f,
+                0f, yScale, 0f, 0f,
                 xOffset, yOffset, zScale, -1f,
-                0.0000f, 0.0000f, zOffset, 0f,
+                0f, 0f, zOffset, 0f,
             )
         }
 
@@ -184,23 +184,23 @@ public data class Matrix(
 
     }
 
-    public operator fun times(other: Matrix): Matrix {
-        val m00 = this.m00 * other.m00 + this.m01 * other.m10 + this.m02 * other.m20 + this.m03 * other.m30;
-        val m10 = this.m10 * other.m00 + this.m11 * other.m10 + this.m12 * other.m20 + this.m13 * other.m30;
-        val m20 = this.m20 * other.m00 + this.m21 * other.m10 + this.m22 * other.m20 + this.m23 * other.m30;
-        val m30 = this.m30 * other.m00 + this.m31 * other.m10 + this.m32 * other.m20 + this.m33 * other.m30;
-        val m01 = this.m00 * other.m01 + this.m01 * other.m11 + this.m02 * other.m21 + this.m03 * other.m31;
-        val m11 = this.m10 * other.m01 + this.m11 * other.m11 + this.m12 * other.m21 + this.m13 * other.m31;
-        val m21 = this.m20 * other.m01 + this.m21 * other.m11 + this.m22 * other.m21 + this.m23 * other.m31;
-        val m31 = this.m30 * other.m01 + this.m31 * other.m11 + this.m32 * other.m21 + this.m33 * other.m31;
-        val m02 = this.m00 * other.m02 + this.m01 * other.m12 + this.m02 * other.m22 + this.m03 * other.m32;
-        val m12 = this.m10 * other.m02 + this.m11 * other.m12 + this.m12 * other.m22 + this.m13 * other.m32;
-        val m22 = this.m20 * other.m02 + this.m21 * other.m12 + this.m22 * other.m22 + this.m23 * other.m32;
-        val m32 = this.m30 * other.m02 + this.m31 * other.m12 + this.m32 * other.m22 + this.m33 * other.m32;
-        val m03 = this.m00 * other.m03 + this.m01 * other.m13 + this.m02 * other.m23 + this.m03 * other.m33;
-        val m13 = this.m10 * other.m03 + this.m11 * other.m13 + this.m12 * other.m23 + this.m13 * other.m33;
-        val m23 = this.m20 * other.m03 + this.m21 * other.m13 + this.m22 * other.m23 + this.m23 * other.m33;
-        val m33 = this.m30 * other.m03 + this.m31 * other.m13 + this.m32 * other.m23 + this.m33 * other.m33;
+    public fun Mul(matrix: Matrix): Matrix {
+        val m00 = this.m00 * matrix.m00 + this.m01 * matrix.m10 + this.m02 * matrix.m20 + this.m03 * matrix.m30;
+        val m10 = this.m10 * matrix.m00 + this.m11 * matrix.m10 + this.m12 * matrix.m20 + this.m13 * matrix.m30;
+        val m20 = this.m20 * matrix.m00 + this.m21 * matrix.m10 + this.m22 * matrix.m20 + this.m23 * matrix.m30;
+        val m30 = this.m30 * matrix.m00 + this.m31 * matrix.m10 + this.m32 * matrix.m20 + this.m33 * matrix.m30;
+        val m01 = this.m00 * matrix.m01 + this.m01 * matrix.m11 + this.m02 * matrix.m21 + this.m03 * matrix.m31;
+        val m11 = this.m10 * matrix.m01 + this.m11 * matrix.m11 + this.m12 * matrix.m21 + this.m13 * matrix.m31;
+        val m21 = this.m20 * matrix.m01 + this.m21 * matrix.m11 + this.m22 * matrix.m21 + this.m23 * matrix.m31;
+        val m31 = this.m30 * matrix.m01 + this.m31 * matrix.m11 + this.m32 * matrix.m21 + this.m33 * matrix.m31;
+        val m02 = this.m00 * matrix.m02 + this.m01 * matrix.m12 + this.m02 * matrix.m22 + this.m03 * matrix.m32;
+        val m12 = this.m10 * matrix.m02 + this.m11 * matrix.m12 + this.m12 * matrix.m22 + this.m13 * matrix.m32;
+        val m22 = this.m20 * matrix.m02 + this.m21 * matrix.m12 + this.m22 * matrix.m22 + this.m23 * matrix.m32;
+        val m32 = this.m30 * matrix.m02 + this.m31 * matrix.m12 + this.m32 * matrix.m22 + this.m33 * matrix.m32;
+        val m03 = this.m00 * matrix.m03 + this.m01 * matrix.m13 + this.m02 * matrix.m23 + this.m03 * matrix.m33;
+        val m13 = this.m10 * matrix.m03 + this.m11 * matrix.m13 + this.m12 * matrix.m23 + this.m13 * matrix.m33;
+        val m23 = this.m20 * matrix.m03 + this.m21 * matrix.m13 + this.m22 * matrix.m23 + this.m23 * matrix.m33;
+        val m33 = this.m30 * matrix.m03 + this.m31 * matrix.m13 + this.m32 * matrix.m23 + this.m33 * matrix.m33;
         return Matrix(
             m00, m10, m20, m30,
             m01, m11, m21, m31,

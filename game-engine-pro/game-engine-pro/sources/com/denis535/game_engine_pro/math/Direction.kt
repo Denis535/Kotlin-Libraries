@@ -24,14 +24,6 @@ public data class Direction(
             );
         }
 
-        public fun Dot(v0: Direction, v1: Direction): Float {
-            return v0.X * v1.X + v0.Y * v1.Y + v0.Z * v1.Z;
-        }
-
-        public fun Cross(v0: Direction, v1: Direction): Direction {
-            return Direction(v0.Y * v1.Z - v0.Z * v1.Y, v0.Z * v1.X - v0.X * v1.Z, v0.X * v1.Y - v0.Y * v1.X);
-        }
-
     }
 
     public val Length: Float
@@ -50,15 +42,25 @@ public data class Direction(
             return Direction(this.X / length, this.Y / length, this.Z / length)
         }
 
-    public operator fun unaryMinus(): Direction = Direction(-this.X, -this.Y, -this.Z)
+    public fun Dot(direction: Direction): Float {
+        return this.X * direction.X + this.Y * direction.Y + this.Z * direction.Z;
+    }
 
-    public operator fun plus(scalar: Float): Direction = Direction(this.X + scalar, this.Y + scalar, this.Z + scalar)
-    public operator fun minus(scalar: Float): Direction = Direction(this.X - scalar, this.Y - scalar, this.Z - scalar)
-    public operator fun times(scalar: Float): Direction = Direction(this.X * scalar, this.Y * scalar, this.Z * scalar)
-    public operator fun div(scalar: Float): Direction = Direction(this.X / scalar, this.Y / scalar, this.Z / scalar)
+    public fun Cross(direction: Direction): Direction {
+        return Direction(
+            this.Y * direction.Z - this.Z * direction.Y,
+            this.Z * direction.X - this.X * direction.Z,
+            this.X * direction.Y - this.Y * direction.X,
+        );
+    }
+
+    public operator fun unaryMinus(): Direction = Direction(-this.X, -this.Y, -this.Z)
 
     public operator fun plus(direction: Direction): Direction = Direction(this.X + direction.X, this.Y + direction.Y, this.Z + direction.Z)
     public operator fun minus(direction: Direction): Direction = Direction(this.X - direction.X, this.Y - direction.Y, this.Z - direction.Z)
+
+    public operator fun times(scalar: Float): Direction = Direction(this.X * scalar, this.Y * scalar, this.Z * scalar)
+    public operator fun div(scalar: Float): Direction = Direction(this.X / scalar, this.Y / scalar, this.Z / scalar)
 
     public operator fun times(scale: Scale): Position = Position(this.X * scale.X, this.Y * scale.Y, this.Z * scale.Z)
     public operator fun div(scale: Scale): Position = Position(this.X / scale.X, this.Y / scale.Y, this.Z / scale.Z)

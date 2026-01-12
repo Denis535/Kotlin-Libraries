@@ -53,18 +53,10 @@ public data class Position(
 
     public operator fun unaryMinus(): Position = Position(-this.X, -this.Y, -this.Z)
 
-    public operator fun plus(scalar: Float): Position = Position(this.X + scalar, this.Y + scalar, this.Z + scalar)
-    public operator fun minus(scalar: Float): Position = Position(this.X - scalar, this.Y - scalar, this.Z - scalar)
-    public operator fun times(scalar: Float): Position = Position(this.X * scalar, this.Y * scalar, this.Z * scalar)
-    public operator fun div(scalar: Float): Position = Position(this.X / scalar, this.Y / scalar, this.Z / scalar)
-
     public operator fun plus(position: Position): Position = Position(this.X + position.X, this.Y + position.Y, this.Z + position.Z)
     public operator fun minus(position: Position): Position = Position(this.X - position.X, this.Y - position.Y, this.Z - position.Z)
 
     public operator fun plus(direction: Direction): Position = Position(this.X + direction.X, this.Y + direction.Y, this.Z + direction.Z)
     public operator fun minus(direction: Direction): Position = Position(this.X - direction.X, this.Y - direction.Y, this.Z - direction.Z)
-
-    public operator fun times(scale: Scale): Position = Position(this.X * scale.X, this.Y * scale.Y, this.Z * scale.Z)
-    public operator fun div(scale: Scale): Position = Position(this.X / scale.X, this.Y / scale.Y, this.Z / scale.Z)
 
 }
