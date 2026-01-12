@@ -36,25 +36,25 @@ public data class Rotation(
                     v0.Z + (v1_Z - v0.Z) * t,
                     v0.W + (v1_W - v0.W) * t,
                 )
+            } else {
+                val theta = Math.Acos(dot)
+
+                val sinTheta = Math.Sin(theta)
+                val cosTheta = dot
+
+                val sinTheta_t = Math.Sin(theta * t)
+                val cosTheta_t = Math.Cos(theta * t)
+
+                val k0 = cosTheta_t - cosTheta * sinTheta_t / sinTheta
+                val k1 = sinTheta_t / sinTheta
+
+                return Rotation(
+                    v0.X * k0 + v1_X * k1,
+                    v0.Y * k0 + v1_Y * k1,
+                    v0.Z * k0 + v1_Z * k1,
+                    v0.W * k0 + v1_W * k1,
+                )
             }
-
-            val theta = Math.Acos(dot)
-
-            val sinTheta = Math.Sin(theta)
-            val cosTheta = dot
-
-            val sinTheta_t = Math.Sin(theta * t)
-            val cosTheta_t = Math.Cos(theta * t)
-
-            val k0 = cosTheta_t - cosTheta * sinTheta_t / sinTheta
-            val k1 = sinTheta_t / sinTheta
-
-            return Rotation(
-                v0.X * k0 + v1_X * k1,
-                v0.Y * k0 + v1_Y * k1,
-                v0.Z * k0 + v1_Z * k1,
-                v0.W * k0 + v1_W * k1,
-            )
         }
 
         public fun Angle(v0: Rotation, v1: Rotation): Float {
@@ -68,8 +68,8 @@ public data class Rotation(
                 dot = 1f
             }
 
-            val theta = 2f * Math.Acos(Math.Clamp01(Math.Abs(dot)))
-            return theta * Math.RadToDeg
+            val theta = Math.Acos(dot)
+            return 2f * theta * Math.RadToDeg
         }
 
     }
