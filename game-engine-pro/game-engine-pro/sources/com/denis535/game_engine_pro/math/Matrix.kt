@@ -3,9 +3,9 @@ package com.denis535.game_engine_pro.math
 // Column-major
 //    |  0   1   2   3
 // ---+----------------
-// 0  | m00 m10 m20 m30 - right,   translation.x
-// 1  | m01 m11 m21 m31 - up,      translation.y
-// 2  | m02 m12 m22 m32 - forward, translation.z
+// 0  | m00 m10 m20 m30 - x-direction, translation.x
+// 1  | m01 m11 m21 m31 - y-direction, translation.y
+// 2  | m02 m12 m22 m32 - z-direction, translation.z
 // 3  | m03 m13 m23 m33 - 0, 0, 0, 1
 
 public data class Matrix(
@@ -86,6 +86,10 @@ public data class Matrix(
             );
         }
 
+        public fun TRS(translation: Matrix, rotation: Matrix, scale: Matrix): Matrix {
+            return translation * rotation * scale
+        }
+
         public fun TRS(translation: Position, rotation: Rotation, scale: Scale): Matrix {
             val xx = rotation.X * rotation.X * 2f;
             val xy = rotation.X * rotation.Y * 2f;
@@ -119,10 +123,6 @@ public data class Matrix(
             )
         }
 
-        public fun TRS(translation: Matrix, rotation: Matrix, scale: Matrix): Matrix {
-            return translation * rotation * scale
-        }
-
         public fun Ortho(
             left: Float,
             right: Float,
@@ -131,17 +131,39 @@ public data class Matrix(
             zNear: Float,
             zFar: Float,
         ): Matrix {
-            val sx = 2f / (right - left)
-            val sy = 2f / (top - bottom)
-            val sz = -2f / (zFar - zNear)
-            val tx = -(right + left) / (right - left)
-            val ty = -(top + bottom) / (top - bottom)
-            val tz = -(zFar + zNear) / (zFar - zNear)
+            val xScale = 2f / (right - left)
+            val yScale = 2f / (top - bottom)
+            val zScale = -2f / (zFar - zNear)
+            val xOffset = -(right + left) / (right - left)
+            val yOffset = -(top + bottom) / (top - bottom)
+            val zOffset = -(zFar + zNear) / (zFar - zNear)
             return Matrix(
-                sx, 0f, 0f, 0f,
-                0f, sy, 0f, 0f,
-                0f, 0f, sz, 0f,
-                tx, ty, tz, 1f,
+                xScale, 0.00000f, 0.0000f, 0f,
+                0.0000f, yScale, 0.00000f, 0f,
+                0.0000f, 0.0000f, zScale, +0f,
+                xOffset, yOffset, zOffset, 1f,
+            )
+        }
+
+        public fun Frustum(
+            left: Float,
+            right: Float,
+            bottom: Float,
+            top: Float,
+            zNear: Float,
+            zFar: Float,
+        ): Matrix {
+            val xScale = 2f * zNear / (right - left)
+            val yScale = 2f * zNear / (top - bottom)
+            val zScale = -(zFar + zNear) / (zFar - zNear)
+            val xOffset = (right + left) / (right - left)
+            val yOffset = (top + bottom) / (top - bottom)
+            val zOffset = -2f * zFar * zNear / (zFar - zNear)
+            return Matrix(
+                xScale, 0.00000f, 0.0000f, 0f,
+                0.0000f, yScale, 0.00000f, 0f,
+                0.0000f, 0.0000f, zScale, -1f,
+                xOffset, yOffset, zOffset, 1f,
             )
         }
 
@@ -160,115 +182,6 @@ public data class Matrix(
             return Frustum(left, right, bottom, top, zNear, zFar)
         }
 
-        public fun Frustum(
-            left: Float,
-            right: Float,
-            bottom: Float,
-            top: Float,
-            zNear: Float,
-            zFar: Float,
-        ): Matrix {
-            val sx = (2f * zNear) / (right - left)
-            val sy = (2f * zNear) / (top - bottom)
-            val sz = -(zFar + zNear) / (zFar - zNear)
-            val ox = (right + left) / (right - left)
-            val oy = (top + bottom) / (top - bottom)
-            val tz = -(2f * zFar * zNear) / (zFar - zNear)
-            return Matrix(
-                sx, 0f, 0f, 0f,
-                0f, sy, 0f, 0f,
-                ox, oy, sz, -1f,
-                0f, 0f, tz, 0f,
-            )
-        }
-
-    }
-
-    public val Determinant: Float
-        get() {
-            // m00 m10 m20 m30
-            // m01 m11 m21 m31
-            // m02 m12 m22 m32
-            // m03 m13 m23 m33
-            val minor00 = m00 * m11 - m01 * m10
-            val minor01 = m00 * m12 - m02 * m10
-            val minor02 = m00 * m13 - m03 * m10
-            val minor03 = m01 * m12 - m02 * m11
-            val minor04 = m01 * m13 - m03 * m11
-            val minor05 = m02 * m13 - m03 * m12
-            val minor06 = m20 * m31 - m21 * m30
-            val minor07 = m20 * m32 - m22 * m30
-            val minor08 = m20 * m33 - m23 * m30
-            val minor09 = m21 * m32 - m22 * m31
-            val minor10 = m21 * m33 - m23 * m31
-            val minor11 = m22 * m33 - m23 * m32
-            return minor00 * minor11 - minor01 * minor10 + minor02 * minor09 + minor03 * minor08 - minor04 * minor07 + minor05 * minor06
-        }
-
-    public val Inversed: Matrix
-        get() {
-            // m00 m10 m20 m30
-            // m01 m11 m21 m31
-            // m02 m12 m22 m32
-            // m03 m13 m23 m33
-            val minor00 = m00 * m11 - m01 * m10
-            val minor01 = m00 * m12 - m02 * m10
-            val minor02 = m00 * m13 - m03 * m10
-            val minor03 = m01 * m12 - m02 * m11
-            val minor04 = m01 * m13 - m03 * m11
-            val minor05 = m02 * m13 - m03 * m12
-            val minor06 = m20 * m31 - m21 * m30
-            val minor07 = m20 * m32 - m22 * m30
-            val minor08 = m20 * m33 - m23 * m30
-            val minor09 = m21 * m32 - m22 * m31
-            val minor10 = m21 * m33 - m23 * m31
-            val minor11 = m22 * m33 - m23 * m32
-            val determinant = minor00 * minor11 - minor01 * minor10 + minor02 * minor09 + minor03 * minor08 - minor04 * minor07 + minor05 * minor06
-            val m00 = (+this.m11 * minor11 - this.m12 * minor10 + this.m13 * minor09) / determinant
-            val m10 = (-this.m10 * minor11 + this.m12 * minor08 - this.m13 * minor07) / determinant
-            val m20 = (+this.m10 * minor10 - this.m11 * minor08 + this.m13 * minor06) / determinant
-            val m30 = (-this.m10 * minor09 + this.m11 * minor07 - this.m12 * minor06) / determinant
-            val m01 = (-this.m01 * minor11 + this.m02 * minor10 - this.m03 * minor09) / determinant
-            val m11 = (+this.m00 * minor11 - this.m02 * minor08 + this.m03 * minor07) / determinant
-            val m21 = (-this.m00 * minor10 + this.m01 * minor08 - this.m03 * minor06) / determinant
-            val m31 = (+this.m00 * minor09 - this.m01 * minor07 + this.m02 * minor06) / determinant
-            val m02 = (+this.m31 * minor05 - this.m32 * minor04 + this.m33 * minor03) / determinant
-            val m12 = (-this.m30 * minor05 + this.m32 * minor02 - this.m33 * minor01) / determinant
-            val m22 = (+this.m30 * minor04 - this.m31 * minor02 + this.m33 * minor00) / determinant
-            val m32 = (-this.m30 * minor03 + this.m31 * minor01 - this.m32 * minor00) / determinant
-            val m03 = (-this.m21 * minor05 + this.m22 * minor04 - this.m23 * minor03) / determinant
-            val m13 = (+this.m20 * minor05 - this.m22 * minor02 + this.m23 * minor01) / determinant
-            val m23 = (-this.m20 * minor04 + this.m21 * minor02 - this.m23 * minor00) / determinant
-            val m33 = (+this.m20 * minor03 - this.m21 * minor01 + this.m22 * minor00) / determinant
-            return Matrix(
-                m00, m10, m20, m30,
-                m01, m11, m21, m31,
-                m02, m12, m22, m32,
-                m03, m13, m23, m33,
-            )
-        }
-
-    public fun TransformPosition(position: Position): Position {
-        val x = this.m00 * position.X + this.m01 * position.Y + this.m02 * position.Z + this.m03;
-        val y = this.m10 * position.X + this.m11 * position.Y + this.m12 * position.Z + this.m13;
-        val z = this.m20 * position.X + this.m21 * position.Y + this.m22 * position.Z + this.m23;
-        val w = this.m30 * position.X + this.m31 * position.Y + this.m32 * position.Z + this.m33;
-        return Position(
-            x / w,
-            y / w,
-            z / w,
-        )
-    }
-
-    public fun TransformDirection(direction: Direction): Direction {
-        val x = this.m00 * direction.X + this.m01 * direction.Y + this.m02 * direction.Z
-        val y = this.m10 * direction.X + this.m11 * direction.Y + this.m12 * direction.Z
-        val z = this.m20 * direction.X + this.m21 * direction.Y + this.m22 * direction.Z
-        return Direction(
-            x,
-            y,
-            z,
-        )
     }
 
     public operator fun times(other: Matrix): Matrix {
@@ -293,6 +206,29 @@ public data class Matrix(
             m01, m11, m21, m31,
             m02, m12, m22, m32,
             m03, m13, m23, m33,
+        )
+    }
+
+    public fun TransformPosition(position: Position): Position {
+        val x = this.m00 * position.X + this.m01 * position.Y + this.m02 * position.Z + this.m03;
+        val y = this.m10 * position.X + this.m11 * position.Y + this.m12 * position.Z + this.m13;
+        val z = this.m20 * position.X + this.m21 * position.Y + this.m22 * position.Z + this.m23;
+        val w = this.m30 * position.X + this.m31 * position.Y + this.m32 * position.Z + this.m33;
+        return Position(
+            x / w,
+            y / w,
+            z / w,
+        )
+    }
+
+    public fun TransformDirection(direction: Direction): Direction {
+        val x = this.m00 * direction.X + this.m01 * direction.Y + this.m02 * direction.Z
+        val y = this.m10 * direction.X + this.m11 * direction.Y + this.m12 * direction.Z
+        val z = this.m20 * direction.X + this.m21 * direction.Y + this.m22 * direction.Z
+        return Direction(
+            x,
+            y,
+            z,
         )
     }
 

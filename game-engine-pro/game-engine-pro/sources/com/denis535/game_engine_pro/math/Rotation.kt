@@ -20,17 +20,27 @@ public data class Rotation(
 
     }
 
-//    public operator fun unaryMinus(): Scale = Scale(-this.X, -this.Y, -this.Z)
-//
-//    public operator fun plus(scalar: Float): Scale = Scale(this.X + scalar, this.Y + scalar, this.Z + scalar)
-//    public operator fun minus(scalar: Float): Scale = Scale(this.X - scalar, this.Y - scalar, this.Z - scalar)
-//    public operator fun times(scalar: Float): Scale = Scale(this.X * scalar, this.Y * scalar, this.Z * scalar)
-//    public operator fun div(scalar: Float): Scale = Scale(this.X / scalar, this.Y / scalar, this.Z / scalar)
-//
-//    public operator fun plus(scale: Scale): Scale = Scale(this.X + scale.X, this.Y + scale.Y, this.Z + scale.Z)
-//    public operator fun minus(scale: Scale): Scale = Scale(this.X - scale.X, this.Y - scale.Y, this.Z - scale.Z)
-//
-//    public operator fun times(scale: Scale): Position = Position(this.X * scale.X, this.Y * scale.Y, this.Z * scale.Z)
-//    public operator fun div(scale: Scale): Position = Position(this.X / scale.X, this.Y / scale.Y, this.Z / scale.Z)
+    public fun TransformPosition(position: Position): Position {
+        val x = this.X
+        val y = this.Y
+        val z = this.Z
+        val w = this.W
+
+        // 2 * (x,y,z) компоненты для удобства
+        val xx = x * x
+        val yy = y * y
+        val zz = z * z
+        val xy = x * y
+        val xz = x * z
+        val yz = y * z
+        val wx = w * x
+        val wy = w * y
+        val wz = w * z
+
+        val rx = (1f - 2f * (yy + zz)) * position.X + (2f * (xy - wz)) * position.Y + (2f * (xz + wy)) * position.Z
+        val ry = (2f * (xy + wz)) * position.X + (1f - 2f * (xx + zz)) * position.Y + (2f * (yz - wx)) * position.Z
+        val rz = (2f * (xz - wy)) * position.X + (2f * (yz + wx)) * position.Y + (1f - 2f * (xx + yy)) * position.Z
+        return Position(rx, ry, rz)
+    }
 
 }
