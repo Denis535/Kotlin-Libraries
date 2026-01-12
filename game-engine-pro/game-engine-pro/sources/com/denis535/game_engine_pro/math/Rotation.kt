@@ -10,22 +10,7 @@ public data class Rotation(
 
         public val Identity: Rotation = Rotation(0f, 0f, 0f, 1f);
 
-        public fun FromEulerAngles(x: Float, y: Float, z: Float): Rotation {
-            val sinX = Math.Sin(x * Math.DegToRad / 2f)
-            val cosX = Math.Cos(x * Math.DegToRad / 2f)
-            val sinY = Math.Sin(y * Math.DegToRad / 2f)
-            val cosY = Math.Cos(y * Math.DegToRad / 2f)
-            val sinZ = Math.Sin(z * Math.DegToRad / 2f)
-            val cosZ = Math.Cos(z * Math.DegToRad / 2f)
-            return Rotation(
-                sinX * cosY * cosZ + cosX * sinY * sinZ,
-                cosX * sinY * cosZ - sinX * cosY * sinZ,
-                cosX * cosY * sinZ + sinX * sinY * cosZ,
-                cosX * cosY * cosZ - sinX * sinY * sinZ,
-            )
-        }
-
-        public fun FromDirections(right: Direction, up: Direction, forward: Direction): Rotation {
+        public fun FromAxes(right: Direction, up: Direction, forward: Direction): Rotation {
             val m00 = right.X
             val m10 = right.Y
             val m20 = right.Z
@@ -76,10 +61,36 @@ public data class Rotation(
             }
         }
 
-        public fun FromForwardDirection(forward: Direction, up: Direction = Direction.Up): Rotation {
+        public fun FromForwardAxis(forward: Direction, up: Direction = Direction.Up): Rotation {
             val right = up.Cross(forward)
             val up = forward.Cross(right)
-            return FromDirections(right, up, forward)
+            return FromAxes(right, up, forward)
+        }
+
+        public fun FromAxisAngle(direction: Direction, angle: Float): Rotation {
+            val sin = Math.Sin(angle * Math.DegToRad / 2f)
+            val cos = Math.Cos(angle * Math.DegToRad / 2f)
+            return Rotation(
+                direction.X * sin,
+                direction.Y * sin,
+                direction.Z * sin,
+                cos,
+            )
+        }
+
+        public fun FromEulerAngles(x: Float, y: Float, z: Float): Rotation {
+            val sinX = Math.Sin(x * Math.DegToRad / 2f)
+            val cosX = Math.Cos(x * Math.DegToRad / 2f)
+            val sinY = Math.Sin(y * Math.DegToRad / 2f)
+            val cosY = Math.Cos(y * Math.DegToRad / 2f)
+            val sinZ = Math.Sin(z * Math.DegToRad / 2f)
+            val cosZ = Math.Cos(z * Math.DegToRad / 2f)
+            return Rotation(
+                sinX * cosY * cosZ + cosX * sinY * sinZ,
+                cosX * sinY * cosZ - sinX * cosY * sinZ,
+                cosX * cosY * sinZ + sinX * sinY * cosZ,
+                cosX * cosY * cosZ - sinX * sinY * sinZ,
+            )
         }
 
         public fun Slerp(v0: Rotation, v1: Rotation, t: Float): Rotation {
