@@ -61,9 +61,15 @@ public data class Rotation(
             }
         }
 
-        public fun FromForwardAxis(forward: Direction, up: Direction = Direction.Up): Rotation {
+        public fun FromForwardUp(forward: Direction, up: Direction = Direction.Up): Rotation {
             val right = up.Cross(forward)
             val up = forward.Cross(right)
+            return FromAxes(right, up, forward)
+        }
+
+        public fun FromForwardRight(forward: Direction, right: Direction): Rotation {
+            val up = forward.Cross(right)
+            val right = up.Cross(forward)
             return FromAxes(right, up, forward)
         }
 
@@ -78,7 +84,43 @@ public data class Rotation(
             )
         }
 
-        public fun FromEulerAngles(angleX: Float, angleY: Float, angleZ: Float): Rotation {
+        public fun FromAngleX(angleX: Float): Rotation {
+            // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L352
+            val sinX = Math.Sin(angleX * Math.DegToRad / 2f)
+            val cosX = Math.Cos(angleX * Math.DegToRad / 2f)
+            return Rotation(
+                sinX,
+                0f,
+                0f,
+                cosX,
+            );
+        }
+
+        public fun FromAngleY(angleY: Float): Rotation {
+            val sinY = Math.Sin(angleY * Math.DegToRad / 2f)
+            val cosY = Math.Cos(angleY * Math.DegToRad / 2f)
+            return Rotation(
+                0f,
+                sinY,
+                0f,
+                cosY,
+            );
+        }
+
+        public fun FromAngleZ(angleZ: Float): Rotation {
+            val sinZ = Math.Sin(angleZ * Math.DegToRad / 2f)
+            val cosZ = Math.Cos(angleZ * Math.DegToRad / 2f)
+            return Rotation(
+                0f,
+                0f,
+                sinZ,
+                cosZ,
+            );
+        }
+
+        public fun FromEulerAnglesYXZ(angleX: Float, angleY: Float, angleZ: Float): Rotation {
+            // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
+            // return FromAngleZ(angleZ).Mul(FromAngleX(angleX)).Mul(FromAngleY(angleY))
             val sinX = Math.Sin(angleX * Math.DegToRad / 2f)
             val cosX = Math.Cos(angleX * Math.DegToRad / 2f)
             val sinY = Math.Sin(angleY * Math.DegToRad / 2f)
@@ -86,10 +128,10 @@ public data class Rotation(
             val sinZ = Math.Sin(angleZ * Math.DegToRad / 2f)
             val cosZ = Math.Cos(angleZ * Math.DegToRad / 2f)
             return Rotation(
-                cosX * cosY * cosZ - sinX * cosY * sinZ - cosX * sinY * sinZ - sinX * sinY * cosZ,
-                sinX * cosY * cosZ + cosX * cosY * sinZ + sinX * sinY * sinZ - cosX * sinY * cosZ,
-                cosX * sinY * cosZ + sinX * sinY * sinZ + cosX * cosY * sinZ - sinX * cosY * cosZ,
-                cosX * cosY * sinZ - sinX * cosY * cosZ + cosX * sinY * cosZ + sinX * sinY * sinZ,
+                sinX * cosY * cosZ - sinY * sinZ * cosX,
+                sinY * cosX * cosZ + sinX * sinZ * cosY,
+                sinZ * cosX * cosY + sinX * sinY * cosZ,
+                cosX * cosY * cosZ - sinY * sinZ * sinX,
             )
         }
 
@@ -152,6 +194,11 @@ public data class Rotation(
         get() {
             val length = this.Length;
             return Rotation(this.X / length, this.Y / length, this.Z / length, this.W / length)
+        }
+
+    public val Inverse: Rotation
+        get() {
+            return Rotation(-this.X, -this.Y, -this.Z, this.W)
         }
 
     public val Right: Direction
