@@ -1,12 +1,10 @@
 package com.denis535.game_engine_pro.math
 
 // Column-major
-//    |  0   1   2   3
-// ---+----------------
-// 0  | m00 m10 m20 m30 - x-column: x-direction, translation.x
-// 1  | m01 m11 m21 m31 - y-column: y-direction, translation.y
-// 2  | m02 m12 m22 m32 - z-column: z-direction, translation.z
-// 3  | m03 m13 m23 m33 - w-column: 0, 0, 0, 1
+// m00 m10 m20 m30 - x-column: x-direction, translation.x
+// m01 m11 m21 m31 - y-column: y-direction, translation.y
+// m02 m12 m22 m32 - z-column: z-direction, translation.z
+// m03 m13 m23 m33 - w-column: 0, 0, 0, 1
 
 public data class Matrix4x4(
     public val m00: Float,
@@ -35,12 +33,12 @@ public data class Matrix4x4(
             0f, 0f, 0f, 1f,
         );
 
-        public fun TRS(position: Vector3, quaternion: Quaternion: Vector3, scale: Vector3): Matrix4x4 {
-            return TRS(Translation(position), Rotation(quaternion), Scale(scale))
+        public fun TRS(position: Vector3, rotation: Quaternion, scale: Vector3): Matrix4x4 {
+            return TRS(Translation(position), Rotation(rotation), Scale(scale))
         }
 
-        public fun TRS(translation: Matrix4x4, rotation: Matrix4x4, scale: Matrix4x4): Matrix4x4 {
-            return scale.Mul(rotation).Mul(translation)
+        public fun TRS(position: Matrix4x4, rotation: Matrix4x4, scale: Matrix4x4): Matrix4x4 {
+            return scale.Mul(rotation).Mul(position)
         }
 
         public fun Translation(position: Vector3): Matrix4x4 {
@@ -52,18 +50,18 @@ public data class Matrix4x4(
             );
         }
 
-        public fun Rotation(quaternion: Quaternion): Matrix4x4 {
-            val xx = quaternion.X * quaternion.X * 2f;
-            val xy = quaternion.X * quaternion.Y * 2f;
-            val xz = quaternion.X * quaternion.Z * 2f;
-            val xw = quaternion.X * quaternion.W * 2f;
+        public fun Rotation(rotation: Quaternion): Matrix4x4 {
+            val xx = rotation.X * rotation.X * 2f;
+            val xy = rotation.X * rotation.Y * 2f;
+            val xz = rotation.X * rotation.Z * 2f;
+            val xw = rotation.X * rotation.W * 2f;
 
-            val yy = quaternion.Y * quaternion.Y * 2f;
-            val yz = quaternion.Y * quaternion.Z * 2f;
-            val yw = quaternion.Y * quaternion.W * 2f;
+            val yy = rotation.Y * rotation.Y * 2f;
+            val yz = rotation.Y * rotation.Z * 2f;
+            val yw = rotation.Y * rotation.W * 2f;
 
-            val zz = quaternion.Z * quaternion.Z * 2f;
-            val zw = quaternion.Z * quaternion.W * 2f;
+            val zz = rotation.Z * rotation.Z * 2f;
+            val zw = rotation.Z * rotation.W * 2f;
 
             val m00 = 1f - (yy + zz);
             val m10 = xy + zw;
