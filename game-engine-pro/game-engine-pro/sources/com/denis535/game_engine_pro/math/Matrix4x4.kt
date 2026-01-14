@@ -35,20 +35,12 @@ public data class Matrix4x4(
             0f, 0f, 0f, 1f,
         );
 
-        public fun TRS(translation: Matrix4x4, rotation: Matrix4x4, scale: Matrix4x4): Matrix4x4 {
-            return translation.Mul(rotation).Mul(scale)
-        }
-
-        public fun TRS(position: Vector3, axisX: Vector3, axisY: Vector3, axisZ: Vector3, scale: Vector3): Matrix4x4 {
-            return TRS(Translation(position), Rotation(axisX, axisY, axisZ), Scale(scale))
-        }
-
         public fun TRS(position: Vector3, quaternion: Quaternion: Vector3, scale: Vector3): Matrix4x4 {
             return TRS(Translation(position), Rotation(quaternion), Scale(scale))
         }
 
-        public fun TRS(position: Vector3, angles: Vector3, scale: Vector3): Matrix4x4 {
-            return TRS(Translation(position), Rotation(angles), Scale(scale))
+        public fun TRS(translation: Matrix4x4, rotation: Matrix4x4, scale: Matrix4x4): Matrix4x4 {
+            return scale.Mul(rotation).Mul(translation)
         }
 
         public fun Translation(position: Vector3): Matrix4x4 {
@@ -56,15 +48,6 @@ public data class Matrix4x4(
                 1f, 0f, 0f, position.X,
                 0f, 1f, 0f, position.Y,
                 0f, 0f, 1f, position.Z,
-                0f, 0f, 0f, 1f,
-            );
-        }
-
-        public fun Rotation(axisX: Vector3, axisY: Vector3, axisZ: Vector3): Matrix4x4 {
-            return Matrix4x4(
-                axisX.X, axisX.Y, axisX.Z, 0f,
-                axisY.X, axisY.Y, axisY.Z, 0f,
-                axisZ.X, axisZ.Y, axisZ.Z, 0f,
                 0f, 0f, 0f, 1f,
             );
         }
@@ -98,43 +81,6 @@ public data class Matrix4x4(
                 m00, m10, m20, 0f,
                 m01, m11, m21, 0f,
                 m02, m12, m22, 0f,
-                0f, 0f, 0f, 1f,
-            )
-        }
-
-        public fun Rotation(angles: Vector3): Matrix4x4 {
-            return RotationZ(angles.Z).Mul(RotationY(angles.Y)).Mul(RotationX(angles.X)) // YXZ order
-        }
-
-        public fun RotationX(angleX: Float): Matrix4x4 {
-            val sin = Math.Sin(angleX * Math.DegToRad)
-            val cos = Math.Cos(angleX * Math.DegToRad)
-            return Matrix4x4(
-                1f, 0f, 0f, 0f,
-                0f, cos, sin, 0f,
-                0f, -sin, cos, 0f,
-                0f, 0f, 0f, 1f,
-            )
-        }
-
-        public fun RotationY(angleY: Float): Matrix4x4 {
-            val sin = Math.Sin(angleY * Math.DegToRad)
-            val cos = Math.Cos(angleY * Math.DegToRad)
-            return Matrix4x4(
-                cos, 0f, -sin, 0f,
-                0f, 1f, 0f, 0f,
-                sin, 0f, cos, 0f,
-                0f, 0f, 0f, 1f,
-            )
-        }
-
-        public fun RotationZ(angleZ: Float): Matrix4x4 {
-            val sin = Math.Sin(angleZ * Math.DegToRad)
-            val cos = Math.Cos(angleZ * Math.DegToRad)
-            return Matrix4x4(
-                cos, sin, 0f, 0f,
-                -sin, cos, 0f, 0f,
-                0f, 0f, 1f, 0f,
                 0f, 0f, 0f, 1f,
             )
         }
@@ -254,11 +200,11 @@ public data class Matrix4x4(
         )
     }
 
-    public fun Mul(vector: Vector3): Vector3 {
-        val x = this.m00 * vector.X + this.m01 * vector.Y + this.m02 * vector.Z + this.m03;
-        val y = this.m10 * vector.X + this.m11 * vector.Y + this.m12 * vector.Z + this.m13;
-        val z = this.m20 * vector.X + this.m21 * vector.Y + this.m22 * vector.Z + this.m23;
-        val w = this.m30 * vector.X + this.m31 * vector.Y + this.m32 * vector.Z + this.m33;
+    public fun MultiplyPoint(point: Vector3): Vector3 {
+        val x = this.m00 * point.X + this.m01 * point.Y + this.m02 * point.Z + this.m03;
+        val y = this.m10 * point.X + this.m11 * point.Y + this.m12 * point.Z + this.m13;
+        val z = this.m20 * point.X + this.m21 * point.Y + this.m22 * point.Z + this.m23;
+        val w = this.m30 * point.X + this.m31 * point.Y + this.m32 * point.Z + this.m33;
         return Vector3(
             x / w,
             y / w,
