@@ -36,7 +36,7 @@ public data class Matrix4x4(
         );
 
         public fun TRS(translation: Matrix4x4, rotation: Matrix4x4, scale: Matrix4x4): Matrix4x4 {
-            return translation.Mul(rotation).Mul(scale) // scale-rotation-translation order
+            return translation.Mul(rotation).Mul(scale)
         }
 
         public fun TRS(position: Vector3, axisX: Vector3, axisY: Vector3, axisZ: Vector3, scale: Vector3): Matrix4x4 {
@@ -94,7 +94,7 @@ public data class Matrix4x4(
             val m12 = yz - xw;
             val m22 = 1f - (xx + yy);
 
-            return Matrix(
+            return Matrix4x4(
                 m00, m10, m20, 0f,
                 m01, m11, m21, 0f,
                 m02, m12, m22, 0f,
