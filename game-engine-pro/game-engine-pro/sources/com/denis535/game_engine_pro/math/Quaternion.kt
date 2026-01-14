@@ -117,7 +117,7 @@ public data class Quaternion(
 
         public fun Angles(angleX: Float, angleY: Float, angleZ: Float): Quaternion {
             // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
-            // Y - top
+            // Y - up
             // X - right
             // Z - forward
             return AngleZ(angleZ).Mul(AngleX(angleX)).Mul(AngleY(angleY)) // YXZ
