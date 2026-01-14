@@ -160,13 +160,16 @@ public open class MainWindow : AutoCloseable {
             when (description) {
                 is Description.FullScreen -> {
                     var flags = SDL_WINDOW_VULKAN or SDL_WINDOW_FULLSCREEN
-                    SDL_CreateWindow(description.Title, 0, 0, flags).also { SDL.ThrowErrorIfNeeded() }
+                    SDL_CreateWindow(description.Title, 0, 0, flags).also { SDL.ThrowErrorIfNeeded() }.also {
+                        SDL_SetWindowMinimumSize(it, 320, 240)
+                    }
                 }
                 is Description.Window -> {
                     var flags = SDL_WINDOW_VULKAN
                     if (description.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
                     SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }.also {
                         SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { SDL.ThrowErrorIfNeeded() }
+                        SDL_SetWindowMinimumSize(it, 320, 240)
                     }
                 }
             }
