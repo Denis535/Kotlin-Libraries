@@ -10,12 +10,11 @@ RUN apt update && apt install -y \
 WORKDIR /SDL
 
 ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
-    " \
+    "BUILD_DIR='build/x86_64-w64-mingw32'; \
+    INSTALL_DIR='dist/x86_64-w64-mingw32'; \
     export CC=x86_64-w64-mingw32-gcc; \
     export CXX=x86_64-w64-mingw32-g++; \
     export RC=x86_64-w64-mingw32-windres; \
-    BUILD_DIR='build/x86_64-w64-mingw32'; \
-    INSTALL_DIR='dist/x86_64-w64-mingw32'; \
     cmake \
         -S . \
         -B \"$BUILD_DIR\" \

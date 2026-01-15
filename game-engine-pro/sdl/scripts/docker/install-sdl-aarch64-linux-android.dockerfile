@@ -20,10 +20,10 @@ RUN apt update && apt install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools \
-    && wget https://dl.google.com/android/repository/commandlinetools-linux-latest.zip \
-    && unzip commandlinetools-linux-latest.zip -d ${ANDROID_SDK_ROOT}/cmdline-tools \
+    && wget https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip -O cmdline-tools.zip \
+    && unzip cmdline-tools.zip -d ${ANDROID_SDK_ROOT}/cmdline-tools \
     && mv ${ANDROID_SDK_ROOT}/cmdline-tools/cmdline-tools ${ANDROID_SDK_ROOT}/cmdline-tools/latest \
-    && rm commandlinetools-linux-latest.zip
+    && rm cmdline-tools.zip
 
 RUN yes | sdkmanager --sdk_root=${ANDROID_SDK_ROOT} \
     "platforms;${ANDROID_PLATFORM}" \
@@ -31,11 +31,8 @@ RUN yes | sdkmanager --sdk_root=${ANDROID_SDK_ROOT} \
 
 WORKDIR /SDL
 
-ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c",
-    " \
-    export CC=gcc \
-    export CXX=g++ \
-    BUILD_DIR='build/aarch64-linux-android'; \
+ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
+    "BUILD_DIR='build/aarch64-linux-android'; \
     INSTALL_DIR='dist/aarch64-linux-android'; \
     cmake \
         -S . \
@@ -72,6 +69,6 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c",
         -DSDL_AUDIO_AAUDIO=ON \
         -DSDL_JOYSTICK_ANDROID=ON \
         -DSDL_SENSOR_ANDROID=ON; \
-    cmake --build \"$BUILD_DIR\" -j$(nproc); \
+    cmake --build \"$BUILD_DIR\" -- -j$(nproc); \
     cmake --install \"$BUILD_DIR\" \
     "]

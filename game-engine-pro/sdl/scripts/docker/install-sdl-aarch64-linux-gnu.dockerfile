@@ -16,11 +16,10 @@ RUN apt update && apt install -y \
 WORKDIR /SDL
 
 ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
-    " \
+    "BUILD_DIR='build/aarch64-linux-gnu'; \
+    INSTALL_DIR='dist/aarch64-linux-gnu'; \
     export CC=gcc \
     export CXX=g++ \
-    BUILD_DIR='build/aarch64-linux-gnu'; \
-    INSTALL_DIR='dist/aarch64-linux-gnu'; \
     cmake \
         -S . \
         -B \"$BUILD_DIR\" \
@@ -45,6 +44,6 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -DSDL_SENSOR=ON \
         -DSDL_RENDER_OPENGL=ON \
         -DSDL_RENDER_VULKAN=ON; \
-    cmake --build \"$BUILD_DIR\" -j$(nproc); \
+    cmake --build \"$BUILD_DIR\" -- -j$(nproc); \
     cmake --install \"$BUILD_DIR\" \
     "]

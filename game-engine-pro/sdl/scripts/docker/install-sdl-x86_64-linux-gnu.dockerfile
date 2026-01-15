@@ -16,11 +16,10 @@ RUN apt update && apt install -y \
 WORKDIR /SDL
 
 ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
-    " \
+    "BUILD_DIR='build/x86_64-linux-gnu'; \
+    INSTALL_DIR='dist/x86_64-linux-gnu'; \
     export CC=x86_64-linux-gnu-gcc; \
     export CXX=x86_64-linux-gnu-g++; \
-    BUILD_DIR='build/x86_64-linux-gnu'; \
-    INSTALL_DIR='dist/x86_64-linux-gnu'; \
     cmake \
         -S . \
         -B \"$BUILD_DIR\" \
