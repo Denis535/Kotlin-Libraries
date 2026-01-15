@@ -1,6 +1,6 @@
 package = com.denis535.sdl
 
 headers.mingw = SDL3/SDL.h
-staticLibraries.mingw = libSDL3.dll.a
+staticLibraries.mingw = libSDL3.a
 libraryPaths.mingw = SDL/x86_64-w64-mingw32/lib
 compilerOpts.mingw = -ISDL/x86_64-w64-mingw32/include

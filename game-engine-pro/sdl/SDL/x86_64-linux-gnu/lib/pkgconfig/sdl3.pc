@@ -1,4 +1,4 @@
-prefix=/SDL/x86_64-linux-gnu
+prefix=/SDL/dist/x86_64-linux-gnu
 exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include
@@ -9,6 +9,5 @@ URL: https://www.libsdl.org/
 Version: 3.4.0
 Requires.private: 
 Conflicts:
-Libs: -L${libdir} -Wl,-rpath,${libdir} -Wl,--enable-new-dtags -lSDL3 
-Libs.private: -pthread -lm
+Libs: -L${libdir}  -lSDL3   -pthread -lm
 Cflags: -I${includedir} 
