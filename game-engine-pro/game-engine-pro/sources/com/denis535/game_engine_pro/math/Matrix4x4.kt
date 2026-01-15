@@ -7,22 +7,22 @@ package com.denis535.game_engine_pro.math
 // m03 m13 m23 m33 - w-column: 0, 0, 0, 1
 
 public data class Matrix4x4(
-    public val m00: Float,
-    public val m10: Float,
-    public val m20: Float,
-    public val m30: Float,
-    public val m01: Float,
-    public val m11: Float,
-    public val m21: Float,
-    public val m31: Float,
-    public val m02: Float,
-    public val m12: Float,
-    public val m22: Float,
-    public val m32: Float,
-    public val m03: Float,
-    public val m13: Float,
-    public val m23: Float,
-    public val m33: Float,
+    public val X0: Float,
+    public val X1: Float,
+    public val X2: Float,
+    public val X3: Float,
+    public val Y0: Float,
+    public val Y1: Float,
+    public val Y2: Float,
+    public val Y3: Float,
+    public val Z0: Float,
+    public val Z1: Float,
+    public val Z2: Float,
+    public val Z3: Float,
+    public val W0: Float,
+    public val W1: Float,
+    public val W2: Float,
+    public val W3: Float,
 ) {
     public companion object {
 
@@ -155,41 +155,41 @@ public data class Matrix4x4(
 
     public val Position: Vector3
         get() {
-            return Vector3(m30, m31, m32)
+            return Vector3(X3, Y3, Z3)
         }
 
     public val AxisX: Vector3
         get() {
-            return Vector3(m00, m10, m20)
+            return Vector3(X0, X1, X2)
         }
 
     public val AxisY: Vector3
         get() {
-            return Vector3(m01, m11, m21)
+            return Vector3(Y0, Y1, Y2)
         }
 
     public val AxisZ: Vector3
         get() {
-            return Vector3(m02, m12, m22)
+            return Vector3(Z0, Z1, Z2)
         }
 
     public fun Mul(matrix: Matrix4x4): Matrix4x4 {
-        val m00 = this.m00 * matrix.m00 + this.m01 * matrix.m10 + this.m02 * matrix.m20 + this.m03 * matrix.m30;
-        val m01 = this.m00 * matrix.m01 + this.m01 * matrix.m11 + this.m02 * matrix.m21 + this.m03 * matrix.m31;
-        val m02 = this.m00 * matrix.m02 + this.m01 * matrix.m12 + this.m02 * matrix.m22 + this.m03 * matrix.m32;
-        val m03 = this.m00 * matrix.m03 + this.m01 * matrix.m13 + this.m02 * matrix.m23 + this.m03 * matrix.m33;
-        val m10 = this.m10 * matrix.m00 + this.m11 * matrix.m10 + this.m12 * matrix.m20 + this.m13 * matrix.m30;
-        val m11 = this.m10 * matrix.m01 + this.m11 * matrix.m11 + this.m12 * matrix.m21 + this.m13 * matrix.m31;
-        val m12 = this.m10 * matrix.m02 + this.m11 * matrix.m12 + this.m12 * matrix.m22 + this.m13 * matrix.m32;
-        val m13 = this.m10 * matrix.m03 + this.m11 * matrix.m13 + this.m12 * matrix.m23 + this.m13 * matrix.m33;
-        val m20 = this.m20 * matrix.m00 + this.m21 * matrix.m10 + this.m22 * matrix.m20 + this.m23 * matrix.m30;
-        val m21 = this.m20 * matrix.m01 + this.m21 * matrix.m11 + this.m22 * matrix.m21 + this.m23 * matrix.m31;
-        val m22 = this.m20 * matrix.m02 + this.m21 * matrix.m12 + this.m22 * matrix.m22 + this.m23 * matrix.m32;
-        val m23 = this.m20 * matrix.m03 + this.m21 * matrix.m13 + this.m22 * matrix.m23 + this.m23 * matrix.m33;
-        val m30 = this.m30 * matrix.m00 + this.m31 * matrix.m10 + this.m32 * matrix.m20 + this.m33 * matrix.m30;
-        val m31 = this.m30 * matrix.m01 + this.m31 * matrix.m11 + this.m32 * matrix.m21 + this.m33 * matrix.m31;
-        val m32 = this.m30 * matrix.m02 + this.m31 * matrix.m12 + this.m32 * matrix.m22 + this.m33 * matrix.m32;
-        val m33 = this.m30 * matrix.m03 + this.m31 * matrix.m13 + this.m32 * matrix.m23 + this.m33 * matrix.m33;
+        val m00 = this.X0 * matrix.X0 + this.Y0 * matrix.X1 + this.Z0 * matrix.X2 + this.W0 * matrix.X3;
+        val m01 = this.X0 * matrix.Y0 + this.Y0 * matrix.Y1 + this.Z0 * matrix.Y2 + this.W0 * matrix.Y3;
+        val m02 = this.X0 * matrix.Z0 + this.Y0 * matrix.Z1 + this.Z0 * matrix.Z2 + this.W0 * matrix.Z3;
+        val m03 = this.X0 * matrix.W0 + this.Y0 * matrix.W1 + this.Z0 * matrix.W2 + this.W0 * matrix.W3;
+        val m10 = this.X1 * matrix.X0 + this.Y1 * matrix.X1 + this.Z1 * matrix.X2 + this.W1 * matrix.X3;
+        val m11 = this.X1 * matrix.Y0 + this.Y1 * matrix.Y1 + this.Z1 * matrix.Y2 + this.W1 * matrix.Y3;
+        val m12 = this.X1 * matrix.Z0 + this.Y1 * matrix.Z1 + this.Z1 * matrix.Z2 + this.W1 * matrix.Z3;
+        val m13 = this.X1 * matrix.W0 + this.Y1 * matrix.W1 + this.Z1 * matrix.W2 + this.W1 * matrix.W3;
+        val m20 = this.X2 * matrix.X0 + this.Y2 * matrix.X1 + this.Z2 * matrix.X2 + this.W2 * matrix.X3;
+        val m21 = this.X2 * matrix.Y0 + this.Y2 * matrix.Y1 + this.Z2 * matrix.Y2 + this.W2 * matrix.Y3;
+        val m22 = this.X2 * matrix.Z0 + this.Y2 * matrix.Z1 + this.Z2 * matrix.Z2 + this.W2 * matrix.Z3;
+        val m23 = this.X2 * matrix.W0 + this.Y2 * matrix.W1 + this.Z2 * matrix.W2 + this.W2 * matrix.W3;
+        val m30 = this.X3 * matrix.X0 + this.Y3 * matrix.X1 + this.Z3 * matrix.X2 + this.W3 * matrix.X3;
+        val m31 = this.X3 * matrix.Y0 + this.Y3 * matrix.Y1 + this.Z3 * matrix.Y2 + this.W3 * matrix.Y3;
+        val m32 = this.X3 * matrix.Z0 + this.Y3 * matrix.Z1 + this.Z3 * matrix.Z2 + this.W3 * matrix.Z3;
+        val m33 = this.X3 * matrix.W0 + this.Y3 * matrix.W1 + this.Z3 * matrix.W2 + this.W3 * matrix.W3;
         return Matrix4x4(
             m00, m10, m20, m30,
             m01, m11, m21, m31,
@@ -199,10 +199,10 @@ public data class Matrix4x4(
     }
 
     public fun MultiplyPoint(point: Vector3): Vector3 {
-        val x = this.m00 * point.X + this.m01 * point.Y + this.m02 * point.Z + this.m03;
-        val y = this.m10 * point.X + this.m11 * point.Y + this.m12 * point.Z + this.m13;
-        val z = this.m20 * point.X + this.m21 * point.Y + this.m22 * point.Z + this.m23;
-        val w = this.m30 * point.X + this.m31 * point.Y + this.m32 * point.Z + this.m33;
+        val x = this.X0 * point.X + this.Y0 * point.Y + this.Z0 * point.Z + this.W0;
+        val y = this.X1 * point.X + this.Y1 * point.Y + this.Z1 * point.Z + this.W1;
+        val z = this.X2 * point.X + this.Y2 * point.Y + this.Z2 * point.Z + this.W2;
+        val w = this.X3 * point.X + this.Y3 * point.Y + this.Z3 * point.Z + this.W3;
         return Vector3(
             x / w,
             y / w,
