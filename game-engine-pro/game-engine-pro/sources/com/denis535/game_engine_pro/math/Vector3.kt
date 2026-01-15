@@ -22,6 +22,38 @@ public data class Vector3(
             );
         }
 
+        public fun Min(v0: Vector3, v1: Vector3): Vector3 {
+            return Vector3(
+                Math.Min(v0.X, v1.X),
+                Math.Min(v0.Y, v1.Y),
+                Math.Min(v0.Z, v1.Z),
+            );
+        }
+
+        public fun Max(v0: Vector3, v1: Vector3): Vector3 {
+            return Vector3(
+                Math.Max(v0.X, v1.X),
+                Math.Max(v0.Y, v1.Y),
+                Math.Max(v0.Z, v1.Z),
+            );
+        }
+
+        public fun Clamp(value: Vector3, min: Float, max: Float): Vector3 {
+            return Vector3(
+                Math.Clamp(value.X, min, max),
+                Math.Clamp(value.Y, min, max),
+                Math.Clamp(value.Z, min, max),
+            );
+        }
+
+        public fun Clamp01(value: Vector3): Vector3 {
+            return Vector3(
+                Math.Clamp01(value.X),
+                Math.Clamp01(value.Y),
+                Math.Clamp01(value.Z),
+            );
+        }
+
     }
 
     public val Length: Float
