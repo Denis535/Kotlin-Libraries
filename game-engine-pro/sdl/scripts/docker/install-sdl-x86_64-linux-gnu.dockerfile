@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -24,7 +24,8 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -S . \
         -B \"$BUILD_DIR\" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=\"$INSTALL_DIR\" \
+        -DCMAKE_C_STANDARD=11 \
+        -DCMAKE_C_EXTENSIONS=ON \
         \
         -DSDL_STATIC=ON \
         -DSDL_SHARED=OFF \
@@ -33,17 +34,20 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -DSDL_TESTS=OFF \
         -DSDL_INSTALL_TESTS=OFF \
         \
+        -DSDL_VIDEO=ON \
         -DSDL_VIDEO_WINDOWS=OFF \
         -DSDL_VIDEO_X11=ON \
         -DSDL_VIDEO_WAYLAND=OFF \
-        \
-        -DSDL_VIDEO=ON \
-        -DSDL_AUDIO=ON \
-        -DSDL_JOYSTICK=ON \
-        -DSDL_HAPTIC=ON \
-        -DSDL_SENSOR=ON \
+        -DSDL_OPENGLES=OFF \
         -DSDL_RENDER_OPENGL=ON \
-        -DSDL_RENDER_VULKAN=ON; \
+        -DSDL_RENDER_VULKAN=ON \
+        \
+        -DSDL_AUDIO=ON \
+        -SDL_AUDIO_JACK=ON \
+        \
+        -DSDL_JOYSTICK=ON \
+        -DSDL_SENSOR=ON \
+        -DSDL_HAPTIC=ON; \
     cmake --build \"$BUILD_DIR\" -- -j$(nproc); \
-    cmake --install \"$BUILD_DIR\" \
+    cmake --install \"$BUILD_DIR\" --prefix \"$INSTALL_DIR\" \
     "]

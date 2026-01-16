@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -39,7 +39,8 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -B \"$BUILD_DIR\" \
         -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=\"$INSTALL_DIR\" \
+        -DCMAKE_C_STANDARD=11 \
+        -DCMAKE_C_EXTENSIONS=ON \
         -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake \
         -DANDROID_PLATFORM=${ANDROID_PLATFORM} \
         -DANDROID_ABI=arm64-v8a \
@@ -52,23 +53,22 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -DSDL_TESTS=OFF \
         -DSDL_INSTALL_TESTS=OFF \
         \
+        -DSDL_VIDEO=ON \
         -DSDL_VIDEO_WINDOWS=OFF \
         -DSDL_VIDEO_X11=OFF \
         -DSDL_VIDEO_WAYLAND=OFF \
-        \
-        -DSDL_VIDEO=ON \
-        -DSDL_AUDIO=ON \
-        -DSDL_JOYSTICK=ON \
-        -DSDL_HAPTIC=ON \
-        -DSDL_SENSOR=ON \
+        -DSDL_OPENGLES=ON \
         -DSDL_RENDER_OPENGL=OFF \
         -DSDL_RENDER_VULKAN=ON \
         \
-        -DSDL_OPENGLES=ON \
-        -DSDL_AUDIO_OPENSL=ON \
+        -DSDL_AUDIO=ON \
         -DSDL_AUDIO_AAUDIO=ON \
+        \
+        -DSDL_JOYSTICK=ON \
         -DSDL_JOYSTICK_ANDROID=ON \
-        -DSDL_SENSOR_ANDROID=ON; \
+        -DSDL_SENSOR=ON \
+        -DSDL_SENSOR_ANDROID=ON \
+        -DSDL_HAPTIC=ON; \
     cmake --build \"$BUILD_DIR\" -- -j$(nproc); \
-    cmake --install \"$BUILD_DIR\" \
+    cmake --install \"$BUILD_DIR\" --prefix \"$INSTALL_DIR\" \
     "]

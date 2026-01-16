@@ -19,7 +19,8 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -S . \
         -B \"$BUILD_DIR\" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=\"$INSTALL_DIR\" \
+        -DCMAKE_C_STANDARD=11 \
+        -DCMAKE_C_EXTENSIONS=ON \
         -DCMAKE_SYSTEM_NAME=Windows \
         -DCMAKE_FIND_ROOT_PATH=/usr/x86_64-w64-mingw32 \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
@@ -33,17 +34,20 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -DSDL_TESTS=OFF \
         -DSDL_INSTALL_TESTS=OFF \
         \
+        -DSDL_VIDEO=ON \
         -DSDL_VIDEO_WINDOWS=ON \
         -DSDL_VIDEO_X11=OFF \
         -DSDL_VIDEO_WAYLAND=OFF \
-        \
-        -DSDL_VIDEO=ON \
-        -DSDL_AUDIO=ON \
-        -DSDL_JOYSTICK=ON \
-        -DSDL_HAPTIC=ON \
-        -DSDL_SENSOR=ON \
+        -DSDL_OPENGLES=OFF \
         -DSDL_RENDER_OPENGL=ON \
-        -DSDL_RENDER_VULKAN=ON; \
+        -DSDL_RENDER_VULKAN=ON \
+        \
+        -DSDL_AUDIO=ON \
+        -DSDL_AUDIO_WASAPI=ON \
+        \
+        -DSDL_JOYSTICK=ON \
+        -DSDL_SENSOR=ON \
+        -DSDL_HAPTIC=ON; \
     cmake --build \"$BUILD_DIR\" -- -j$(nproc); \
-    cmake --install \"$BUILD_DIR\" \
+    cmake --install \"$BUILD_DIR\" --prefix \"$INSTALL_DIR\" \
     "]
