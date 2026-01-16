@@ -18,8 +18,8 @@ WORKDIR /SDL
 ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
     "BUILD_DIR='build/aarch64-linux-gnu'; \
     INSTALL_DIR='dist/aarch64-linux-gnu'; \
-    export CC=gcc \
-    export CXX=g++ \
+    export CC=gcc; \
+    export CXX=g++; \
     cmake \
         -S . \
         -B \"$BUILD_DIR\" \
