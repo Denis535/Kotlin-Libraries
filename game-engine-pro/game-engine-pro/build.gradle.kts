@@ -9,7 +9,7 @@ version = project.version
 description = project.description
 
 kotlin {
-    this.mingwX64()
+    mingwX64()
     this.linuxX64()
     this.linuxArm64()
     this.sourceSets {
@@ -17,7 +17,8 @@ kotlin {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
             this.dependencies {
-                this.implementation("io.github.denis535:sdl:3.4.0.4")
+                this.implementation(this.project(":sdl"))
+//                this.implementation("io.github.denis535:sdl:3.4.0.5")
             }
         }
         val mingwX64Main by getting {}

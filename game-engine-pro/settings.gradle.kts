@@ -18,5 +18,6 @@ plugins {
 
 rootProject.name = "game-engine-pro"
 
+include(":example")
 include(":game-engine-pro")
 include(":sdl")
