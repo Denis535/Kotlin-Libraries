@@ -1,4 +1,4 @@
-FROM arm64v8/ubuntu:20.04
+FROM arm64v8/ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -18,8 +18,6 @@ WORKDIR /SDL
 ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
     "BUILD_DIR='build/aarch64-linux-gnu'; \
     INSTALL_DIR='dist/aarch64-linux-gnu'; \
-    export CC=gcc; \
-    export CXX=g++; \
     cmake \
         -S . \
         -B \"$BUILD_DIR\" \
@@ -43,11 +41,11 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -DSDL_RENDER_VULKAN=ON \
         \
         -DSDL_AUDIO=ON \
-        -SDL_AUDIO_JACK=ON \
+        -DSDL_AUDIO_JACK=ON \
         \
         -DSDL_JOYSTICK=ON \
         -DSDL_SENSOR=ON \
         -DSDL_HAPTIC=ON; \
     cmake --build \"$BUILD_DIR\" -- -j$(nproc); \
-    cmake --install \"$BUILD_DIR\" --prefix \"$INSTALL_DIR\" \
+    cmake --install \"$BUILD_DIR\" --prefix \"$INSTALL_DIR\"; \
     "]

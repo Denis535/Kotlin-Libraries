@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -70,5 +70,5 @@ ENTRYPOINT ["/usr/bin/env", "bash", "-e", "-c", \
         -DSDL_SENSOR_ANDROID=ON \
         -DSDL_HAPTIC=ON; \
     cmake --build \"$BUILD_DIR\" -- -j$(nproc); \
-    cmake --install \"$BUILD_DIR\" --prefix \"$INSTALL_DIR\" \
+    cmake --install \"$BUILD_DIR\" --prefix \"$INSTALL_DIR\"; \
     "]
