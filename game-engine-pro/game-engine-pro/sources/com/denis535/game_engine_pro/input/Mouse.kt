@@ -8,7 +8,7 @@ public class Mouse : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    public var OnCursorMove: ((MouseCursorMoveEvent) -> Unit)? = null
+    public var OnMotion: ((MouseMotionEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -74,24 +74,24 @@ public class Mouse : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetCursorPosition(): Pair<Float, Float> {
+    public fun GetCursor(): Pair<Float, Float> { // unlocked cursor only
         check(!this.IsClosed)
         memScoped {
-            val cursorX = this.alloc<FloatVar>()
-            val cursorY = this.alloc<FloatVar>()
-            SDL_GetMouseState(cursorX.ptr, cursorY.ptr).also { SDL.ThrowErrorIfNeeded() }
-            return Pair(cursorX.value, cursorY.value)
+            val x = this.alloc<FloatVar>()
+            val y = this.alloc<FloatVar>()
+            SDL_GetMouseState(x.ptr, y.ptr).also { SDL.ThrowErrorIfNeeded() }
+            return Pair(x.value, y.value)
         }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetCursorDelta(): Pair<Float, Float> {
+    public fun GetDelta(): Pair<Float, Float> { // locked cursor only
         check(!this.IsClosed)
         memScoped {
-            val cursorDeltaX = this.alloc<FloatVar>()
-            val cursorDeltaY = this.alloc<FloatVar>()
-            SDL_GetRelativeMouseState(cursorDeltaX.ptr, cursorDeltaY.ptr).also { SDL.ThrowErrorIfNeeded() }
-            return Pair(cursorDeltaX.value, cursorDeltaY.value)
+            val deltaX = this.alloc<FloatVar>()
+            val deltaY = this.alloc<FloatVar>()
+            SDL_GetRelativeMouseState(deltaX.ptr, deltaY.ptr).also { SDL.ThrowErrorIfNeeded() }
+            return Pair(deltaX.value, deltaY.value)
         }
     }
 
@@ -104,27 +104,23 @@ public class Mouse : AutoCloseable {
 
 }
 
-public class MouseCursorMoveEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
-    public val CursorDeltaX: Float,
-    public val CursorDeltaY: Float,
+public class MouseMotionEvent(
+    public val Cursor: Pair<Float, Float>, // unlocked cursor only
+    public val Delta: Pair<Float, Float>, // locked cursor only
 )
 
 public class MouseButtonActionEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
+    public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val Button: MouseButton,
     public val Clicks: Int,
 )
 
 public class MouseWheelScrollEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
+    public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val ScrollX: Float,
     public val ScrollY: Float,
-    public val ScrollIntegerX: Int,
-    public val ScrollIntegerY: Int,
+    public val IntegerScrollX: Int,
+    public val IntegerScrollY: Int,
 )
 
 public enum class MouseButton {

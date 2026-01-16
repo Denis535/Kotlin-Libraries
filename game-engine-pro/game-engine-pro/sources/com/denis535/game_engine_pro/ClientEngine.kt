@@ -57,49 +57,73 @@ public abstract class ClientEngine : Engine {
         when (event.pointed.type) {
             SDL_EVENT_MOUSE_MOTION -> {
                 val event = event.pointed.motion
-                val cursorX = event.x
-                val cursorY = event.y
-                val cursorDeltaX = event.xrel
-                val cursorDeltaY = event.yrel
-                this.OnMouseCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
+                val x = event.x
+                val y = event.y
+                val deltaX = event.xrel
+                val deltaY = event.yrel
+                this.OnMouseMotion(MouseMotionEvent(Pair(x, y), Pair(deltaX, deltaY)))
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val event = event.pointed.button
-                val cursorX = event.x
-                val cursorY = event.y
+                val x = event.x
+                val y = event.y
                 val isPressed = event.down
                 val button = MouseButton.FromNativeValue(event.button)
                 val clicks = event.clicks.toInt()
                 if (button != null) {
                     if (isPressed) {
-                        this.OnMouseButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
+                        this.OnMouseButtonPress(MouseButtonActionEvent(Pair(x, y), button, clicks))
                     } else {
-                        this.OnMouseButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
+                        this.OnMouseButtonRelease(MouseButtonActionEvent(Pair(x, y), button, clicks))
                     }
                 }
             }
             SDL_EVENT_MOUSE_WHEEL -> {
                 val event = event.pointed.wheel
-                val cursorX = event.mouse_x
-                val cursorY = event.mouse_y
+                val x = event.mouse_x
+                val y = event.mouse_y
                 val isDirectionNormal = event.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
                 val scrollX: Float
                 val scrollY: Float
-                val scrollIntegerX: Int
-                val scrollIntegerY: Int
+                val integerScrollX: Int
+                val integerScrollY: Int
                 if (isDirectionNormal) {
                     scrollX = event.x
                     scrollY = event.y
-                    scrollIntegerX = event.integer_x
-                    scrollIntegerY = event.integer_y
+                    integerScrollX = event.integer_x
+                    integerScrollY = event.integer_y
                 } else {
                     scrollX = -event.x
                     scrollY = -event.y
-                    scrollIntegerX = -event.integer_x
-                    scrollIntegerY = -event.integer_y
+                    integerScrollX = -event.integer_x
+                    integerScrollY = -event.integer_y
                 }
-                this.OnMouseWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
+                this.OnMouseWheelScroll(MouseWheelScrollEvent(Pair(x, y), scrollX, scrollY, integerScrollX, integerScrollY))
             }
+
+//            SDL_EVENT_FINGER_DOWN -> {
+//                val event = event.pointed.tfinger
+//                val id = event.fingerID
+//                val x = event.x
+//                val y = event.y
+//                val pressure = event.pressure
+//            }
+//            SDL_EVENT_FINGER_UP, SDL_EVENT_FINGER_CANCELED -> {
+//                val event = event.pointed.tfinger
+//                val id = event.fingerID
+//                val x = event.x
+//                val y = event.y
+//            }
+//            SDL_EVENT_FINGER_MOTION -> {
+//                val event = event.pointed.tfinger
+//                val id = event.fingerID
+//                val x = event.x
+//                val y = event.y
+//                val deltaX = event.dx
+//                val deltaY = event.dy
+//                val pressure = event.pressure
+//            }
+
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val event = event.pointed.key
                 val isPressed = event.down
@@ -117,13 +141,7 @@ public abstract class ClientEngine : Engine {
                     }
                 }
             }
-            SDL_EVENT_TEXT_INPUT -> {
-                val event = event.pointed.text
-                val text = event.text?.toKStringFromUtf8()
-                if (text != null) {
-                    this.OnTextInput(text)
-                }
-            }
+
 //            SDL_EVENT_JOYSTICK_ADDED -> {
 //                val event = event.pointed.jdevice
 //                val id = event.which
@@ -178,14 +196,23 @@ public abstract class ClientEngine : Engine {
 //                    MathUtils.Lerp(-1f, 1f, MathUtils.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
 //                }
 //            }
+
+            SDL_EVENT_TEXT_INPUT -> {
+                val event = event.pointed.text
+                val text = event.text?.toKStringFromUtf8()
+                if (text != null) {
+                    this.OnTextInput(text)
+                }
+            }
+
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
                 this.IsRunning = false
             }
         }
     }
 
-    protected open fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
-        this.Mouse.OnCursorMove?.invoke(event)
+    protected open fun OnMouseMotion(event: MouseMotionEvent) {
+        this.Mouse.OnMotion?.invoke(event)
     }
 
     protected open fun OnMouseButtonPress(event: MouseButtonActionEvent) {
