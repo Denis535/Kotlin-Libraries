@@ -61,7 +61,7 @@ public abstract class ClientEngine : Engine {
                 val y = event.y
                 val deltaX = event.xrel
                 val deltaY = event.yrel
-                this.OnMouseMotion(MouseMotionEvent(Pair(x, y), Pair(deltaX, deltaY)))
+                this.OnMouseMove(MouseMoveEvent(Pair(x, y), Pair(deltaX, deltaY)))
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val event = event.pointed.button
@@ -211,8 +211,8 @@ public abstract class ClientEngine : Engine {
         }
     }
 
-    protected open fun OnMouseMotion(event: MouseMotionEvent) {
-        this.Mouse.OnMotion?.invoke(event)
+    protected open fun OnMouseMove(event: MouseMoveEvent) {
+        this.Mouse.OnMove?.invoke(event)
     }
 
     protected open fun OnMouseButtonPress(event: MouseButtonActionEvent) {

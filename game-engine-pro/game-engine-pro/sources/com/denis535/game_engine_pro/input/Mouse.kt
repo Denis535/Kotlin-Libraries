@@ -8,7 +8,7 @@ public class Mouse : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    public var OnMotion: ((MouseMotionEvent) -> Unit)? = null
+    public var OnMove: ((MouseMoveEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -104,7 +104,7 @@ public class Mouse : AutoCloseable {
 
 }
 
-public class MouseMotionEvent(
+public class MouseMoveEvent(
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val Delta: Pair<Float, Float>, // locked cursor only
 )

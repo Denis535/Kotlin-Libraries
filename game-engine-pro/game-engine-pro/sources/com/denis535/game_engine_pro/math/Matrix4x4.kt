@@ -1,9 +1,9 @@
 package com.denis535.game_engine_pro.math
 
 // Column-major
-// m00 m10 m20 m30 - x-column: x-direction, translation.x
-// m01 m11 m21 m31 - y-column: y-direction, translation.y
-// m02 m12 m22 m32 - z-column: z-direction, translation.z
+// m00 m10 m20 m30 - x-column: x-axis, position.x
+// m01 m11 m21 m31 - y-column: y-axis, position.y
+// m02 m12 m22 m32 - z-column: z-axis, position.z
 // m03 m13 m23 m33 - w-column: 0, 0, 0, 1
 
 public data class Matrix4x4(
