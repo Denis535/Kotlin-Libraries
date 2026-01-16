@@ -35,6 +35,20 @@ kotlin {
             }
         }
     }
+    this.androidNativeX64 {
+        this.compilations["main"].cinterops {
+            val sdl by creating {
+                this.definitionFile = file("sources/com.denis535.sdl-x86_64-linux-android.def")
+            }
+        }
+    }
+    this.androidNativeArm64 {
+        this.compilations["main"].cinterops {
+            val sdl by creating {
+                this.definitionFile = file("sources/com.denis535.sdl-aarch64-linux-android.def")
+            }
+        }
+    }
     this.sourceSets {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
@@ -43,6 +57,8 @@ kotlin {
         val mingwX64Main by getting {}
         val linuxX64Main by getting {}
         val linuxArm64Main by getting {}
+        val androidNativeX64Main by getting {}
+        val androidNativeArm64Main by getting {}
     }
 }
 

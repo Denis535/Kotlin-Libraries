@@ -1,6 +1,6 @@
 package = com.denis535.sdl
 
-headers.linux = SDL3/SDL.h
-staticLibraries.linux = libSDL3.a
-libraryPaths.linux = SDL/x86_64-linux-gnu/lib
-compilerOpts.linux = -ISDL/x86_64-linux-gnu/include
+headers = SDL3/SDL.h
+staticLibraries = libSDL3.a
+libraryPaths = SDL/x86_64-linux-gnu/lib
+compilerOpts = -ISDL/x86_64-linux-gnu/include
