@@ -44,10 +44,10 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
-//        if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.LeftAlt)) {
-//            this.Window.IsFullScreen = !this.Window.IsFullScreen
-//        }
         super.OnKeyboardKeyPress(event)
+        if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
+            this.Window.IsFullScreen = !this.Window.IsFullScreen
+        }
     }
 
     protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
@@ -75,7 +75,7 @@ private class ClientEngine2 : ClientEngine {
 
 private class MainWindow2 : MainWindow {
 
-    public constructor() : super(Description.Window("Example")) {
+    public constructor() : super(Description.Window("Example", IsResizable = true)) {
         this.Raise()
     }
 
