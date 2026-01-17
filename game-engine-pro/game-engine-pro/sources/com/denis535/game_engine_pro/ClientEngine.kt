@@ -52,8 +52,8 @@ public abstract class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessEvent(event: CPointer<SDL_Event>) {
-        super.ProcessEvent(event)
+    internal override fun ProcessEvent(info: FrameInfo, event: CPointer<SDL_Event>) {
+        super.ProcessEvent(info, event)
         when (event.pointed.type) {
             SDL_EVENT_MOUSE_MOTION -> {
                 val event = event.pointed.motion

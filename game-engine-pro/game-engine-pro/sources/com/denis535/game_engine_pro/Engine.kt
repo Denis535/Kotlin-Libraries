@@ -13,11 +13,10 @@ public abstract class Engine : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val Time: Double
+    public val Ticks: ULong
         get() {
             check(!this.IsClosed)
-            val ticks = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
-            return ticks.toDouble() / 1000.0
+            return SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
         }
 
     public var IsRunning: Boolean = false
@@ -43,13 +42,13 @@ public abstract class Engine : AutoCloseable {
         this.IsRunning = true
         this.OnStart(info)
         while (true) {
-            val startTime = this.Time
+            val startTime = this.Ticks
             this.ProcessFrame(info, fixedDeltaTime)
             if (!this.IsRunning) {
                 break
             }
-            val endTime = this.Time
-            val deltaTime = (endTime - startTime).toFloat()
+            val endTime = this.Ticks
+            val deltaTime = (endTime - startTime).toFloat() / 1000f
             info.Number++
             info.Time += deltaTime
             info.DeltaTime = deltaTime
@@ -63,7 +62,7 @@ public abstract class Engine : AutoCloseable {
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
-                this@Engine.ProcessEvent(event.ptr)
+                this@Engine.ProcessEvent(info, event.ptr)
             }
         }
         if (info.FixedFrameInfo.Number == 0) {
@@ -81,7 +80,7 @@ public abstract class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvent(event: CPointer<SDL_Event>) {
+    internal open fun ProcessEvent(info: FrameInfo, event: CPointer<SDL_Event>) {
         check(!this.IsClosed)
         when (event.pointed.type) {
             SDL_EVENT_QUIT -> {

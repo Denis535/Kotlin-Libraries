@@ -5,9 +5,22 @@ import cnames.structs.*
 import com.denis535.sdl.*
 
 public open class MainWindow : AutoCloseable {
-    public sealed class Description(public val Title: String) {
-        public class FullScreen(title: String) : Description(title)
-        public class Window(title: String, public val Width: Int = 1280, public val Height: Int = 720, public val IsResizable: Boolean = false) : Description(title)
+    public sealed class Description(
+        public val Title: String,
+    ) {
+        public class FullScreen(
+            title: String,
+            public val Width: Int = 1280,
+            public val Height: Int = 720,
+            public val IsResizable: Boolean = false,
+        ) : Description(title)
+
+        public class Window(
+            title: String,
+            public val Width: Int = 1280,
+            public val Height: Int = 720,
+            public val IsResizable: Boolean = false,
+        ) : Description(title)
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -118,6 +131,14 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public val IsVisible: Boolean
+        get() {
+            check(!this.IsClosed)
+            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_HIDDEN == 0UL && flags and SDL_WINDOW_MINIMIZED == 0UL
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public var IsTextInputEnabled: Boolean
         get() {
             check(!this.IsClosed)
@@ -160,8 +181,10 @@ public open class MainWindow : AutoCloseable {
             when (description) {
                 is Description.FullScreen -> {
                     var flags = SDL_WINDOW_VULKAN or SDL_WINDOW_FULLSCREEN
-                    SDL_CreateWindow(description.Title, 0, 0, flags).also { SDL.ThrowErrorIfNeeded() }.also {
-                        SDL_SetWindowMinimumSize(it, 320, 240)
+                    if (description.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
+                    SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }.also {
+                        SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { SDL.ThrowErrorIfNeeded() }
+                        SDL_SetWindowMinimumSize(it, 320, 240).also { SDL.ThrowErrorIfNeeded() }
                     }
                 }
                 is Description.Window -> {
@@ -169,7 +192,7 @@ public open class MainWindow : AutoCloseable {
                     if (description.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
                     SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }.also {
                         SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { SDL.ThrowErrorIfNeeded() }
-                        SDL_SetWindowMinimumSize(it, 320, 240)
+                        SDL_SetWindowMinimumSize(it, 320, 240).also { SDL.ThrowErrorIfNeeded() }
                     }
                 }
             }
