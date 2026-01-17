@@ -31,49 +31,49 @@ public abstract class Engine : AutoCloseable {
     public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        val info = FrameInfo()
+        val frame = Frame()
         this.IsRunning = true
-        this.OnStart(info)
+        this.OnStart(frame)
         while (true) {
             val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
-            this.ProcessFrame(info, fixedDeltaTime)
+            this.ProcessFrame(frame, fixedDeltaTime)
             if (!this.IsRunning) {
                 break
             }
             val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
             val deltaTime = (endTime - startTime).toFloat() / 1000f
-            info.Number++
-            info.Time += deltaTime
-            info.DeltaTime = deltaTime
+            frame.Number++
+            frame.Time += deltaTime
+            frame.DeltaTime = deltaTime
         }
-        this.OnStop(info)
+        this.OnStop(frame)
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float) {
+    internal open fun ProcessFrame(frame: Frame, fixedDeltaTime: Float) {
         check(!this.IsClosed)
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
-                this@Engine.ProcessEvent(info, event.ptr)
+                this@Engine.ProcessEvent(frame, event.ptr)
             }
         }
-        if (info.FixedFrameInfo.Number == 0) {
-            this.OnFixedUpdate(info)
-            info.FixedFrameInfo.Number++
-            info.FixedFrameInfo.DeltaTime = fixedDeltaTime
+        if (frame.Fixed.Number == 0) {
+            this.OnFixedUpdate(frame)
+            frame.Fixed.Number++
+            frame.Fixed.DeltaTime = fixedDeltaTime
         } else {
-            while (info.FixedFrameInfo.Time <= info.Time) {
-                this.OnFixedUpdate(info)
-                info.FixedFrameInfo.Number++
-                info.FixedFrameInfo.DeltaTime = fixedDeltaTime
+            while (frame.Fixed.Time <= frame.Time) {
+                this.OnFixedUpdate(frame)
+                frame.Fixed.Number++
+                frame.Fixed.DeltaTime = fixedDeltaTime
             }
         }
-        this.OnUpdate(info)
+        this.OnUpdate(frame)
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvent(info: FrameInfo, event: CPointer<SDL_Event>) {
+    internal open fun ProcessEvent(frame: Frame, event: CPointer<SDL_Event>) {
         check(!this.IsClosed)
         when (event.pointed.type) {
             SDL_EVENT_QUIT -> {
@@ -82,11 +82,11 @@ public abstract class Engine : AutoCloseable {
         }
     }
 
-    protected abstract fun OnStart(info: FrameInfo)
-    protected abstract fun OnStop(info: FrameInfo)
+    protected abstract fun OnStart(frame: Frame)
+    protected abstract fun OnStop(frame: Frame)
 
-    protected abstract fun OnFixedUpdate(info: FrameInfo)
-    protected abstract fun OnUpdate(info: FrameInfo)
+    protected abstract fun OnFixedUpdate(frame: Frame)
+    protected abstract fun OnUpdate(frame: Frame)
 
     @OptIn(ExperimentalForeignApi::class)
     public fun RequestQuit() {
@@ -100,9 +100,9 @@ public abstract class Engine : AutoCloseable {
 
 }
 
-public class FrameInfo {
+public class Frame {
 
-    public val FixedFrameInfo: FixedFrameInfo = FixedFrameInfo()
+    public val Fixed: FixedFrame = FixedFrame()
 
     public var Number: Int = 0
         internal set
@@ -121,12 +121,12 @@ public class FrameInfo {
     internal constructor()
 
     public override fun toString(): String {
-        return "FrameInfo(Number=${this.Number}, Time=${this.Time})"
+        return "Frame(Number=${this.Number}, Time=${this.Time})"
     }
 
 }
 
-public class FixedFrameInfo {
+public class FixedFrame {
 
     public var Number: Int = 0
         internal set
@@ -142,7 +142,7 @@ public class FixedFrameInfo {
     internal constructor()
 
     public override fun toString(): String {
-        return "FixedFrameInfo(Number=${this.Number}, Time=${this.Time})"
+        return "FixedFrame(Number=${this.Number}, Time=${this.Time})"
     }
 
 }

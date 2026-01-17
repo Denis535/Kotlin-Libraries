@@ -46,18 +46,18 @@ public abstract class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float) {
-        super.ProcessFrame(info, fixedDeltaTime)
-        this.OnDraw(info)
+    internal override fun ProcessFrame(frame: Frame, fixedDeltaTime: Float) {
+        super.ProcessFrame(frame, fixedDeltaTime)
+        this.OnDraw(frame)
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessEvent(info: FrameInfo, event: CPointer<SDL_Event>) {
-        super.ProcessEvent(info, event)
+    internal override fun ProcessEvent(frame: Frame, event: CPointer<SDL_Event>) {
+        super.ProcessEvent(frame, event)
         when (event.pointed.type) {
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
-                val timestamp = info.Time
+                val timestamp = frame.Time
                 val x = evt.x
                 val y = evt.y
                 val deltaX = evt.xrel
@@ -67,7 +67,7 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val evt = event.pointed.button
-                val timestamp = info.Time
+                val timestamp = frame.Time
                 val x = evt.x
                 val y = evt.y
                 val isPressed = evt.down
@@ -86,7 +86,7 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_MOUSE_WHEEL -> {
                 val evt = event.pointed.wheel
-                val timestamp = info.Time
+                val timestamp = frame.Time
                 val x = evt.mouse_x
                 val y = evt.mouse_y
                 val isDirectionNormal = evt.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
@@ -134,7 +134,7 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val evt = event.pointed.key
-                val timestamp = info.Time
+                val timestamp = frame.Time
                 val isPressed = evt.down
                 val isRepeated = evt.repeat
                 val key = KeyboardKey.FromNativeValue(evt.scancode)
@@ -246,6 +246,6 @@ public abstract class ClientEngine : Engine {
     protected open fun OnTextInput(text: String) {
     }
 
-    protected abstract fun OnDraw(info: FrameInfo)
+    protected abstract fun OnDraw(frame: Frame)
 
 }
