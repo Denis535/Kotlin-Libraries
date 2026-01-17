@@ -21,10 +21,10 @@ private class ClientEngine2 : ClientEngine {
         super.close()
     }
 
-    protected override fun OnStart(frame: Frame) {
+    protected override fun OnStart(time: Time) {
     }
 
-    protected override fun OnStop(frame: Frame) {
+    protected override fun OnStop(time: Time) {
     }
 
     protected override fun OnMouseMove(event: MouseMoveEvent) {
@@ -62,13 +62,13 @@ private class ClientEngine2 : ClientEngine {
         super.OnTextInput(text)
     }
 
-    protected override fun OnFixedUpdate(frame: Frame) {
+    protected override fun OnFixedUpdate(time: Time) {
     }
 
-    protected override fun OnUpdate(frame: Frame) {
+    protected override fun OnUpdate(time: Time) {
     }
 
-    protected override fun OnDraw(frame: Frame) {
+    protected override fun OnDraw(time: Time) {
     }
 
 }

@@ -31,49 +31,49 @@ public abstract class Engine : AutoCloseable {
     public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
         check(!this.IsRunning)
+        val time = Time()
         this.IsRunning = true
-        val frame = Frame()
-        this.OnStart(frame)
+        this.OnStart(time)
         while (true) {
             val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
-            this.ProcessFrame(frame, fixedDeltaTime)
+            this.ProcessFrame(time, fixedDeltaTime)
             if (!this.IsRunning) {
                 break
             }
             val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
             val deltaTime = (endTime - startTime).toFloat() / 1000f
-            frame.Number++
-            frame.Time += deltaTime
-            frame.DeltaTime = deltaTime
+            time.Number++
+            time.Time += deltaTime
+            time.DeltaTime = deltaTime
         }
-        this.OnStop(frame)
+        this.OnStop(time)
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessFrame(frame: Frame, fixedDeltaTime: Float) {
+    internal open fun ProcessFrame(time: Time, fixedDeltaTime: Float) {
         check(!this.IsClosed)
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
-                this@Engine.ProcessEvent(frame, event.ptr)
+                this@Engine.ProcessEvent(time, event.ptr)
             }
         }
-        if (frame.Fixed.Number == 0) {
-            this.OnFixedUpdate(frame)
-            frame.Fixed.Number++
-            frame.Fixed.DeltaTime = fixedDeltaTime
+        if (time.Fixed.Number == 0) {
+            this.OnFixedUpdate(time)
+            time.Fixed.Number++
+            time.Fixed.DeltaTime = fixedDeltaTime
         } else {
-            while (frame.Fixed.Time <= frame.Time) {
-                this.OnFixedUpdate(frame)
-                frame.Fixed.Number++
-                frame.Fixed.DeltaTime = fixedDeltaTime
+            while (time.Fixed.Time <= time.Time) {
+                this.OnFixedUpdate(time)
+                time.Fixed.Number++
+                time.Fixed.DeltaTime = fixedDeltaTime
             }
         }
-        this.OnUpdate(frame)
+        this.OnUpdate(time)
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvent(frame: Frame, event: CPointer<SDL_Event>) {
+    internal open fun ProcessEvent(time: Time, event: CPointer<SDL_Event>) {
         check(!this.IsClosed)
         when (event.pointed.type) {
             SDL_EVENT_QUIT -> {
@@ -82,11 +82,11 @@ public abstract class Engine : AutoCloseable {
         }
     }
 
-    protected abstract fun OnStart(frame: Frame)
-    protected abstract fun OnStop(frame: Frame)
+    protected abstract fun OnStart(time: Time)
+    protected abstract fun OnStop(time: Time)
 
-    protected abstract fun OnFixedUpdate(frame: Frame)
-    protected abstract fun OnUpdate(frame: Frame)
+    protected abstract fun OnFixedUpdate(time: Time)
+    protected abstract fun OnUpdate(time: Time)
 
     @OptIn(ExperimentalForeignApi::class)
     public fun RequestQuit() {
@@ -100,9 +100,9 @@ public abstract class Engine : AutoCloseable {
 
 }
 
-public class Frame {
+public class Time {
 
-    public val Fixed: FixedFrame = FixedFrame()
+    public val Fixed: FixedTime = FixedTime()
 
     public var Number: Int = 0
         internal set
@@ -121,12 +121,12 @@ public class Frame {
     internal constructor()
 
     public override fun toString(): String {
-        return "Frame(Number=${this.Number}, Time=${this.Time})"
+        return "Time(Number=${this.Number}, Time=${this.Time})"
     }
 
 }
 
-public class FixedFrame {
+public class FixedTime {
 
     public var Number: Int = 0
         internal set
@@ -142,7 +142,7 @@ public class FixedFrame {
     internal constructor()
 
     public override fun toString(): String {
-        return "FixedFrame(Number=${this.Number}, Time=${this.Time})"
+        return "FixedTime(Number=${this.Number}, Time=${this.Time})"
     }
 
 }
