@@ -56,117 +56,109 @@ public abstract class ClientEngine : Engine {
         super.ProcessEvent(info, event)
         when (event.pointed.type) {
             SDL_EVENT_MOUSE_MOTION -> {
-                val event = event.pointed.motion
+                val evt = event.pointed.motion
                 val timestamp = info.Time
-                val x = event.x
-                val y = event.y
-                val deltaX = event.xrel
-                val deltaY = event.yrel
-                val evt = MouseMoveEvent(timestamp, Pair(x, y), Pair(deltaX, deltaY))
-                this.OnMouseMove(evt)
+                val x = evt.x
+                val y = evt.y
+                val deltaX = evt.xrel
+                val deltaY = evt.yrel
+                val event = MouseMoveEvent(timestamp, Pair(x, y), Pair(deltaX, deltaY))
+                this.OnMouseMove(event)
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
-                val event = event.pointed.button
+                val evt = event.pointed.button
                 val timestamp = info.Time
-                val x = event.x
-                val y = event.y
-                val isPressed = event.down
-                val button = MouseButton.FromNativeValue(event.button)
-                val clicks = event.clicks.toInt()
-                val evt = if (button != null) {
+                val x = evt.x
+                val y = evt.y
+                val isPressed = evt.down
+                val button = MouseButton.FromNativeValue(evt.button)
+                val clicks = evt.clicks.toInt()
+                val event = if (button != null) {
                     MouseButtonActionEvent(timestamp, Pair(x, y), button, clicks)
                 } else {
                     null
                 }
                 if (isPressed) {
-                    if (evt != null) this.OnMouseButtonPress(evt)
+                    if (event != null) this.OnMouseButtonPress(event)
                 } else {
-                    if (evt != null) this.OnMouseButtonRelease(evt)
+                    if (event != null) this.OnMouseButtonRelease(event)
                 }
             }
             SDL_EVENT_MOUSE_WHEEL -> {
-                val event = event.pointed.wheel
+                val evt = event.pointed.wheel
                 val timestamp = info.Time
-                val x = event.mouse_x
-                val y = event.mouse_y
-                val isDirectionNormal = event.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
+                val x = evt.mouse_x
+                val y = evt.mouse_y
+                val isDirectionNormal = evt.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
                 val scrollX: Float
                 val scrollY: Float
                 val integerScrollX: Int
                 val integerScrollY: Int
                 if (isDirectionNormal) {
-                    scrollX = event.x
-                    scrollY = event.y
-                    integerScrollX = event.integer_x
-                    integerScrollY = event.integer_y
+                    scrollX = evt.x
+                    scrollY = evt.y
+                    integerScrollX = evt.integer_x
+                    integerScrollY = evt.integer_y
                 } else {
-                    scrollX = -event.x
-                    scrollY = -event.y
-                    integerScrollX = -event.integer_x
-                    integerScrollY = -event.integer_y
+                    scrollX = -evt.x
+                    scrollY = -evt.y
+                    integerScrollX = -evt.integer_x
+                    integerScrollY = -evt.integer_y
                 }
-                val evt = MouseWheelScrollEvent(timestamp, Pair(x, y), scrollX, scrollY, integerScrollX, integerScrollY)
-                this.OnMouseWheelScroll(evt)
+                val event = MouseWheelScrollEvent(timestamp, Pair(x, y), scrollX, scrollY, integerScrollX, integerScrollY)
+                this.OnMouseWheelScroll(event)
             }
 
 //            SDL_EVENT_FINGER_DOWN -> {
-//                val event = event.pointed.tfinger
-//                val id = event.fingerID
-//                val x = event.x
-//                val y = event.y
-//                val pressure = event.pressure
+//                val evt = event.pointed.tfinger
+//                val id = evt.fingerID
+//                val x = evt.x
+//                val y = evt.y
+//                val pressure = evt.pressure
 //            }
 //            SDL_EVENT_FINGER_UP, SDL_EVENT_FINGER_CANCELED -> {
-//                val event = event.pointed.tfinger
-//                val id = event.fingerID
-//                val x = event.x
-//                val y = event.y
+//                val evt = evt.pointed.tfinger
+//                val id = evt.fingerID
+//                val x = evt.x
+//                val y = evt.y
 //            }
 //            SDL_EVENT_FINGER_MOTION -> {
-//                val event = event.pointed.tfinger
-//                val id = event.fingerID
-//                val x = event.x
-//                val y = event.y
-//                val deltaX = event.dx
-//                val deltaY = event.dy
-//                val pressure = event.pressure
+//                val evt = event.pointed.tfinger
+//                val id = evt.fingerID
+//                val x = evt.x
+//                val y = evt.y
+//                val deltaX = evt.dx
+//                val deltaY = evt.dy
+//                val pressure = evt.pressure
 //            }
 
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
-                val event = event.pointed.key
+                val evt = event.pointed.key
                 val timestamp = info.Time
-                val isPressed = event.down
-                val isRepeated = event.repeat
-                val key = KeyboardKey.FromNativeValue(event.scancode)
-                val evt = if (key != null) {
+                val isPressed = evt.down
+                val isRepeated = evt.repeat
+                val key = KeyboardKey.FromNativeValue(evt.scancode)
+                val event = if (key != null) {
                     KeyboardKeyActionEvent(timestamp, key)
                 } else {
                     null
                 }
                 if (isPressed) {
                     if (!isRepeated) {
-                        if (evt != null) this.OnKeyboardKeyPress(evt)
+                        if (event != null) this.OnKeyboardKeyPress(event)
                     } else {
-                        if (evt != null) this.OnKeyboardKeyRepeat(evt)
+                        if (event != null) this.OnKeyboardKeyRepeat(event)
                     }
                 } else {
-                    if (evt != null) this.OnKeyboardKeyRelease(evt)
+                    if (event != null) this.OnKeyboardKeyRelease(event)
                 }
             }
 
-//            SDL_EVENT_JOYSTICK_ADDED -> {
-//                val event = event.pointed.jdevice
-//                val id = event.which
-//            }
-//            SDL_EVENT_JOYSTICK_REMOVED -> {
-//                val event = event.pointed.jdevice
-//                val id = event.which
-//            }
 //            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
-//                val event = event.pointed.jhat
-//                val id = event.which
-//                val hat = event.hat
-//                val value = event.value
+//                val evt = event.pointed.jhat
+//                val id = evt.which
+//                val hat = evt.hat
+//                val value = evt.value
 //                when (value.toUInt()) {
 //                    SDL_HAT_LEFT -> {
 //
@@ -195,23 +187,23 @@ public abstract class ClientEngine : Engine {
 //                }
 //            }
 //            SDL_EVENT_JOYSTICK_BUTTON_DOWN, SDL_EVENT_JOYSTICK_BUTTON_UP -> {
-//                val event = event.pointed.jbutton
-//                val id = event.which
-//                val button = event.button
-//                val isPressed = event.down
+//                val evt = event.pointed.jbutton
+//                val id = evt.which
+//                val button = evt.button
+//                val isPressed = evt.down
 //            }
 //            SDL_EVENT_JOYSTICK_AXIS_MOTION -> {
-//                val event = event.pointed.jaxis
-//                val id = event.which
-//                val axis = event.axis
-//                val value = event.value.let {
+//                val evt = event.pointed.jaxis
+//                val id = evt.which
+//                val axis = evt.axis
+//                val value = evt.value.let {
 //                    MathUtils.Lerp(-1f, 1f, MathUtils.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
 //                }
 //            }
 
             SDL_EVENT_TEXT_INPUT -> {
-                val event = event.pointed.text
-                val text = event.text?.toKStringFromUtf8()
+                val evt = event.pointed.text
+                val text = evt.text?.toKStringFromUtf8()
                 if (text != null) {
                     this.OnTextInput(text)
                 }
