@@ -1,6 +1,4 @@
 package = com.denis535.sdl
 
+compilerOpts = -I../libs/SDL/x86_64-linux-android/include
 headers = SDL3/SDL.h
-staticLibraries = libSDL3.a
-libraryPaths = SDL/x86_64-linux-android/lib
-compilerOpts = -ISDL/x86_64-linux-android/include

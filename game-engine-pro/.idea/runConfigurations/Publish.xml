@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value=":game-engine-pro:publish" />
+          <option value=":example:publish" />
         </list>
       </option>
       <option name="vmOptions" />
