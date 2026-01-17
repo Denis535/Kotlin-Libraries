@@ -31,8 +31,8 @@ public abstract class Engine : AutoCloseable {
     public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        val frame = Frame()
         this.IsRunning = true
+        val frame = Frame()
         this.OnStart(frame)
         while (true) {
             val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
