@@ -57,29 +57,36 @@ public abstract class ClientEngine : Engine {
         when (event.pointed.type) {
             SDL_EVENT_MOUSE_MOTION -> {
                 val event = event.pointed.motion
+                val timestamp = info.Time
                 val x = event.x
                 val y = event.y
                 val deltaX = event.xrel
                 val deltaY = event.yrel
-                this.OnMouseMove(MouseMoveEvent(Pair(x, y), Pair(deltaX, deltaY)))
+                val evt = MouseMoveEvent(timestamp, Pair(x, y), Pair(deltaX, deltaY))
+                this.OnMouseMove(evt)
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val event = event.pointed.button
+                val timestamp = info.Time
                 val x = event.x
                 val y = event.y
                 val isPressed = event.down
                 val button = MouseButton.FromNativeValue(event.button)
                 val clicks = event.clicks.toInt()
-                if (button != null) {
-                    if (isPressed) {
-                        this.OnMouseButtonPress(MouseButtonActionEvent(Pair(x, y), button, clicks))
-                    } else {
-                        this.OnMouseButtonRelease(MouseButtonActionEvent(Pair(x, y), button, clicks))
-                    }
+                val evt = if (button != null) {
+                    MouseButtonActionEvent(timestamp, Pair(x, y), button, clicks)
+                } else {
+                    null
+                }
+                if (isPressed) {
+                    if (evt != null) this.OnMouseButtonPress(evt)
+                } else {
+                    if (evt != null) this.OnMouseButtonRelease(evt)
                 }
             }
             SDL_EVENT_MOUSE_WHEEL -> {
                 val event = event.pointed.wheel
+                val timestamp = info.Time
                 val x = event.mouse_x
                 val y = event.mouse_y
                 val isDirectionNormal = event.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
@@ -98,7 +105,8 @@ public abstract class ClientEngine : Engine {
                     integerScrollX = -event.integer_x
                     integerScrollY = -event.integer_y
                 }
-                this.OnMouseWheelScroll(MouseWheelScrollEvent(Pair(x, y), scrollX, scrollY, integerScrollX, integerScrollY))
+                val evt = MouseWheelScrollEvent(timestamp, Pair(x, y), scrollX, scrollY, integerScrollX, integerScrollY)
+                this.OnMouseWheelScroll(evt)
             }
 
 //            SDL_EVENT_FINGER_DOWN -> {
@@ -126,19 +134,23 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val event = event.pointed.key
+                val timestamp = info.Time
                 val isPressed = event.down
                 val isRepeated = event.repeat
                 val key = KeyboardKey.FromNativeValue(event.scancode)
-                if (key != null) {
-                    if (isPressed) {
-                        if (!isRepeated) {
-                            this.OnKeyboardKeyPress(KeyboardKeyActionEvent(key))
-                        } else {
-                            this.OnKeyboardKeyRepeat(KeyboardKeyActionEvent(key))
-                        }
+                val evt = if (key != null) {
+                    KeyboardKeyActionEvent(timestamp, key)
+                } else {
+                    null
+                }
+                if (isPressed) {
+                    if (!isRepeated) {
+                        if (evt != null) this.OnKeyboardKeyPress(evt)
                     } else {
-                        this.OnKeyboardKeyRelease(KeyboardKeyActionEvent(key))
+                        if (evt != null) this.OnKeyboardKeyRepeat(evt)
                     }
+                } else {
+                    if (evt != null) this.OnKeyboardKeyRelease(evt)
                 }
             }
 

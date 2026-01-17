@@ -12,13 +12,6 @@ public abstract class Engine : AutoCloseable {
             return SDL_WasInit(0U).also { SDL.ThrowErrorIfNeeded() } == 0U
         }
 
-    @OptIn(ExperimentalForeignApi::class)
-    public val Ticks: ULong
-        get() {
-            check(!this.IsClosed)
-            return SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
-        }
-
     public var IsRunning: Boolean = false
         get() {
             check(!this.IsClosed)
@@ -42,12 +35,12 @@ public abstract class Engine : AutoCloseable {
         this.IsRunning = true
         this.OnStart(info)
         while (true) {
-            val startTime = this.Ticks
+            val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
             this.ProcessFrame(info, fixedDeltaTime)
             if (!this.IsRunning) {
                 break
             }
-            val endTime = this.Ticks
+            val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
             val deltaTime = (endTime - startTime).toFloat() / 1000f
             info.Number++
             info.Time += deltaTime

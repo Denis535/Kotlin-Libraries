@@ -69,7 +69,8 @@ public class Keyboard : AutoCloseable {
 }
 
 public class KeyboardKeyActionEvent(
-    public val Key: KeyboardKey
+    public val Timestamp: Float,
+    public val Key: KeyboardKey,
 )
 
 public enum class KeyboardKey {
