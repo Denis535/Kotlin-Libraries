@@ -23,8 +23,18 @@ public abstract class Engine : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal constructor() {
+    internal constructor(manifest: Manifest) {
         check(SDL_WasInit(0U).also { SDL.ThrowErrorIfNeeded() } == 0U)
+        SDL_Init(0U).also { SDL.ThrowErrorIfNeeded() }
+        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { SDL.ThrowErrorIfNeeded() }
+        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { SDL.ThrowErrorIfNeeded() }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public override fun close() {
+        check(!this.IsClosed)
+        check(!this.IsRunning)
+        SDL_Quit().also { SDL.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -101,53 +111,6 @@ public abstract class Engine : AutoCloseable {
             event.type = SDL_EVENT_QUIT
             SDL_PushEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }
         }
-    }
-
-}
-
-public class Time {
-
-    public val Fixed: FixedTime = FixedTime()
-
-    public var Number: Int = 0
-        internal set
-
-    public var Time: Float = 0.0f
-        internal set
-
-    public var DeltaTime: Float = 0.0f
-        internal set
-
-    public val Fps: Float
-        get() {
-            return if (this.DeltaTime > 0.0f) 1.0f / this.DeltaTime else 0.0f
-        }
-
-    internal constructor()
-
-    public override fun toString(): String {
-        return "Time(Number=${this.Number}, Time=${this.Time})"
-    }
-
-}
-
-public class FixedTime {
-
-    public var Number: Int = 0
-        internal set
-
-    public val Time: Float
-        get() {
-            return this.Number * this.DeltaTime
-        }
-
-    public var DeltaTime: Float = 0.0f
-        internal set
-
-    internal constructor()
-
-    public override fun toString(): String {
-        return "FixedTime(Number=${this.Number}, Time=${this.Time})"
     }
 
 }

@@ -26,10 +26,8 @@ public abstract class ClientEngine : Engine {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest, windowProvider: () -> MainWindow) {
-        SDL_Init(SDL_INIT_VIDEO).also { SDL.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { SDL.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { SDL.ThrowErrorIfNeeded() }
+    public constructor(manifest: Manifest, windowProvider: () -> MainWindow) : super(manifest) {
+        SDL_Init(SDL_INIT_VIDEO or SDL_INIT_AUDIO).also { SDL.ThrowErrorIfNeeded() }
         this.Window = windowProvider()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
@@ -42,7 +40,7 @@ public abstract class ClientEngine : Engine {
         this.Keyboard.close()
         this.Mouse.close()
         this.Window.close()
-        SDL_Quit().also { SDL.ThrowErrorIfNeeded() }
+        super.close()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -64,26 +62,30 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.window
                 val timestamp = time.Time
                 val windowID = evt.windowID
-                this.OnMouseFocus()
+                val event = MouseFocusEvent(timestamp, windowID)
+                this.OnMouseFocus(event)
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
                 val evt = event.pointed.window
                 val timestamp = time.Time
                 val windowID = evt.windowID
-                this.OnMouseFocusLost()
+                val event = MouseFocusLostEvent(timestamp, windowID)
+                this.OnMouseFocusLost(event)
             }
 
             SDL_EVENT_WINDOW_FOCUS_GAINED -> {
                 val evt = event.pointed.window
                 val timestamp = time.Time
                 val windowID = evt.windowID
-                this.OnInputFocus()
+                val event = InputFocusEvent(timestamp, windowID)
+                this.OnInputFocus(event)
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
                 val evt = event.pointed.window
                 val timestamp = time.Time
                 val windowID = evt.windowID
-                this.OnInputFocusLost()
+                val event = InputFocusLostEvent(timestamp, windowID)
+                this.OnInputFocusLost(event)
             }
 
             SDL_EVENT_TEXT_INPUT -> {
@@ -92,7 +94,8 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 val text = evt.text?.toKStringFromUtf8()
                 if (text != null) {
-                    this.OnInput(text)
+                    val event = InputEvent(timestamp, windowID, text)
+                    this.OnInput(event)
                 }
             }
 
@@ -259,27 +262,24 @@ public abstract class ClientEngine : Engine {
 //            }
 
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-                val evt = event.pointed.window
-                val timestamp = time.Time
-                val windowID = evt.windowID
                 this.IsRunning = false
             }
         }
     }
 
-    protected open fun OnMouseFocus() {
+    protected open fun OnMouseFocus(event: MouseFocusEvent) {
     }
 
-    protected open fun OnMouseFocusLost() {
+    protected open fun OnMouseFocusLost(event: MouseFocusLostEvent) {
     }
 
-    protected open fun OnInputFocus() {
+    protected open fun OnInputFocus(event: InputFocusEvent) {
     }
 
-    protected open fun OnInputFocusLost() {
+    protected open fun OnInputFocusLost(event: InputFocusLostEvent) {
     }
 
-    protected open fun OnInput(text: String) {
+    protected open fun OnInput(event: InputEvent) {
     }
 
     protected open fun OnMouseMove(event: MouseMoveEvent) {
