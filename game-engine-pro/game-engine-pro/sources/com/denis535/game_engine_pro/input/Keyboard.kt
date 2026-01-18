@@ -9,49 +9,6 @@ public class Keyboard : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    public var OnKeyPress: ((KeyboardKeyActionEvent) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
-    public var OnKeyRepeat: ((KeyboardKeyActionEvent) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
-    public var OnKeyRelease: ((KeyboardKeyActionEvent) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
-
     internal constructor()
 
     public override fun close() {

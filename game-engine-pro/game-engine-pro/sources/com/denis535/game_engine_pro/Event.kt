@@ -13,17 +13,17 @@ public class MouseFocusLostEvent(
     public val WindowID: UInt,
 )
 
-public class InputFocusEvent(
+public class KeyboardFocusEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
 )
 
-public class InputFocusLostEvent(
+public class KeyboardFocusLostEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
 )
 
-public class InputEvent(
+public class TextInputEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Text: String,
@@ -36,7 +36,7 @@ public class MouseMoveEvent(
     public val Delta: Pair<Float, Float>, // locked cursor only
 )
 
-public class MouseButtonActionEvent(
+public class MouseButtonEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
@@ -52,7 +52,7 @@ public class MouseWheelScrollEvent(
     public val IntegerScroll: Pair<Int, Int>,
 )
 
-public class KeyboardKeyActionEvent(
+public class KeyboardKeyEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Key: KeyboardKey,

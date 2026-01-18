@@ -77,26 +77,15 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.window
                 val timestamp = this.Time.Time
                 val windowID = evt.windowID
-                val event = InputFocusEvent(timestamp, windowID)
-                this.OnInputFocus(event)
+                val event = KeyboardFocusEvent(timestamp, windowID)
+                this.OnKeyboardFocus(event)
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
                 val evt = event.pointed.window
                 val timestamp = this.Time.Time
                 val windowID = evt.windowID
-                val event = InputFocusLostEvent(timestamp, windowID)
-                this.OnInputFocusLost(event)
-            }
-
-            SDL_EVENT_TEXT_INPUT -> {
-                val evt = event.pointed.text
-                val timestamp = this.Time.Time
-                val windowID = evt.windowID
-                val text = evt.text?.toKStringFromUtf8()
-                if (text != null) {
-                    val event = InputEvent(timestamp, windowID, text)
-                    this.OnInput(event)
-                }
+                val event = KeyboardFocusLostEvent(timestamp, windowID)
+                this.OnKeyboardFocusLost(event)
             }
 
             SDL_EVENT_MOUSE_MOTION -> {
@@ -120,7 +109,7 @@ public abstract class ClientEngine : Engine {
                 val button = MouseButton.FromNativeValue(evt.button)
                 val clickCount = evt.clicks.toInt()
                 val event = if (button != null) {
-                    MouseButtonActionEvent(timestamp, windowID, Pair(x, y), button, clickCount)
+                    MouseButtonEvent(timestamp, windowID, Pair(x, y), button, clickCount)
                 } else {
                     null
                 }
@@ -160,7 +149,7 @@ public abstract class ClientEngine : Engine {
 //                val evt = event.pointed.tfinger
 //                val timestamp = time.Time
 //                val windowID = evt.windowID
-//                val id = evt.fingerID
+//                val fingerID = evt.fingerID
 //                val x = evt.x
 //                val y = evt.y
 //                val pressure = evt.pressure
@@ -169,7 +158,7 @@ public abstract class ClientEngine : Engine {
 //                val evt = evt.pointed.tfinger
 //                val timestamp = time.Time
 //                val windowID = evt.windowID
-//                val id = evt.fingerID
+//                val fingerID = evt.fingerID
 //                val x = evt.x
 //                val y = evt.y
 //            }
@@ -177,7 +166,7 @@ public abstract class ClientEngine : Engine {
 //                val evt = event.pointed.tfinger
 //                val timestamp = time.Time
 //                val windowID = evt.windowID
-//                val id = evt.fingerID
+//                val fingerID = evt.fingerID
 //                val x = evt.x
 //                val y = evt.y
 //                val deltaX = evt.dx
@@ -193,7 +182,7 @@ public abstract class ClientEngine : Engine {
                 val isRepeated = evt.repeat
                 val key = KeyboardKey.FromNativeValue(evt.scancode)
                 val event = if (key != null) {
-                    KeyboardKeyActionEvent(timestamp, windowID, key)
+                    KeyboardKeyEvent(timestamp, windowID, key)
                 } else {
                     null
                 }
@@ -212,7 +201,7 @@ public abstract class ClientEngine : Engine {
 //                val evt = event.pointed.jhat
 //                val timestamp = time.Time
 //                val windowID = evt.windowID
-//                val id = evt.which
+//                val joystickID = evt.which
 //                val hat = evt.hat
 //                val value = evt.value
 //                when (value.toUInt()) {
@@ -246,7 +235,7 @@ public abstract class ClientEngine : Engine {
 //                val evt = event.pointed.jbutton
 //                val timestamp = time.Time
 //                val windowID = evt.windowID
-//                val id = evt.which
+//                val joystickID = evt.which
 //                val button = evt.button
 //                val isPressed = evt.down
 //            }
@@ -254,12 +243,23 @@ public abstract class ClientEngine : Engine {
 //                val evt = event.pointed.jaxis
 //                val timestamp = time.Time
 //                val windowID = evt.windowID
-//                val id = evt.which
+//                val joystickID = evt.which
 //                val axis = evt.axis
 //                val value = evt.value.let {
 //                    MathUtils.Lerp(-1f, 1f, MathUtils.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
 //                }
 //            }
+
+            SDL_EVENT_TEXT_INPUT -> {
+                val evt = event.pointed.text
+                val timestamp = this.Time.Time
+                val windowID = evt.windowID
+                val text = evt.text?.toKStringFromUtf8()
+                if (text != null) {
+                    val event = TextInputEvent(timestamp, windowID, text)
+                    this.OnTextInput(event)
+                }
+            }
 
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
                 this.IsRunning = false
@@ -267,48 +267,22 @@ public abstract class ClientEngine : Engine {
         }
     }
 
-    protected open fun OnMouseFocus(event: MouseFocusEvent) {
-    }
+    protected abstract fun OnMouseFocus(event: MouseFocusEvent)
+    protected abstract fun OnMouseFocusLost(event: MouseFocusLostEvent)
 
-    protected open fun OnMouseFocusLost(event: MouseFocusLostEvent) {
-    }
+    protected abstract fun OnKeyboardFocus(event: KeyboardFocusEvent)
+    protected abstract fun OnKeyboardFocusLost(event: KeyboardFocusLostEvent)
 
-    protected open fun OnInputFocus(event: InputFocusEvent) {
-    }
+    protected abstract fun OnMouseMove(event: MouseMoveEvent)
+    protected abstract fun OnMouseButtonPress(event: MouseButtonEvent)
+    protected abstract fun OnMouseButtonRelease(event: MouseButtonEvent)
+    protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
 
-    protected open fun OnInputFocusLost(event: InputFocusLostEvent) {
-    }
+    protected abstract fun OnKeyboardKeyPress(event: KeyboardKeyEvent)
+    protected abstract fun OnKeyboardKeyRepeat(event: KeyboardKeyEvent)
+    protected abstract fun OnKeyboardKeyRelease(event: KeyboardKeyEvent)
 
-    protected open fun OnInput(event: InputEvent) {
-    }
-
-    protected open fun OnMouseMove(event: MouseMoveEvent) {
-        this.Mouse.OnMove?.invoke(event)
-    }
-
-    protected open fun OnMouseButtonPress(event: MouseButtonActionEvent) {
-        this.Mouse.OnButtonPress?.invoke(event)
-    }
-
-    protected open fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
-        this.Mouse.OnButtonRelease?.invoke(event)
-    }
-
-    protected open fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
-        this.Mouse.OnWheelScroll?.invoke(event)
-    }
-
-    protected open fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
-        this.Keyboard.OnKeyPress?.invoke(event)
-    }
-
-    protected open fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
-        this.Keyboard.OnKeyRepeat?.invoke(event)
-    }
-
-    protected open fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
-        this.Keyboard.OnKeyRelease?.invoke(event)
-    }
+    protected abstract fun OnTextInput(event: TextInputEvent)
 
     protected abstract fun OnDraw()
 

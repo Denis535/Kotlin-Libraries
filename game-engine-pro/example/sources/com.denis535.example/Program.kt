@@ -24,35 +24,43 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnStop() {
     }
 
+    protected override fun OnMouseFocus(event: MouseFocusEvent) {
+    }
+
+    protected override fun OnMouseFocusLost(event: MouseFocusLostEvent) {
+    }
+
+    protected override fun OnKeyboardFocus(event: KeyboardFocusEvent) {
+    }
+
+    protected override fun OnKeyboardFocusLost(event: KeyboardFocusLostEvent) {
+    }
+
     protected override fun OnMouseMove(event: MouseMoveEvent) {
-        super.OnMouseMove(event)
     }
 
-    protected override fun OnMouseButtonPress(event: MouseButtonActionEvent) {
-        super.OnMouseButtonPress(event)
+    protected override fun OnMouseButtonPress(event: MouseButtonEvent) {
     }
 
-    protected override fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
-        super.OnMouseButtonRelease(event)
+    protected override fun OnMouseButtonRelease(event: MouseButtonEvent) {
     }
 
     protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
-        super.OnMouseWheelScroll(event)
     }
 
-    protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
+    protected override fun OnKeyboardKeyPress(event: KeyboardKeyEvent) {
         if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
             this.Window.IsFullScreen = !this.Window.IsFullScreen
         }
-        super.OnKeyboardKeyPress(event)
     }
 
-    protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
-        super.OnKeyboardKeyRepeat(event)
+    protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyEvent) {
     }
 
-    protected override fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
-        super.OnKeyboardKeyRelease(event)
+    protected override fun OnKeyboardKeyRelease(event: KeyboardKeyEvent) {
+    }
+
+    protected override fun OnTextInput(event: TextInputEvent) {
     }
 
     protected override fun OnFixedUpdate() {
