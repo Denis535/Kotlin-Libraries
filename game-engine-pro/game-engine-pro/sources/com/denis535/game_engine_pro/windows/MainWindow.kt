@@ -1,8 +1,8 @@
 package com.denis535.game_engine_pro.windows
 
-import kotlinx.cinterop.*
 import cnames.structs.*
 import com.denis535.sdl.*
+import kotlinx.cinterop.*
 
 public open class MainWindow : AutoCloseable {
     public sealed class Description(
@@ -24,50 +24,57 @@ public open class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private var _NativeWindow: CPointer<SDL_Window>? = null
+    private var _Native: CPointer<SDL_Window>? = null
 
     @OptIn(ExperimentalForeignApi::class)
     public val IsClosed: Boolean
         get() {
-            return this._NativeWindow == null
+            return this._Native == null
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    protected val NativeWindow: CPointer<SDL_Window>
+    protected val Native: CPointer<SDL_Window>
         get() {
             check(!this.IsClosed)
-            return this._NativeWindow!!
+            return this._Native!!
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal val NativeWindowInternal: CPointer<SDL_Window>
+    internal val NativeInternal: CPointer<SDL_Window>
         get() {
             check(!this.IsClosed)
-            return this._NativeWindow!!
+            return this._Native!!
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val ID: UInt
+        get() {
+            check(!this.IsClosed)
+            return SDL_GetWindowID(this._Native!!).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsFullScreen: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_FULLSCREEN != 0UL
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowFullscreen(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowFullscreen(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var Title: String
         get() {
             check(!this.IsClosed)
-            val title = SDL_GetWindowTitle(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val title = SDL_GetWindowTitle(this.Native).also { SDL.ThrowErrorIfNeeded() }
             return title!!.toKString()
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowTitle(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowTitle(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -77,13 +84,13 @@ public open class MainWindow : AutoCloseable {
             memScoped {
                 val x = this.alloc<IntVar>()
                 val y = this.alloc<IntVar>()
-                SDL_GetWindowPosition(this@MainWindow.NativeWindow, x.ptr, y.ptr).also { SDL.ThrowErrorIfNeeded() }
+                SDL_GetWindowPosition(this@MainWindow.Native, x.ptr, y.ptr).also { SDL.ThrowErrorIfNeeded() }
                 return Pair(x.value, y.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowPosition(this.NativeWindow, value.first, value.second).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowPosition(this.Native, value.first, value.second).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -93,40 +100,40 @@ public open class MainWindow : AutoCloseable {
             memScoped {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
-                SDL_GetWindowSize(this@MainWindow.NativeWindow, width.ptr, height.ptr).also { SDL.ThrowErrorIfNeeded() }
+                SDL_GetWindowSize(this@MainWindow.Native, width.ptr, height.ptr).also { SDL.ThrowErrorIfNeeded() }
                 return Pair(width.value, height.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowSize(this.NativeWindow, value.first, value.second).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowSize(this.Native, value.first, value.second).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsResizable: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_RESIZABLE != 0UL
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowResizable(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowResizable(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsShown: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_HIDDEN == 0UL
         }
         set(value) {
             check(!this.IsClosed)
             if (value) {
-                SDL_ShowWindow(this.NativeWindow)
+                SDL_ShowWindow(this.Native)
             } else {
-                SDL_HideWindow(this.NativeWindow)
+                SDL_HideWindow(this.Native)
             }
         }
 
@@ -134,39 +141,39 @@ public open class MainWindow : AutoCloseable {
     public val IsVisible: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_HIDDEN == 0UL && flags and SDL_WINDOW_MINIMIZED == 0UL
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var IsTextInputEnabled: Boolean
+    public var IsInputEnabled: Boolean
         get() {
             check(!this.IsClosed)
-            return SDL_TextInputActive(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_TextInputActive(this.Native).also { SDL.ThrowErrorIfNeeded() }
         }
         set(value) {
             check(!this.IsClosed)
             if (value) {
-                SDL_StartTextInput(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+                SDL_StartTextInput(this.Native).also { SDL.ThrowErrorIfNeeded() }
             } else {
-                SDL_StopTextInput(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+                SDL_StopTextInput(this.Native).also { SDL.ThrowErrorIfNeeded() }
             }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val HasFocus: Boolean
-        get() {
-            check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
-            return flags and SDL_WINDOW_INPUT_FOCUS == 0UL
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public val HasMouseFocus: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_MOUSE_FOCUS == 0UL
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val HasInputFocus: Boolean
+        get() {
+            check(!this.IsClosed)
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_INPUT_FOCUS == 0UL
         }
 
     public val Cursor: Cursor
@@ -177,7 +184,7 @@ public open class MainWindow : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(description: Description) {
-        this._NativeWindow = run {
+        this._Native = run {
             when (description) {
                 is Description.FullScreen -> {
                     var flags = SDL_WINDOW_VULKAN or SDL_WINDOW_FULLSCREEN
@@ -204,15 +211,15 @@ public open class MainWindow : AutoCloseable {
     public override fun close() {
         check(!this.IsClosed)
         this.Cursor.close()
-        this._NativeWindow = run {
-            SDL_DestroyWindow(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+        this._Native = run {
+            SDL_DestroyWindow(this.Native).also { SDL.ThrowErrorIfNeeded() }
             null
         }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun Raise() {
-        SDL_RaiseWindow(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+        SDL_RaiseWindow(this.Native).also { SDL.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -221,7 +228,7 @@ public open class MainWindow : AutoCloseable {
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
-            event.window.windowID = SDL_GetWindowID(this@MainWindow.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            event.window.windowID = this@MainWindow.ID
             SDL_PushEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }
         }
     }

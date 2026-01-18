@@ -19,7 +19,7 @@ public data class Vector3(
                 v0.X + (v1.X - v0.X) * t,
                 v0.Y + (v1.Y - v0.Y) * t,
                 v0.Z + (v1.Z - v0.Z) * t,
-            );
+            )
         }
 
         public fun Min(v0: Vector3, v1: Vector3): Vector3 {
@@ -27,7 +27,7 @@ public data class Vector3(
                 Math.Min(v0.X, v1.X),
                 Math.Min(v0.Y, v1.Y),
                 Math.Min(v0.Z, v1.Z),
-            );
+            )
         }
 
         public fun Max(v0: Vector3, v1: Vector3): Vector3 {
@@ -35,7 +35,7 @@ public data class Vector3(
                 Math.Max(v0.X, v1.X),
                 Math.Max(v0.Y, v1.Y),
                 Math.Max(v0.Z, v1.Z),
-            );
+            )
         }
 
         public fun Clamp(value: Vector3, min: Float, max: Float): Vector3 {
@@ -43,7 +43,7 @@ public data class Vector3(
                 Math.Clamp(value.X, min, max),
                 Math.Clamp(value.Y, min, max),
                 Math.Clamp(value.Z, min, max),
-            );
+            )
         }
 
         public fun Clamp01(value: Vector3): Vector3 {
@@ -51,7 +51,7 @@ public data class Vector3(
                 Math.Clamp01(value.X),
                 Math.Clamp01(value.Y),
                 Math.Clamp01(value.Z),
-            );
+            )
         }
 
     }
@@ -68,12 +68,12 @@ public data class Vector3(
 
     public val Normalized: Vector3
         get() {
-            val length = this.Length;
+            val length = this.Length
             return Vector3(this.X / length, this.Y / length, this.Z / length)
         }
 
     public fun Dot(vector: Vector3): Float {
-        return this.X * vector.X + this.Y * vector.Y + this.Z * vector.Z;
+        return this.X * vector.X + this.Y * vector.Y + this.Z * vector.Z
     }
 
     public fun Cross(vector: Vector3): Vector3 {
@@ -81,7 +81,7 @@ public data class Vector3(
             this.Y * vector.Z - this.Z * vector.Y,
             this.Z * vector.X - this.X * vector.Z,
             this.X * vector.Y - this.Y * vector.X,
-        );
+        )
     }
 
     public operator fun unaryMinus(): Vector3 = Vector3(-this.X, -this.Y, -this.Z)

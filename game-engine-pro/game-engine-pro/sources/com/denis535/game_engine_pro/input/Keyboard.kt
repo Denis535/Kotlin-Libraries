@@ -1,7 +1,7 @@
 package com.denis535.game_engine_pro.input
 
-import kotlinx.cinterop.*
 import com.denis535.sdl.*
+import kotlinx.cinterop.*
 
 public class Keyboard : AutoCloseable {
 
@@ -70,6 +70,7 @@ public class Keyboard : AutoCloseable {
 
 public class KeyboardKeyActionEvent(
     public val Timestamp: Float,
+    public val WindowID: UInt,
     public val Key: KeyboardKey,
 )
 

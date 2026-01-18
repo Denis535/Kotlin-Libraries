@@ -1,7 +1,7 @@
 package com.denis535.game_engine_pro
 
-import kotlinx.cinterop.*
 import com.denis535.sdl.*
+import kotlinx.cinterop.*
 
 public abstract class Engine : AutoCloseable {
     public class Manifest(public val Id: String?, public val Name: String? = null, public val Version: String? = null, public val Creator: String? = null)

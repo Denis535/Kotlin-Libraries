@@ -1,15 +1,15 @@
 package com.denis535.game_engine_pro.windows
 
-import kotlinx.cinterop.*
 import cnames.structs.*
 import com.denis535.sdl.*
+import kotlinx.cinterop.*
 
-public class Cursor : AutoCloseable {
-
-    private val Window: MainWindow
+public class Cursor {
 
     @OptIn(ExperimentalForeignApi::class)
-    private var NativeCursor: CPointer<SDL_Cursor>? = null
+    private var _Native: CPointer<SDL_Cursor>? = null
+
+    private val Window: MainWindow
 
     @OptIn(ExperimentalForeignApi::class)
     public var Style: CursorStyle?
@@ -17,16 +17,25 @@ public class Cursor : AutoCloseable {
             error("Not implemented")
         }
         set(value) {
-            val prevNativeCursor = this.NativeCursor
-            this.NativeCursor = if (value != null) {
+            val prevNativeCursor = this._Native
+            this._Native = if (value != null) {
                 SDL_CreateSystemCursor(value.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
             } else {
                 null
             }
-            SDL_SetCursor(this.NativeCursor).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetCursor(this._Native).also { SDL.ThrowErrorIfNeeded() }
             if (prevNativeCursor != null) {
                 SDL_DestroyCursor(prevNativeCursor).also { SDL.ThrowErrorIfNeeded() }
             }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsLocked: Boolean
+        get() {
+            return SDL_GetWindowRelativeMouseMode(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            SDL_SetWindowRelativeMouseMode(this.Window.NativeInternal, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -45,29 +54,20 @@ public class Cursor : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public var IsGrabbed: Boolean
         get() {
-            return SDL_GetWindowMouseGrab(this.Window.NativeWindowInternal).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GetWindowMouseGrab(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
         }
         set(value) {
-            SDL_SetWindowMouseGrab(this.Window.NativeWindowInternal, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowMouseGrab(this.Window.NativeInternal, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsCaptured: Boolean
         get() {
-            val flags = SDL_GetWindowFlags(this.Window.NativeWindowInternal).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
         }
         set(value) {
             SDL_CaptureMouse(value).also { SDL.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public var IsLocked: Boolean
-        get() {
-            return SDL_GetWindowRelativeMouseMode(this.Window.NativeWindowInternal).also { SDL.ThrowErrorIfNeeded() }
-        }
-        set(value) {
-            SDL_SetWindowRelativeMouseMode(this.Window.NativeWindowInternal, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     internal constructor(window: MainWindow) {
@@ -75,9 +75,9 @@ public class Cursor : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override fun close() {
-        if (this.NativeCursor != null) {
-            SDL_DestroyCursor(this.NativeCursor).also { SDL.ThrowErrorIfNeeded() }
+    internal fun close() {
+        if (this._Native != null) {
+            SDL_DestroyCursor(this._Native).also { SDL.ThrowErrorIfNeeded() }
         }
     }
 

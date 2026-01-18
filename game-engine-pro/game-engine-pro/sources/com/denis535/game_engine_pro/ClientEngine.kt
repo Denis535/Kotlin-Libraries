@@ -1,9 +1,9 @@
 package com.denis535.game_engine_pro
 
-import kotlinx.cinterop.*
-import com.denis535.sdl.*
 import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.windows.*
+import com.denis535.sdl.*
+import kotlinx.cinterop.*
 
 public abstract class ClientEngine : Engine {
 
@@ -55,26 +55,64 @@ public abstract class ClientEngine : Engine {
     internal override fun ProcessEvent(time: Time, event: CPointer<SDL_Event>) {
         super.ProcessEvent(time, event)
         when (event.pointed.type) {
+            SDL_EVENT_WINDOW_MOUSE_ENTER -> {
+                val evt = event.pointed.window
+                val timestamp = time.Time
+                val windowID = evt.windowID
+                this.OnMouseFocus()
+            }
+            SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
+                val evt = event.pointed.window
+                val timestamp = time.Time
+                val windowID = evt.windowID
+                this.OnMouseFocusLost()
+            }
+
+            SDL_EVENT_WINDOW_FOCUS_GAINED -> {
+                val evt = event.pointed.window
+                val timestamp = time.Time
+                val windowID = evt.windowID
+                this.OnInputFocus()
+            }
+            SDL_EVENT_WINDOW_FOCUS_LOST -> {
+                val evt = event.pointed.window
+                val timestamp = time.Time
+                val windowID = evt.windowID
+                this.OnInputFocusLost()
+            }
+
+            SDL_EVENT_TEXT_INPUT -> {
+                val evt = event.pointed.text
+                val timestamp = time.Time
+                val windowID = evt.windowID
+                val text = evt.text?.toKStringFromUtf8()
+                if (text != null) {
+                    this.OnInput(text)
+                }
+            }
+
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
                 val timestamp = time.Time
+                val windowID = evt.windowID
                 val x = evt.x
                 val y = evt.y
                 val deltaX = evt.xrel
                 val deltaY = evt.yrel
-                val event = MouseMoveEvent(timestamp, Pair(x, y), Pair(deltaX, deltaY))
+                val event = MouseMoveEvent(timestamp, windowID, Pair(x, y), Pair(deltaX, deltaY))
                 this.OnMouseMove(event)
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val evt = event.pointed.button
                 val timestamp = time.Time
+                val windowID = evt.windowID
                 val x = evt.x
                 val y = evt.y
                 val isPressed = evt.down
                 val button = MouseButton.FromNativeValue(evt.button)
                 val clicks = evt.clicks.toInt()
                 val event = if (button != null) {
-                    MouseButtonActionEvent(timestamp, Pair(x, y), button, clicks)
+                    MouseButtonActionEvent(timestamp, windowID, Pair(x, y), button, clicks)
                 } else {
                     null
                 }
@@ -87,6 +125,7 @@ public abstract class ClientEngine : Engine {
             SDL_EVENT_MOUSE_WHEEL -> {
                 val evt = event.pointed.wheel
                 val timestamp = time.Time
+                val windowID = evt.windowID
                 val x = evt.mouse_x
                 val y = evt.mouse_y
                 val isDirectionNormal = evt.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
@@ -105,12 +144,14 @@ public abstract class ClientEngine : Engine {
                     integerScrollX = -evt.integer_x
                     integerScrollY = -evt.integer_y
                 }
-                val event = MouseWheelScrollEvent(timestamp, Pair(x, y), scrollX, scrollY, integerScrollX, integerScrollY)
+                val event = MouseWheelScrollEvent(timestamp, windowID, Pair(x, y), scrollX, scrollY, integerScrollX, integerScrollY)
                 this.OnMouseWheelScroll(event)
             }
 
 //            SDL_EVENT_FINGER_DOWN -> {
 //                val evt = event.pointed.tfinger
+//                val timestamp = time.Time
+//                val windowID = evt.windowID
 //                val id = evt.fingerID
 //                val x = evt.x
 //                val y = evt.y
@@ -118,12 +159,16 @@ public abstract class ClientEngine : Engine {
 //            }
 //            SDL_EVENT_FINGER_UP, SDL_EVENT_FINGER_CANCELED -> {
 //                val evt = evt.pointed.tfinger
+//                val timestamp = time.Time
+//                val windowID = evt.windowID
 //                val id = evt.fingerID
 //                val x = evt.x
 //                val y = evt.y
 //            }
 //            SDL_EVENT_FINGER_MOTION -> {
 //                val evt = event.pointed.tfinger
+//                val timestamp = time.Time
+//                val windowID = evt.windowID
 //                val id = evt.fingerID
 //                val x = evt.x
 //                val y = evt.y
@@ -135,11 +180,12 @@ public abstract class ClientEngine : Engine {
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val evt = event.pointed.key
                 val timestamp = time.Time
+                val windowID = evt.windowID
                 val isPressed = evt.down
                 val isRepeated = evt.repeat
                 val key = KeyboardKey.FromNativeValue(evt.scancode)
                 val event = if (key != null) {
-                    KeyboardKeyActionEvent(timestamp, key)
+                    KeyboardKeyActionEvent(timestamp, windowID, key)
                 } else {
                     null
                 }
@@ -156,6 +202,8 @@ public abstract class ClientEngine : Engine {
 
 //            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
 //                val evt = event.pointed.jhat
+//                val timestamp = time.Time
+//                val windowID = evt.windowID
 //                val id = evt.which
 //                val hat = evt.hat
 //                val value = evt.value
@@ -188,12 +236,16 @@ public abstract class ClientEngine : Engine {
 //            }
 //            SDL_EVENT_JOYSTICK_BUTTON_DOWN, SDL_EVENT_JOYSTICK_BUTTON_UP -> {
 //                val evt = event.pointed.jbutton
+//                val timestamp = time.Time
+//                val windowID = evt.windowID
 //                val id = evt.which
 //                val button = evt.button
 //                val isPressed = evt.down
 //            }
 //            SDL_EVENT_JOYSTICK_AXIS_MOTION -> {
 //                val evt = event.pointed.jaxis
+//                val timestamp = time.Time
+//                val windowID = evt.windowID
 //                val id = evt.which
 //                val axis = evt.axis
 //                val value = evt.value.let {
@@ -201,18 +253,28 @@ public abstract class ClientEngine : Engine {
 //                }
 //            }
 
-            SDL_EVENT_TEXT_INPUT -> {
-                val evt = event.pointed.text
-                val text = evt.text?.toKStringFromUtf8()
-                if (text != null) {
-                    this.OnTextInput(text)
-                }
-            }
-
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
+                val evt = event.pointed.window
+                val timestamp = time.Time
+                val windowID = evt.windowID
                 this.IsRunning = false
             }
         }
+    }
+
+    protected open fun OnMouseFocus() {
+    }
+
+    protected open fun OnMouseFocusLost() {
+    }
+
+    protected open fun OnInputFocus() {
+    }
+
+    protected open fun OnInputFocusLost() {
+    }
+
+    protected open fun OnInput(text: String) {
     }
 
     protected open fun OnMouseMove(event: MouseMoveEvent) {
@@ -241,9 +303,6 @@ public abstract class ClientEngine : Engine {
 
     protected open fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
         this.Keyboard.OnKeyRelease?.invoke(event)
-    }
-
-    protected open fun OnTextInput(text: String) {
     }
 
     protected abstract fun OnDraw(time: Time)

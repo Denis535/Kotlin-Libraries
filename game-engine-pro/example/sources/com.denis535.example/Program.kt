@@ -3,8 +3,6 @@ package com.denis535.example
 import com.denis535.game_engine_pro.*
 import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.windows.*
-import kotlinx.cinterop.*
-import kotlin.reflect.*
 
 public fun Main(args: Array<String>) {
     ClientEngine2().use {
@@ -44,10 +42,10 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
-        super.OnKeyboardKeyPress(event)
         if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
             this.Window.IsFullScreen = !this.Window.IsFullScreen
         }
+        super.OnKeyboardKeyPress(event)
     }
 
     protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
@@ -56,10 +54,6 @@ private class ClientEngine2 : ClientEngine {
 
     protected override fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
         super.OnKeyboardKeyRelease(event)
-    }
-
-    protected override fun OnTextInput(text: String) {
-        super.OnTextInput(text)
     }
 
     protected override fun OnFixedUpdate(time: Time) {

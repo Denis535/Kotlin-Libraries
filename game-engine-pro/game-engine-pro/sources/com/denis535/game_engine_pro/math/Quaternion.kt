@@ -8,7 +8,7 @@ public data class Quaternion(
 ) {
     public companion object {
 
-        public val Identity: Quaternion = Quaternion(0f, 0f, 0f, 1f);
+        public val Identity: Quaternion = Quaternion(0f, 0f, 0f, 1f)
 
         public fun Axes(axisX: Vector3, axisY: Vector3, axisZ: Vector3): Quaternion {
             val m00 = axisX.X
@@ -67,46 +67,46 @@ public data class Quaternion(
             // Z - forward
             val axisX = axisY.Cross(axisZ)
             val axisY = axisZ.Cross(axisX)
-            return Axes(axisX, axisY, axisZ)
+            return this.Axes(axisX, axisY, axisZ)
         }
 
         public fun AngleX(angleX: Float): Quaternion {
             // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L352
-            val sinX = Math.Sin(angleX * Math.DegToRad / 2f)
-            val cosX = Math.Cos(angleX * Math.DegToRad / 2f)
+            val sinX = Math.Sin(angleX * Math.DEG_TO_RAD / 2f)
+            val cosX = Math.Cos(angleX * Math.DEG_TO_RAD / 2f)
             return Quaternion(
                 sinX,
                 0f,
                 0f,
                 cosX,
-            );
+            )
         }
 
         public fun AngleY(angleY: Float): Quaternion {
-            val sinY = Math.Sin(angleY * Math.DegToRad / 2f)
-            val cosY = Math.Cos(angleY * Math.DegToRad / 2f)
+            val sinY = Math.Sin(angleY * Math.DEG_TO_RAD / 2f)
+            val cosY = Math.Cos(angleY * Math.DEG_TO_RAD / 2f)
             return Quaternion(
                 0f,
                 sinY,
                 0f,
                 cosY,
-            );
+            )
         }
 
         public fun AngleZ(angleZ: Float): Quaternion {
-            val sinZ = Math.Sin(angleZ * Math.DegToRad / 2f)
-            val cosZ = Math.Cos(angleZ * Math.DegToRad / 2f)
+            val sinZ = Math.Sin(angleZ * Math.DEG_TO_RAD / 2f)
+            val cosZ = Math.Cos(angleZ * Math.DEG_TO_RAD / 2f)
             return Quaternion(
                 0f,
                 0f,
                 sinZ,
                 cosZ,
-            );
+            )
         }
 
         public fun AngleAxis(angle: Float, axis: Vector3): Quaternion {
-            val sin = Math.Sin(angle * Math.DegToRad / 2f)
-            val cos = Math.Cos(angle * Math.DegToRad / 2f)
+            val sin = Math.Sin(angle * Math.DEG_TO_RAD / 2f)
+            val cos = Math.Cos(angle * Math.DEG_TO_RAD / 2f)
             return Quaternion(
                 axis.X * sin,
                 axis.Y * sin,
@@ -116,11 +116,11 @@ public data class Quaternion(
         }
 
         public fun Angles(angleX: Float, angleY: Float, angleZ: Float): Quaternion {
-            // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
             // Y - up
             // X - right
             // Z - forward
-            return AngleZ(angleZ) * AngleX(angleX) * AngleY(angleY) // YXZ
+            // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
+            return this.AngleZ(angleZ) * this.AngleX(angleX) * this.AngleY(angleY) // YXZ
         }
 
         public fun Slerp(v0: Quaternion, v1: Quaternion, t: Float): Quaternion {
@@ -180,72 +180,72 @@ public data class Quaternion(
 
     public val Normalized: Quaternion
         get() {
-            val length = this.Length;
+            val length = this.Length
             return Quaternion(this.X / length, this.Y / length, this.Z / length, this.W / length)
         }
 
     public val AxisX: Vector3
         get() {
-            val xx = this.X * this.X * 2f;
-            val xy = this.X * this.Y * 2f;
-            val xz = this.X * this.Z * 2f;
-            val xw = this.X * this.W * 2f;
+            val xx = this.X * this.X * 2f
+            val xy = this.X * this.Y * 2f
+            val xz = this.X * this.Z * 2f
+            val xw = this.X * this.W * 2f
 
-            val yy = this.Y * this.Y * 2f;
-            val yz = this.Y * this.Z * 2f;
-            val yw = this.Y * this.W * 2f;
+            val yy = this.Y * this.Y * 2f
+            val yz = this.Y * this.Z * 2f
+            val yw = this.Y * this.W * 2f
 
-            val zz = this.Z * this.Z * 2f;
-            val zw = this.Z * this.W * 2f;
+            val zz = this.Z * this.Z * 2f
+            val zw = this.Z * this.W * 2f
 
-            val m00 = 1f - (yy + zz);
-            val m10 = xy + zw;
-            val m20 = xz - yw;
+            val m00 = 1f - (yy + zz)
+            val m10 = xy + zw
+            val m20 = xz - yw
             return Vector3(m00, m10, m20)
         }
 
     public val AxisY: Vector3
         get() {
-            val xx = this.X * this.X * 2f;
-            val xy = this.X * this.Y * 2f;
-            val xz = this.X * this.Z * 2f;
-            val xw = this.X * this.W * 2f;
+            val xx = this.X * this.X * 2f
+            val xy = this.X * this.Y * 2f
+            val xz = this.X * this.Z * 2f
+            val xw = this.X * this.W * 2f
 
-            val yy = this.Y * this.Y * 2f;
-            val yz = this.Y * this.Z * 2f;
-            val yw = this.Y * this.W * 2f;
+            val yy = this.Y * this.Y * 2f
+            val yz = this.Y * this.Z * 2f
+            val yw = this.Y * this.W * 2f
 
-            val zz = this.Z * this.Z * 2f;
-            val zw = this.Z * this.W * 2f;
+            val zz = this.Z * this.Z * 2f
+            val zw = this.Z * this.W * 2f
 
-            val m01 = xy - zw;
-            val m11 = 1f - (xx + zz);
-            val m21 = yz + xw;
+            val m01 = xy - zw
+            val m11 = 1f - (xx + zz)
+            val m21 = yz + xw
             return Vector3(m01, m11, m21)
         }
 
     public val AxisZ: Vector3
         get() {
-            val xx = this.X * this.X * 2f;
-            val xy = this.X * this.Y * 2f;
-            val xz = this.X * this.Z * 2f;
-            val xw = this.X * this.W * 2f;
+            val xx = this.X * this.X * 2f
+            val xy = this.X * this.Y * 2f
+            val xz = this.X * this.Z * 2f
+            val xw = this.X * this.W * 2f
 
-            val yy = this.Y * this.Y * 2f;
-            val yz = this.Y * this.Z * 2f;
-            val yw = this.Y * this.W * 2f;
+            val yy = this.Y * this.Y * 2f
+            val yz = this.Y * this.Z * 2f
+            val yw = this.Y * this.W * 2f
 
-            val zz = this.Z * this.Z * 2f;
-            val zw = this.Z * this.W * 2f;
+            val zz = this.Z * this.Z * 2f
+            val zw = this.Z * this.W * 2f
 
-            val m02 = xz + yw;
-            val m12 = yz - xw;
-            val m22 = 1f - (xx + yy);
+            val m02 = xz + yw
+            val m12 = yz - xw
+            val m22 = 1f - (xx + yy)
             return Vector3(m02, m12, m22)
         }
 
     public fun Dot(quaternion: Quaternion): Float {
-        return this.X * quaternion.X + this.Y * quaternion.Y + this.Z * quaternion.Z + this.W * quaternion.W;
+        return this.X * quaternion.X + this.Y * quaternion.Y + this.Z * quaternion.Z + this.W * quaternion.W
     }
 
     public fun Angle(quaternion: Quaternion): Float {
@@ -254,7 +254,7 @@ public data class Quaternion(
             dot = -dot
         }
         val theta = Math.Acos(dot)
-        return theta * Math.RadToDeg * 2f
+        return theta * Math.RAD_TO_DEG * 2f
     }
 
     public operator fun unaryMinus(): Quaternion = Quaternion(-this.X, -this.Y, -this.Z, this.W)
@@ -265,7 +265,7 @@ public data class Quaternion(
             this.W * quaternion.Y + this.Y * quaternion.W + this.Z * quaternion.X - this.X * quaternion.Z,
             this.W * quaternion.Z + this.Z * quaternion.W + this.X * quaternion.Y - this.Y * quaternion.X,
             this.W * quaternion.W - this.X * quaternion.X - this.Y * quaternion.Y - this.Z * quaternion.Z,
-        );
+        )
     }
 
 }

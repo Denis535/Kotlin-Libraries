@@ -1,7 +1,7 @@
 package com.denis535.game_engine_pro.input
 
-import kotlinx.cinterop.*
 import com.denis535.sdl.*
+import kotlinx.cinterop.*
 
 public class Mouse : AutoCloseable {
 
@@ -106,12 +106,14 @@ public class Mouse : AutoCloseable {
 
 public class MouseMoveEvent(
     public val Timestamp: Float,
+    public val WindowID: UInt,
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val Delta: Pair<Float, Float>, // locked cursor only
 )
 
 public class MouseButtonActionEvent(
     public val Timestamp: Float,
+    public val WindowID: UInt,
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val Button: MouseButton,
     public val Clicks: Int,
@@ -119,6 +121,7 @@ public class MouseButtonActionEvent(
 
 public class MouseWheelScrollEvent(
     public val Timestamp: Float,
+    public val WindowID: UInt,
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val ScrollX: Float,
     public val ScrollY: Float,
