@@ -118,9 +118,9 @@ public abstract class ClientEngine : Engine {
                 val y = evt.y
                 val isPressed = evt.down
                 val button = MouseButton.FromNativeValue(evt.button)
-                val clicks = evt.clicks.toInt()
+                val clickCount = evt.clicks.toInt()
                 val event = if (button != null) {
-                    MouseButtonActionEvent(timestamp, windowID, Pair(x, y), button, clicks)
+                    MouseButtonActionEvent(timestamp, windowID, Pair(x, y), button, clickCount)
                 } else {
                     null
                 }
@@ -152,7 +152,7 @@ public abstract class ClientEngine : Engine {
                     integerScrollX = -evt.integer_x
                     integerScrollY = -evt.integer_y
                 }
-                val event = MouseWheelScrollEvent(timestamp, windowID, Pair(x, y), scrollX, scrollY, integerScrollX, integerScrollY)
+                val event = MouseWheelScrollEvent(timestamp, windowID, Pair(x, y), Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
                 this.OnMouseWheelScroll(event)
             }
 

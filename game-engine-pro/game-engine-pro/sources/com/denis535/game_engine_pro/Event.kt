@@ -41,17 +41,15 @@ public class MouseButtonActionEvent(
     public val WindowID: UInt,
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val Button: MouseButton,
-    public val Clicks: Int,
+    public val ClickCount: Int,
 )
 
 public class MouseWheelScrollEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
-    public val ScrollX: Float,
-    public val ScrollY: Float,
-    public val IntegerScrollX: Int,
-    public val IntegerScrollY: Int,
+    public val Scroll: Pair<Float, Float>,
+    public val IntegerScroll: Pair<Int, Int>,
 )
 
 public class KeyboardKeyActionEvent(
