@@ -34,17 +34,16 @@ public abstract class Engine : AutoCloseable {
         val time = Time()
         this.IsRunning = true
         this.OnStart(time)
-        while (true) {
+        while (this.IsRunning) {
             val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
             this.ProcessFrame(time, fixedDeltaTime)
-            if (!this.IsRunning) {
-                break
+            if (this.IsRunning) {
+                val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
+                val deltaTime = (endTime - startTime).toFloat() / 1000f
+                time.Number++
+                time.Time += deltaTime
+                time.DeltaTime = deltaTime
             }
-            val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
-            val deltaTime = (endTime - startTime).toFloat() / 1000f
-            time.Number++
-            time.Time += deltaTime
-            time.DeltaTime = deltaTime
         }
         this.OnStop(time)
     }
@@ -52,12 +51,7 @@ public abstract class Engine : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     internal open fun ProcessFrame(time: Time, fixedDeltaTime: Float) {
         check(!this.IsClosed)
-        memScoped {
-            val event = this.alloc<SDL_Event>()
-            while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
-                this@Engine.ProcessEvent(time, event.ptr)
-            }
-        }
+        this.ProcessEvents(time)
         if (time.Fixed.Number == 0) {
             this.OnFixedUpdate(time)
             time.Fixed.Number++
@@ -70,6 +64,17 @@ public abstract class Engine : AutoCloseable {
             }
         }
         this.OnUpdate(time)
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    internal open fun ProcessEvents(time: Time) {
+        check(!this.IsClosed)
+        memScoped {
+            val event = this.alloc<SDL_Event>()
+            while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
+                this@Engine.ProcessEvent(time, event.ptr)
+            }
+        }
     }
 
     @OptIn(ExperimentalForeignApi::class)

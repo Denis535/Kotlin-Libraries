@@ -52,6 +52,11 @@ public abstract class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
+    internal override fun ProcessEvents(time: Time) {
+        super.ProcessEvents(time)
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
     internal override fun ProcessEvent(time: Time, event: CPointer<SDL_Event>) {
         super.ProcessEvent(time, event)
         when (event.pointed.type) {
