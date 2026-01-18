@@ -44,30 +44,30 @@ public abstract class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessFrame(time: Time, fixedDeltaTime: Float) {
-        super.ProcessFrame(time, fixedDeltaTime)
-        this.OnDraw(time)
+    internal override fun ProcessFrame(fixedDeltaTime: Float) {
+        super.ProcessFrame(fixedDeltaTime)
+        this.OnDraw()
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessEvents(time: Time) {
-        super.ProcessEvents(time)
+    internal override fun ProcessEvents() {
+        super.ProcessEvents()
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessEvent(time: Time, event: CPointer<SDL_Event>) {
-        super.ProcessEvent(time, event)
+    internal override fun ProcessEvent(event: CPointer<SDL_Event>) {
+        super.ProcessEvent(event)
         when (event.pointed.type) {
             SDL_EVENT_WINDOW_MOUSE_ENTER -> {
                 val evt = event.pointed.window
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val event = MouseFocusEvent(timestamp, windowID)
                 this.OnMouseFocus(event)
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
                 val evt = event.pointed.window
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val event = MouseFocusLostEvent(timestamp, windowID)
                 this.OnMouseFocusLost(event)
@@ -75,14 +75,14 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_WINDOW_FOCUS_GAINED -> {
                 val evt = event.pointed.window
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val event = InputFocusEvent(timestamp, windowID)
                 this.OnInputFocus(event)
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
                 val evt = event.pointed.window
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val event = InputFocusLostEvent(timestamp, windowID)
                 this.OnInputFocusLost(event)
@@ -90,7 +90,7 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_TEXT_INPUT -> {
                 val evt = event.pointed.text
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val text = evt.text?.toKStringFromUtf8()
                 if (text != null) {
@@ -101,7 +101,7 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val x = evt.x
                 val y = evt.y
@@ -112,7 +112,7 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val evt = event.pointed.button
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val x = evt.x
                 val y = evt.y
@@ -132,7 +132,7 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_MOUSE_WHEEL -> {
                 val evt = event.pointed.wheel
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val x = evt.mouse_x
                 val y = evt.mouse_y
@@ -187,7 +187,7 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val evt = event.pointed.key
-                val timestamp = time.Time
+                val timestamp = this.Time.Time
                 val windowID = evt.windowID
                 val isPressed = evt.down
                 val isRepeated = evt.repeat
@@ -310,6 +310,6 @@ public abstract class ClientEngine : Engine {
         this.Keyboard.OnKeyRelease?.invoke(event)
     }
 
-    protected abstract fun OnDraw(time: Time)
+    protected abstract fun OnDraw()
 
 }

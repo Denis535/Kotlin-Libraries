@@ -22,6 +22,12 @@ public abstract class Engine : AutoCloseable {
             field = value
         }
 
+    public val Time: Time = Time()
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
     @OptIn(ExperimentalForeignApi::class)
     internal constructor(manifest: Manifest) {
         check(SDL_WasInit(0U).also { SDL.ThrowErrorIfNeeded() } == 0U)
@@ -41,54 +47,53 @@ public abstract class Engine : AutoCloseable {
     public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        val time = Time()
         this.IsRunning = true
-        this.OnStart(time)
+        this.OnStart()
         while (this.IsRunning) {
             val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
-            this.ProcessFrame(time, fixedDeltaTime)
+            this.ProcessFrame(fixedDeltaTime)
             if (this.IsRunning) {
                 val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
                 val deltaTime = (endTime - startTime).toFloat() / 1000f
-                time.Number++
-                time.Time += deltaTime
-                time.DeltaTime = deltaTime
+                this.Time.Number++
+                this.Time.Time += deltaTime
+                this.Time.DeltaTime = deltaTime
             }
         }
-        this.OnStop(time)
+        this.OnStop()
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessFrame(time: Time, fixedDeltaTime: Float) {
+    internal open fun ProcessFrame(fixedDeltaTime: Float) {
         check(!this.IsClosed)
-        this.ProcessEvents(time)
-        if (time.Fixed.Number == 0) {
-            this.OnFixedUpdate(time)
-            time.Fixed.Number++
-            time.Fixed.DeltaTime = fixedDeltaTime
+        this.ProcessEvents()
+        if (this.Time.Fixed.Number == 0) {
+            this.OnFixedUpdate()
+            this.Time.Fixed.Number++
+            this.Time.Fixed.DeltaTime = fixedDeltaTime
         } else {
-            while (time.Fixed.Time <= time.Time) {
-                this.OnFixedUpdate(time)
-                time.Fixed.Number++
-                time.Fixed.DeltaTime = fixedDeltaTime
+            while (this.Time.Fixed.Time <= this.Time.Time) {
+                this.OnFixedUpdate()
+                this.Time.Fixed.Number++
+                this.Time.Fixed.DeltaTime = fixedDeltaTime
             }
         }
-        this.OnUpdate(time)
+        this.OnUpdate()
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvents(time: Time) {
+    internal open fun ProcessEvents() {
         check(!this.IsClosed)
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
-                this@Engine.ProcessEvent(time, event.ptr)
+                this@Engine.ProcessEvent(event.ptr)
             }
         }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvent(time: Time, event: CPointer<SDL_Event>) {
+    internal open fun ProcessEvent(event: CPointer<SDL_Event>) {
         check(!this.IsClosed)
         when (event.pointed.type) {
             SDL_EVENT_QUIT -> {
@@ -97,11 +102,11 @@ public abstract class Engine : AutoCloseable {
         }
     }
 
-    protected abstract fun OnStart(time: Time)
-    protected abstract fun OnStop(time: Time)
+    protected abstract fun OnStart()
+    protected abstract fun OnStop()
 
-    protected abstract fun OnFixedUpdate(time: Time)
-    protected abstract fun OnUpdate(time: Time)
+    protected abstract fun OnFixedUpdate()
+    protected abstract fun OnUpdate()
 
     @OptIn(ExperimentalForeignApi::class)
     public fun RequestQuit() {

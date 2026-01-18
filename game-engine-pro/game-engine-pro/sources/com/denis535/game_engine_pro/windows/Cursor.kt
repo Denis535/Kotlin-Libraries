@@ -4,7 +4,7 @@ import cnames.structs.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public class Cursor {
+public class Cursor : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     private var _Native: CPointer<SDL_Cursor>? = null
@@ -75,7 +75,7 @@ public class Cursor {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal fun close() {
+    public override fun close() {
         if (this._Native != null) {
             SDL_DestroyCursor(this._Native).also { SDL.ThrowErrorIfNeeded() }
         }

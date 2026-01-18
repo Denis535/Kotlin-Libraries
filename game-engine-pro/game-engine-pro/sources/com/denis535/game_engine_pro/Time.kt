@@ -2,8 +2,6 @@ package com.denis535.game_engine_pro
 
 public class Time {
 
-    public val Fixed: FixedTime = FixedTime()
-
     public var Number: Int = 0
         internal set
 
@@ -17,6 +15,8 @@ public class Time {
         get() {
             return if (this.DeltaTime > 0.0f) 1.0f / this.DeltaTime else 0.0f
         }
+
+    public val Fixed: FixedTime = FixedTime()
 
     internal constructor()
 
