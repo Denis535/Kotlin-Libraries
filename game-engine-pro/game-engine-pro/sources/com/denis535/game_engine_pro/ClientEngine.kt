@@ -44,17 +44,6 @@ public abstract class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessFrame(fixedDeltaTime: Float) {
-        super.ProcessFrame(fixedDeltaTime)
-        this.OnDraw()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessEvents() {
-        super.ProcessEvents()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
     internal override fun ProcessEvent(event: CPointer<SDL_Event>) {
         super.ProcessEvent(event)
         when (event.pointed.type) {
@@ -267,6 +256,9 @@ public abstract class ClientEngine : Engine {
         }
     }
 
+    internal fun OnDrawInternal() = this.OnDraw()
+    protected abstract fun OnDraw()
+
     protected abstract fun OnMouseFocus(event: MouseFocusEvent)
     protected abstract fun OnMouseFocusLost(event: MouseFocusLostEvent)
 
@@ -283,7 +275,5 @@ public abstract class ClientEngine : Engine {
     protected abstract fun OnKeyboardKeyRelease(event: KeyboardKeyEvent)
 
     protected abstract fun OnTextInput(event: TextInputEvent)
-
-    protected abstract fun OnDraw()
 
 }

@@ -64,9 +64,14 @@ public abstract class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessFrame(fixedDeltaTime: Float) {
+    private fun ProcessFrame(fixedDeltaTime: Float) {
         check(!this.IsClosed)
-        this.ProcessEvents()
+        memScoped {
+            val event = this.alloc<SDL_Event>()
+            while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
+                this@Engine.ProcessEvent(event.ptr)
+            }
+        }
         if (this.Time.Fixed.FrameCount == 0) {
             this.OnFixedUpdate()
             this.Time.Fixed.DeltaTime = fixedDeltaTime
@@ -79,16 +84,8 @@ public abstract class Engine : AutoCloseable {
             }
         }
         this.OnUpdate()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvents() {
-        check(!this.IsClosed)
-        memScoped {
-            val event = this.alloc<SDL_Event>()
-            while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
-                this@Engine.ProcessEvent(event.ptr)
-            }
+        if (this is ClientEngine) {
+            this.OnDrawInternal()
         }
     }
 
@@ -105,8 +102,8 @@ public abstract class Engine : AutoCloseable {
     protected abstract fun OnStart()
     protected abstract fun OnStop()
 
-    protected abstract fun OnFixedUpdate()
     protected abstract fun OnUpdate()
+    protected abstract fun OnFixedUpdate()
 
     @OptIn(ExperimentalForeignApi::class)
     public fun RequestQuit() {

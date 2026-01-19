@@ -24,6 +24,15 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnStop() {
     }
 
+    protected override fun OnDraw() {
+    }
+
+    protected override fun OnUpdate() {
+    }
+
+    protected override fun OnFixedUpdate() {
+    }
+
     protected override fun OnMouseFocus(event: MouseFocusEvent) {
     }
 
@@ -61,15 +70,6 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnTextInput(event: TextInputEvent) {
-    }
-
-    protected override fun OnFixedUpdate() {
-    }
-
-    protected override fun OnUpdate() {
-    }
-
-    protected override fun OnDraw() {
     }
 
 }
