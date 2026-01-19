@@ -50,15 +50,7 @@ public abstract class Engine : AutoCloseable {
         this.IsRunning = true
         this.OnStart()
         while (this.IsRunning) {
-            val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
             this.ProcessFrame(fixedDeltaTime)
-            if (this.IsRunning) {
-                val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
-                val deltaTime = (endTime - startTime).toFloat() / 1000f
-                this.Time.Time += deltaTime
-                this.Time.DeltaTime = deltaTime
-                this.Time.FrameCount++
-            }
         }
         this.OnStop()
     }
@@ -66,27 +58,35 @@ public abstract class Engine : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     private fun ProcessFrame(fixedDeltaTime: Float) {
         check(!this.IsClosed)
-        memScoped {
-            val event = this.alloc<SDL_Event>()
-            while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
-                this@Engine.ProcessEvent(event.ptr)
+        val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
+        run {
+            memScoped {
+                val event = this.alloc<SDL_Event>()
+                while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
+                    this@Engine.ProcessEvent(event.ptr)
+                }
             }
-        }
-        if (this.Time.Fixed.FrameCount == 0) {
-            this.OnFixedUpdate()
-            this.Time.Fixed.DeltaTime = fixedDeltaTime
-            this.Time.Fixed.FrameCount++
-        } else {
-            while (this.Time.Fixed.Time <= this.Time.Time) {
+            if (this.Time.Fixed.FrameCount == 0) {
                 this.OnFixedUpdate()
                 this.Time.Fixed.DeltaTime = fixedDeltaTime
                 this.Time.Fixed.FrameCount++
+            } else {
+                while (this.Time.Fixed.Time <= this.Time.Time) {
+                    this.OnFixedUpdate()
+                    this.Time.Fixed.DeltaTime = fixedDeltaTime
+                    this.Time.Fixed.FrameCount++
+                }
+            }
+            this.OnUpdate()
+            if (this is ClientEngine) {
+                this.OnDrawInternal()
             }
         }
-        this.OnUpdate()
-        if (this is ClientEngine) {
-            this.OnDrawInternal()
-        }
+        val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
+        val deltaTime = (endTime - startTime).toFloat() / 1000f
+        this.Time.Time += deltaTime
+        this.Time.DeltaTime = deltaTime
+        this.Time.FrameCount++
     }
 
     @OptIn(ExperimentalForeignApi::class)
