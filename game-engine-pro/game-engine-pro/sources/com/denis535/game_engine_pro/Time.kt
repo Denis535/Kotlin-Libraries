@@ -2,13 +2,13 @@ package com.denis535.game_engine_pro
 
 public class Time {
 
-    public var Number: Int = 0
-        internal set
-
     public var Time: Float = 0.0f
         internal set
 
     public var DeltaTime: Float = 0.0f
+        internal set
+
+    public var FrameCount: Int = 0
         internal set
 
     public val Fps: Float
@@ -21,28 +21,28 @@ public class Time {
     internal constructor()
 
     public override fun toString(): String {
-        return "Time(Number=${this.Number}, Time=${this.Time})"
+        return "Time: ${this.Time}"
     }
 
 }
 
 public class FixedTime {
 
-    public var Number: Int = 0
-        internal set
-
     public val Time: Float
         get() {
-            return this.Number * this.DeltaTime
+            return this.DeltaTime * this.FrameCount
         }
 
     public var DeltaTime: Float = 0.0f
         internal set
 
+    public var FrameCount: Int = 0
+        internal set
+
     internal constructor()
 
     public override fun toString(): String {
-        return "FixedTime(Number=${this.Number}, Time=${this.Time})"
+        return "FixedTime: ${this.Time}"
     }
 
 }

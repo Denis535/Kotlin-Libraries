@@ -55,9 +55,9 @@ public abstract class Engine : AutoCloseable {
             if (this.IsRunning) {
                 val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
                 val deltaTime = (endTime - startTime).toFloat() / 1000f
-                this.Time.Number++
                 this.Time.Time += deltaTime
                 this.Time.DeltaTime = deltaTime
+                this.Time.FrameCount++
             }
         }
         this.OnStop()
@@ -67,15 +67,15 @@ public abstract class Engine : AutoCloseable {
     internal open fun ProcessFrame(fixedDeltaTime: Float) {
         check(!this.IsClosed)
         this.ProcessEvents()
-        if (this.Time.Fixed.Number == 0) {
+        if (this.Time.Fixed.FrameCount == 0) {
             this.OnFixedUpdate()
-            this.Time.Fixed.Number++
             this.Time.Fixed.DeltaTime = fixedDeltaTime
+            this.Time.Fixed.FrameCount++
         } else {
             while (this.Time.Fixed.Time <= this.Time.Time) {
                 this.OnFixedUpdate()
-                this.Time.Fixed.Number++
                 this.Time.Fixed.DeltaTime = fixedDeltaTime
+                this.Time.Fixed.FrameCount++
             }
         }
         this.OnUpdate()
