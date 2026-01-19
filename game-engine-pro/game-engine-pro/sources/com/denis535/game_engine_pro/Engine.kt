@@ -106,6 +106,11 @@ public abstract class Engine : AutoCloseable {
     protected abstract fun OnFixedUpdate()
 
     @OptIn(ExperimentalForeignApi::class)
+    public fun Sleep(time: UInt) {
+        SDL_Delay(time).also { SDL.ThrowErrorIfNeeded() }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
     public fun RequestQuit() {
         check(!this.IsClosed)
         memScoped {

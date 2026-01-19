@@ -25,6 +25,7 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnDraw() {
+        this.Sleep(1U)
     }
 
     protected override fun OnUpdate() {
