@@ -1,9 +1,9 @@
 package com.denis535.example
 
 import com.denis535.game_engine_pro.*
+import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.utils.*
-import com.denis535.game_engine_pro.windows.*
 
 public fun Main(args: Array<String>) {
     ClientEngine2().use {
