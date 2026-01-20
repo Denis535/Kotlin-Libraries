@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro.windows
+package com.denis535.game_engine_pro.input
 
 import cnames.structs.*
 import com.denis535.sdl.*
@@ -9,8 +9,6 @@ public class Cursor : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    private val Window: MainWindow
-
     @OptIn(ExperimentalForeignApi::class)
     private var Cursor: CPointer<SDL_Cursor>? = null
         set(value) {
@@ -18,19 +16,6 @@ public class Cursor : AutoCloseable {
             field = value
             if (prev != null) {
                 SDL_DestroyCursor(prev).also { SDL.ThrowErrorIfNeeded() }
-            }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public var Style: CursorStyle?
-        get() {
-            error("Not implemented")
-        }
-        set(value) {
-            if (value != null) {
-                this.Cursor = SDL_CreateSystemCursor(value.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
-            } else {
-                this.Cursor = null
             }
         }
 
@@ -48,18 +33,19 @@ public class Cursor : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var IsCaptured: Boolean
+    public var Style: CursorStyle?
         get() {
-            val flags = SDL_GetWindowFlags(this.Window.Native).also { SDL.ThrowErrorIfNeeded() }
-            return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
+            error("Not implemented")
         }
         set(value) {
-            SDL_CaptureMouse(value).also { SDL.ThrowErrorIfNeeded() }
+            if (value != null) {
+                this.Cursor = SDL_CreateSystemCursor(value.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
+            } else {
+                this.Cursor = null
+            }
         }
 
-    internal constructor(window: MainWindow) {
-        this.Window = window
-    }
+    internal constructor()
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {

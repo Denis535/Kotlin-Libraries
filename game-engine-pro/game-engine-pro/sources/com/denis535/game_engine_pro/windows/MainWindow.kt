@@ -27,7 +27,7 @@ public open class MainWindow : AutoCloseable {
     private var _Native: CPointer<SDL_Window>? = null
 
     @OptIn(ExperimentalForeignApi::class)
-    public val IsClosed: Boolean
+    private val IsClosed: Boolean
         get() {
             return this._Native == null
         }
@@ -148,6 +148,16 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public var IsMouseCaptured: Boolean
+        get() {
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
+        }
+        set(value) {
+            SDL_CaptureMouse(value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public var IsMouseLocked: Boolean
         get() {
             return SDL_GetWindowRelativeMouseMode(this.Native).also { SDL.ThrowErrorIfNeeded() }
@@ -196,12 +206,6 @@ public open class MainWindow : AutoCloseable {
             }
         }
 
-    public val Cursor: Cursor
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
     @OptIn(ExperimentalForeignApi::class)
     public constructor(description: Description) {
         this._Native = run {
@@ -224,13 +228,11 @@ public open class MainWindow : AutoCloseable {
                 }
             }
         }
-        this.Cursor = Cursor(this)
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        this.Cursor.close()
         this._Native = run {
             SDL_DestroyWindow(this.Native).also { SDL.ThrowErrorIfNeeded() }
             null
