@@ -29,8 +29,8 @@ public abstract class ClientEngine : Engine {
     public constructor(manifest: Manifest, windowProvider: () -> MainWindow) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO or SDL_INIT_AUDIO).also { SDL.ThrowErrorIfNeeded() }
         this.Window = windowProvider()
-        this.Mouse = Mouse()
-        this.Keyboard = Keyboard()
+        this.Mouse = Mouse(this.Window)
+        this.Keyboard = Keyboard(this.Window)
     }
 
     @OptIn(ExperimentalForeignApi::class)

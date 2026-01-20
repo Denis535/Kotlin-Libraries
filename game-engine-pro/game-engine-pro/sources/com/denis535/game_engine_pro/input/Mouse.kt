@@ -1,6 +1,6 @@
 package com.denis535.game_engine_pro.input
 
-import com.denis535.game_engine_pro.*
+import com.denis535.game_engine_pro.windows.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -9,7 +9,29 @@ public class Mouse : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    internal constructor()
+    private val Window: MainWindow
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsGrabbed: Boolean
+        get() {
+            return SDL_GetWindowMouseGrab(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            SDL_SetWindowMouseGrab(this.Window.NativeInternal, value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsLocked: Boolean
+        get() {
+            return SDL_GetWindowRelativeMouseMode(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            SDL_SetWindowRelativeMouseMode(this.Window.NativeInternal, value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    internal constructor(window: MainWindow) {
+        this.Window = window
+    }
 
     public override fun close() {
         check(!this.IsClosed)
@@ -45,4 +67,48 @@ public class Mouse : AutoCloseable {
         return state and button.ToNativeMask() != 0u
     }
 
+}
+
+public enum class MouseButton {
+    Left,
+    Right,
+    Middle,
+    X1,
+    X2;
+
+    @OptIn(ExperimentalForeignApi::class)
+    internal fun ToNativeValue(): Int {
+        return when (this) {
+            Left -> SDL_BUTTON_LEFT
+            Right -> SDL_BUTTON_RIGHT
+            Middle -> SDL_BUTTON_MIDDLE
+            X1 -> SDL_BUTTON_X1
+            X2 -> SDL_BUTTON_X2
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    internal fun ToNativeMask(): UInt {
+        return when (this) {
+            Left -> SDL_BUTTON_LMASK
+            Right -> SDL_BUTTON_RMASK
+            Middle -> SDL_BUTTON_MMASK
+            X1 -> SDL_BUTTON_X1MASK
+            X2 -> SDL_BUTTON_X2MASK
+        }
+    }
+
+    public companion object {
+        @OptIn(ExperimentalForeignApi::class)
+        internal fun FromNativeValue(value: UByte): MouseButton? {
+            return when (value.toInt()) {
+                SDL_BUTTON_LEFT -> Left
+                SDL_BUTTON_RIGHT -> Right
+                SDL_BUTTON_MIDDLE -> Middle
+                SDL_BUTTON_X1 -> X1
+                SDL_BUTTON_X2 -> X2
+                else -> null
+            }
+        }
+    }
 }

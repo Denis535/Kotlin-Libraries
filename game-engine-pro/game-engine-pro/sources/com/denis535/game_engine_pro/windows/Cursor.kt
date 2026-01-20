@@ -30,15 +30,6 @@ public class Cursor : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var IsLocked: Boolean
-        get() {
-            return SDL_GetWindowRelativeMouseMode(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
-        }
-        set(value) {
-            SDL_SetWindowRelativeMouseMode(this.Window.NativeInternal, value).also { SDL.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
     public var IsVisible: Boolean
         get() {
             return SDL_CursorVisible().also { SDL.ThrowErrorIfNeeded() }
@@ -49,15 +40,6 @@ public class Cursor : AutoCloseable {
             } else {
                 SDL_HideCursor().also { SDL.ThrowErrorIfNeeded() }
             }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public var IsGrabbed: Boolean
-        get() {
-            return SDL_GetWindowMouseGrab(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
-        }
-        set(value) {
-            SDL_SetWindowMouseGrab(this.Window.NativeInternal, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
