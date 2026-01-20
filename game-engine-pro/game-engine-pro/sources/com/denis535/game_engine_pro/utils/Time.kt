@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro
+package com.denis535.game_engine_pro.utils
 
 public class Time {
 
@@ -11,9 +11,9 @@ public class Time {
     public var FrameCount: Int = 0
         internal set
 
-    public val Fps: Float
+    public val Fps: Float?
         get() {
-            return if (this.DeltaTime > 0.0f) 1.0f / this.DeltaTime else 0.0f
+            return if (this.DeltaTime > 0.0f) 1.0f / this.DeltaTime else null
         }
 
     public val Fixed: FixedTime = FixedTime()

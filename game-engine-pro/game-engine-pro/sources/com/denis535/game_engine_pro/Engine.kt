@@ -1,5 +1,6 @@
 package com.denis535.game_engine_pro
 
+import com.denis535.game_engine_pro.utils.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -104,11 +105,6 @@ public abstract class Engine : AutoCloseable {
 
     protected abstract fun OnUpdate()
     protected abstract fun OnFixedUpdate()
-
-    @OptIn(ExperimentalForeignApi::class)
-    public fun Sleep(time: UInt) {
-        SDL_Delay(time).also { SDL.ThrowErrorIfNeeded() }
-    }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun RequestQuit() {

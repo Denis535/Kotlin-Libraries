@@ -2,6 +2,7 @@ package com.denis535.example
 
 import com.denis535.game_engine_pro.*
 import com.denis535.game_engine_pro.input.*
+import com.denis535.game_engine_pro.utils.*
 import com.denis535.game_engine_pro.windows.*
 
 public fun Main(args: Array<String>) {
@@ -26,7 +27,7 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnDraw() {
-        this.Sleep(1U)
+        Utils.Sleep(10U)
     }
 
     protected override fun OnUpdate() {
