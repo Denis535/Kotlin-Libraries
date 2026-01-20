@@ -13,6 +13,12 @@ public abstract class ClientEngine : Engine {
             return field
         }
 
+    public val Cursor: Cursor
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
     public val Mouse: Mouse
         get() {
             check(!this.IsClosed)
@@ -25,28 +31,22 @@ public abstract class ClientEngine : Engine {
             return field
         }
 
-    public val Cursor: Cursor
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest, windowProvider: () -> MainWindow) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO or SDL_INIT_AUDIO).also { SDL.ThrowErrorIfNeeded() }
         this.Window = windowProvider()
+        this.Cursor = Cursor()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
-        this.Cursor = Cursor()
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        this.Cursor.close()
         this.Keyboard.close()
         this.Mouse.close()
+        this.Cursor.close()
         this.Window.close()
         super.close()
     }

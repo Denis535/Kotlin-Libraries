@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro.input
+package com.denis535.game_engine_pro.windows
 
 import cnames.structs.*
 import com.denis535.sdl.*
