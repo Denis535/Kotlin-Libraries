@@ -33,24 +33,17 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    protected val Native: CPointer<SDL_Window>
-        get() {
-            check(!this.IsClosed)
-            return this._Native!!
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal val NativeInternal: CPointer<SDL_Window>
-        get() {
-            check(!this.IsClosed)
-            return this._Native!!
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
     public val ID: UInt
         get() {
             check(!this.IsClosed)
             return SDL_GetWindowID(this._Native!!).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val Native: CPointer<SDL_Window>
+        get() {
+            check(!this.IsClosed)
+            return this._Native!!
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -146,6 +139,49 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public var IsMouseGrabbed: Boolean
+        get() {
+            return SDL_GetWindowMouseGrab(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            SDL_SetWindowMouseGrab(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsMouseLocked: Boolean
+        get() {
+            return SDL_GetWindowRelativeMouseMode(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            SDL_SetWindowRelativeMouseMode(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val HasMouseFocus: Boolean
+        get() {
+            check(!this.IsClosed)
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_MOUSE_FOCUS != 0UL
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsKeyboardGrabbed: Boolean
+        get() {
+            return SDL_GetWindowKeyboardGrab(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            SDL_SetWindowKeyboardGrab(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val HasKeyboardFocus: Boolean
+        get() {
+            check(!this.IsClosed)
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_INPUT_FOCUS != 0UL
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public var IsTextInputEnabled: Boolean
         get() {
             check(!this.IsClosed)
@@ -158,22 +194,6 @@ public open class MainWindow : AutoCloseable {
             } else {
                 SDL_StopTextInput(this.Native).also { SDL.ThrowErrorIfNeeded() }
             }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val HasMouseFocus: Boolean
-        get() {
-            check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
-            return flags and SDL_WINDOW_MOUSE_FOCUS != 0UL
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val HasKeyboardFocus: Boolean
-        get() {
-            check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
-            return flags and SDL_WINDOW_INPUT_FOCUS != 0UL
         }
 
     public val Cursor: Cursor

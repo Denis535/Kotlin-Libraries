@@ -6,10 +6,20 @@ import kotlinx.cinterop.*
 
 public class Cursor : AutoCloseable {
 
-    @OptIn(ExperimentalForeignApi::class)
-    private var _Native: CPointer<SDL_Cursor>? = null
+    public var IsClosed: Boolean = false
+        private set
 
     private val Window: MainWindow
+
+    @OptIn(ExperimentalForeignApi::class)
+    private var Cursor: CPointer<SDL_Cursor>? = null
+        set(value) {
+            val prev = field
+            field = value
+            if (prev != null) {
+                SDL_DestroyCursor(prev).also { SDL.ThrowErrorIfNeeded() }
+            }
+        }
 
     @OptIn(ExperimentalForeignApi::class)
     public var Style: CursorStyle?
@@ -17,15 +27,10 @@ public class Cursor : AutoCloseable {
             error("Not implemented")
         }
         set(value) {
-            val prevNativeCursor = this._Native
-            this._Native = if (value != null) {
-                SDL_CreateSystemCursor(value.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
+            if (value != null) {
+                this.Cursor = SDL_CreateSystemCursor(value.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
             } else {
-                null
-            }
-            SDL_SetCursor(this._Native).also { SDL.ThrowErrorIfNeeded() }
-            if (prevNativeCursor != null) {
-                SDL_DestroyCursor(prevNativeCursor).also { SDL.ThrowErrorIfNeeded() }
+                this.Cursor = null
             }
         }
 
@@ -45,7 +50,7 @@ public class Cursor : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public var IsCaptured: Boolean
         get() {
-            val flags = SDL_GetWindowFlags(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.Window.Native).also { SDL.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
         }
         set(value) {
@@ -58,9 +63,9 @@ public class Cursor : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
-        if (this._Native != null) {
-            SDL_DestroyCursor(this._Native).also { SDL.ThrowErrorIfNeeded() }
-        }
+        check(!this.IsClosed)
+        this.IsClosed = true
+        this.Cursor = null
     }
 
 }

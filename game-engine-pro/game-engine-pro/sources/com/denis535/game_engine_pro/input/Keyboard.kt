@@ -1,6 +1,5 @@
 package com.denis535.game_engine_pro.input
 
-import com.denis535.game_engine_pro.windows.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -9,20 +8,7 @@ public class Keyboard : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    private val Window: MainWindow
-
-    @OptIn(ExperimentalForeignApi::class)
-    public var IsGrabbed: Boolean
-        get() {
-            return SDL_GetWindowKeyboardGrab(this.Window.NativeInternal).also { SDL.ThrowErrorIfNeeded() }
-        }
-        set(value) {
-            SDL_SetWindowKeyboardGrab(this.Window.NativeInternal, value).also { SDL.ThrowErrorIfNeeded() }
-        }
-
-    internal constructor(window: MainWindow) {
-        this.Window = window
-    }
+    internal constructor()
 
     public override fun close() {
         check(!this.IsClosed)
