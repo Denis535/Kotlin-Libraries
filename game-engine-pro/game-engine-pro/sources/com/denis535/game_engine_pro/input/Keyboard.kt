@@ -8,6 +8,49 @@ public class Keyboard : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
+    public var OnKeyPress: ((KeyboardKeyEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnKeyRepeat: ((KeyboardKeyEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnKeyRelease: ((KeyboardKeyEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
     internal constructor()
 
     public override fun close() {
@@ -23,6 +66,12 @@ public class Keyboard : AutoCloseable {
     }
 
 }
+
+public class KeyboardKeyEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+    public val Key: KeyboardKey,
+)
 
 public enum class KeyboardKey {
     Letter_A,

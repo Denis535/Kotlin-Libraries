@@ -8,6 +8,63 @@ public class Mouse : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
+    public var OnMove: ((MouseMoveEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnButtonPress: ((MouseButtonEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnButtonRelease: ((MouseButtonEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnWheelScroll: ((MouseWheelScrollEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
     internal constructor()
 
     public override fun close() {
@@ -45,6 +102,29 @@ public class Mouse : AutoCloseable {
     }
 
 }
+
+public class MouseMoveEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+    public val Cursor: Pair<Float, Float>, // unlocked cursor only
+    public val Delta: Pair<Float, Float>, // locked cursor only
+)
+
+public class MouseButtonEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+    public val Cursor: Pair<Float, Float>, // unlocked cursor only
+    public val Button: MouseButton,
+    public val ClickCount: Int,
+)
+
+public class MouseWheelScrollEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+    public val Cursor: Pair<Float, Float>, // unlocked cursor only
+    public val Scroll: Pair<Float, Float>,
+    public val IntegerScroll: Pair<Int, Int>,
+)
 
 public enum class MouseButton {
     Left,

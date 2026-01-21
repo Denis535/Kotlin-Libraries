@@ -85,6 +85,17 @@ public abstract class ClientEngine : Engine {
                 this.OnKeyboardFocusLost(event)
             }
 
+            SDL_EVENT_TEXT_INPUT -> {
+                val evt = event.pointed.text
+                val timestamp = this.Time.Time
+                val windowID = evt.windowID
+                val text = evt.text?.toKStringFromUtf8()
+                if (text != null) {
+                    val event = TextInputEvent(timestamp, windowID, text)
+                    this.OnTextInput(event)
+                }
+            }
+
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
                 val timestamp = this.Time.Time
@@ -95,6 +106,7 @@ public abstract class ClientEngine : Engine {
                 val deltaY = evt.yrel
                 val event = MouseMoveEvent(timestamp, windowID, Pair(x, y), Pair(deltaX, deltaY))
                 this.OnMouseMove(event)
+                this.Mouse.OnMove?.invoke(event)
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val evt = event.pointed.button
@@ -105,15 +117,15 @@ public abstract class ClientEngine : Engine {
                 val isPressed = evt.down
                 val button = MouseButton.FromNativeValue(evt.button)
                 val clickCount = evt.clicks.toInt()
-                val event = if (button != null) {
-                    MouseButtonEvent(timestamp, windowID, Pair(x, y), button, clickCount)
-                } else {
-                    null
-                }
-                if (isPressed) {
-                    if (event != null) this.OnMouseButtonPress(event)
-                } else {
-                    if (event != null) this.OnMouseButtonRelease(event)
+                if (button != null) {
+                    val event = MouseButtonEvent(timestamp, windowID, Pair(x, y), button, clickCount)
+                    if (isPressed) {
+                        this.OnMouseButtonPress(event)
+                        this.Mouse.OnButtonPress?.invoke(event)
+                    } else {
+                        this.OnMouseButtonRelease(event)
+                        this.Mouse.OnButtonRelease?.invoke(event)
+                    }
                 }
             }
             SDL_EVENT_MOUSE_WHEEL -> {
@@ -140,6 +152,7 @@ public abstract class ClientEngine : Engine {
                 }
                 val event = MouseWheelScrollEvent(timestamp, windowID, Pair(x, y), Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
                 this.OnMouseWheelScroll(event)
+                this.Mouse.OnWheelScroll?.invoke(event)
             }
 
 //            SDL_EVENT_FINGER_DOWN -> {
@@ -178,25 +191,26 @@ public abstract class ClientEngine : Engine {
                 val isPressed = evt.down
                 val isRepeated = evt.repeat
                 val key = KeyboardKey.FromNativeValue(evt.scancode)
-                val event = if (key != null) {
-                    KeyboardKeyEvent(timestamp, windowID, key)
-                } else {
-                    null
-                }
-                if (isPressed) {
-                    if (!isRepeated) {
-                        if (event != null) this.OnKeyboardKeyPress(event)
+                if (key != null) {
+                    val event = KeyboardKeyEvent(timestamp, windowID, key)
+                    if (isPressed) {
+                        if (!isRepeated) {
+                            this.OnKeyboardKeyPress(event)
+                            this.Keyboard.OnKeyPress?.invoke(event)
+                        } else {
+                            this.OnKeyboardKeyRepeat(event)
+                            this.Keyboard.OnKeyRepeat?.invoke(event)
+                        }
                     } else {
-                        if (event != null) this.OnKeyboardKeyRepeat(event)
+                        this.OnKeyboardKeyRelease(event)
+                        this.Keyboard.OnKeyRelease?.invoke(event)
                     }
-                } else {
-                    if (event != null) this.OnKeyboardKeyRelease(event)
                 }
             }
 
 //            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
 //                val evt = event.pointed.jhat
-//                val timestamp = time.Time
+//                val timestamp = this.Time.Time
 //                val windowID = evt.windowID
 //                val joystickID = evt.which
 //                val hat = evt.hat
@@ -230,7 +244,7 @@ public abstract class ClientEngine : Engine {
 //            }
 //            SDL_EVENT_JOYSTICK_BUTTON_DOWN, SDL_EVENT_JOYSTICK_BUTTON_UP -> {
 //                val evt = event.pointed.jbutton
-//                val timestamp = time.Time
+//                val timestamp = this.Time.Time
 //                val windowID = evt.windowID
 //                val joystickID = evt.which
 //                val button = evt.button
@@ -238,7 +252,7 @@ public abstract class ClientEngine : Engine {
 //            }
 //            SDL_EVENT_JOYSTICK_AXIS_MOTION -> {
 //                val evt = event.pointed.jaxis
-//                val timestamp = time.Time
+//                val timestamp = this.Time.Time
 //                val windowID = evt.windowID
 //                val joystickID = evt.which
 //                val axis = evt.axis
@@ -246,17 +260,6 @@ public abstract class ClientEngine : Engine {
 //                    MathUtils.Lerp(-1f, 1f, MathUtils.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
 //                }
 //            }
-
-            SDL_EVENT_TEXT_INPUT -> {
-                val evt = event.pointed.text
-                val timestamp = this.Time.Time
-                val windowID = evt.windowID
-                val text = evt.text?.toKStringFromUtf8()
-                if (text != null) {
-                    val event = TextInputEvent(timestamp, windowID, text)
-                    this.OnTextInput(event)
-                }
-            }
 
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
                 this.IsRunning = false
@@ -273,6 +276,8 @@ public abstract class ClientEngine : Engine {
     protected abstract fun OnKeyboardFocus(event: KeyboardFocusEvent)
     protected abstract fun OnKeyboardFocusLost(event: KeyboardFocusLostEvent)
 
+    protected abstract fun OnTextInput(event: TextInputEvent)
+
     protected abstract fun OnMouseMove(event: MouseMoveEvent)
     protected abstract fun OnMouseButtonPress(event: MouseButtonEvent)
     protected abstract fun OnMouseButtonRelease(event: MouseButtonEvent)
@@ -282,6 +287,30 @@ public abstract class ClientEngine : Engine {
     protected abstract fun OnKeyboardKeyRepeat(event: KeyboardKeyEvent)
     protected abstract fun OnKeyboardKeyRelease(event: KeyboardKeyEvent)
 
-    protected abstract fun OnTextInput(event: TextInputEvent)
-
 }
+
+public class MouseFocusEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+)
+
+public class MouseFocusLostEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+)
+
+public class KeyboardFocusEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+)
+
+public class KeyboardFocusLostEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+)
+
+public class TextInputEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+    public val Text: String,
+)
