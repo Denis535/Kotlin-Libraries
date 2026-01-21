@@ -208,6 +208,23 @@ public abstract class ClientEngine : Engine {
                 }
             }
 
+//            SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP -> {
+//                val evt = event.pointed.gbutton
+//                val timestamp = this.Time.Time
+//                val gamepadID = evt.which
+//                val button = evt.button // https://wiki.libsdl.org/SDL3/SDL_GamepadButton
+//                val isPressed = evt.down
+//            }
+//            SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
+//                val evt = event.pointed.gaxis
+//                val timestamp = this.Time.Time
+//                val gamepadID = evt.which
+//                val axis = evt.axis // https://wiki.libsdl.org/SDL3/SDL_GamepadAxis
+//                val value = evt.value.let {
+//                    Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
+//                }
+//            }
+
 //            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
 //                val evt = event.pointed.jhat
 //                val timestamp = this.Time.Time
@@ -257,7 +274,7 @@ public abstract class ClientEngine : Engine {
 //                val joystickID = evt.which
 //                val axis = evt.axis
 //                val value = evt.value.let {
-//                    MathUtils.Lerp(-1f, 1f, MathUtils.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
+//                    Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
 //                }
 //            }
 
