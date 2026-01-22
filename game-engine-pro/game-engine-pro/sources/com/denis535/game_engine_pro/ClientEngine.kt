@@ -2,6 +2,7 @@ package com.denis535.game_engine_pro
 
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
+import com.denis535.game_engine_pro.math.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -211,15 +212,15 @@ public abstract class ClientEngine : Engine {
 //            SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP -> {
 //                val evt = event.pointed.gbutton
 //                val timestamp = this.Time.Time
-//                val gamepadID = evt.which
-//                val button = evt.button // https://wiki.libsdl.org/SDL3/SDL_GamepadButton
+//                val playerIndex = SDL_GetGamepadPlayerIndexForID(evt.which)
+//                val button = GamepadButton.FromNativeValue(evt.button) // https://wiki.libsdl.org/SDL3/SDL_GamepadButton
 //                val isPressed = evt.down
 //            }
 //            SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
 //                val evt = event.pointed.gaxis
 //                val timestamp = this.Time.Time
-//                val gamepadID = evt.which
-//                val axis = evt.axis // https://wiki.libsdl.org/SDL3/SDL_GamepadAxis
+//                val playerIndex = SDL_GetGamepadPlayerIndexForID(evt.which)
+//                val axis = GamepadAxis.FromNativeValue(evt.axis) // https://wiki.libsdl.org/SDL3/SDL_GamepadAxis
 //                val value = evt.value.let {
 //                    Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
 //                }
