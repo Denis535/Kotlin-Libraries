@@ -116,7 +116,7 @@ public abstract class ClientEngine : Engine {
                 val x = evt.x
                 val y = evt.y
                 val isPressed = evt.down
-                val button = MouseButton.FromNativeValue(evt.button)
+                val button = MouseButton.FromNativeValue(evt.button.toInt())
                 val clickCount = evt.clicks.toInt()
                 if (button != null) {
                     val event = MouseButtonEvent(timestamp, windowID, Pair(x, y), button, clickCount)
@@ -209,22 +209,28 @@ public abstract class ClientEngine : Engine {
                 }
             }
 
-//            SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP -> {
-//                val evt = event.pointed.gbutton
-//                val timestamp = this.Time.Time
-//                val playerIndex = SDL_GetGamepadPlayerIndexForID(evt.which)
-//                val button = GamepadButton.FromNativeValue(evt.button) // https://wiki.libsdl.org/SDL3/SDL_GamepadButton
-//                val isPressed = evt.down
-//            }
-//            SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
-//                val evt = event.pointed.gaxis
-//                val timestamp = this.Time.Time
-//                val playerIndex = SDL_GetGamepadPlayerIndexForID(evt.which)
-//                val axis = GamepadAxis.FromNativeValue(evt.axis) // https://wiki.libsdl.org/SDL3/SDL_GamepadAxis
-//                val value = evt.value.let {
-//                    Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
-//                }
-//            }
+            SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP -> {
+                val evt = event.pointed.gbutton
+                val timestamp = this.Time.Time
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(evt.which)
+                val button = GamepadButton.FromNativeValue(evt.button.toInt())
+                val isPressed = evt.down
+                if (button != null) {
+                    val event = GamepadButtonEvent(timestamp, playerIndex, button)
+                }
+            }
+            SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
+                val evt = event.pointed.gaxis
+                val timestamp = this.Time.Time
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(evt.which)
+                val axis = GamepadAxis.FromNativeValue(evt.axis.toInt())
+                val value = evt.value.let {
+                    Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
+                }
+                if (axis != null) {
+                    val event = GamepadAxisEvent(timestamp, playerIndex, axis, value)
+                }
+            }
 
 //            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
 //                val evt = event.pointed.jhat

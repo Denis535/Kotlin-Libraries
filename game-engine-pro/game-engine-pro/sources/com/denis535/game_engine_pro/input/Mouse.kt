@@ -133,16 +133,16 @@ public enum class MouseButton {
     X1,
     X2;
 
-    @OptIn(ExperimentalForeignApi::class)
-    internal fun ToNativeValue(): Int {
-        return when (this) {
-            Left -> SDL_BUTTON_LEFT
-            Right -> SDL_BUTTON_RIGHT
-            Middle -> SDL_BUTTON_MIDDLE
-            X1 -> SDL_BUTTON_X1
-            X2 -> SDL_BUTTON_X2
-        }
-    }
+//    @OptIn(ExperimentalForeignApi::class)
+//    internal fun ToNativeValue(): Int {
+//        return when (this) {
+//            Left -> SDL_BUTTON_LEFT
+//            Right -> SDL_BUTTON_RIGHT
+//            Middle -> SDL_BUTTON_MIDDLE
+//            X1 -> SDL_BUTTON_X1
+//            X2 -> SDL_BUTTON_X2
+//        }
+//    }
 
     @OptIn(ExperimentalForeignApi::class)
     internal fun ToNativeMask(): UInt {
@@ -157,8 +157,8 @@ public enum class MouseButton {
 
     public companion object {
         @OptIn(ExperimentalForeignApi::class)
-        internal fun FromNativeValue(value: UByte): MouseButton? {
-            return when (value.toInt()) {
+        internal fun FromNativeValue(value: Int): MouseButton? {
+            return when (value) {
                 SDL_BUTTON_LEFT -> Left
                 SDL_BUTTON_RIGHT -> Right
                 SDL_BUTTON_MIDDLE -> Middle
