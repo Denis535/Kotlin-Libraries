@@ -31,76 +31,77 @@ public class GamepadAxisMoveEvent(
 )
 
 public enum class GamepadButton {
-    DPAD_LEFT,
-    DPAD_RIGHT,
-    DPAD_UP,
-    DPAD_DOWN,
+    Left,
+    Right,
+    Up,
+    Down,
 
-    WEST,  // X / Square
-    EAST,  // B / Circle
-    NORTH, // Y / Triangle
-    SOUTH, // A / X
+    South, // A / X
+    East,  // B / Circle
+    West,  // X / Square
+    North, // Y / Triangle
 
-    LEFT_STICK,
-    RIGHT_STICK,
+    LeftStick,
+    RightStick,
 
-    LEFT_SHOULDER,
-    RIGHT_SHOULDER,
+    LeftShoulder,
+    RightShoulder,
 
-    LEFT_PADDLE1,
-    RIGHT_PADDLE1,
-    LEFT_PADDLE2,
-    RIGHT_PADDLE2,
+    LeftPaddle_1,
+    LeftPaddle_2,
 
-    START,
-    BACK,
-    GUIDE,
+    RightPaddle_1,
+    RightPaddle_2,
 
-    TOUCHPAD,
+    Start,
+    Back,
+    Guide,
 
-    MISC1,
-    MISC2,
-    MISC3,
-    MISC4,
-    MISC5,
-    MISC6;
+    Touchpad,
+
+    Misc_1,
+    Misc_2,
+    Misc_3,
+    Misc_4,
+    Misc_5,
+    Misc_6;
 
     @OptIn(ExperimentalForeignApi::class)
     internal fun ToNativeValue(): Int {
         return when (this) {
-            DPAD_LEFT -> SDL_GAMEPAD_BUTTON_DPAD_LEFT
-            DPAD_RIGHT -> SDL_GAMEPAD_BUTTON_DPAD_RIGHT
-            DPAD_UP -> SDL_GAMEPAD_BUTTON_DPAD_UP
-            DPAD_DOWN -> SDL_GAMEPAD_BUTTON_DPAD_DOWN
+            Left -> SDL_GAMEPAD_BUTTON_DPAD_LEFT
+            Right -> SDL_GAMEPAD_BUTTON_DPAD_RIGHT
+            Up -> SDL_GAMEPAD_BUTTON_DPAD_UP
+            Down -> SDL_GAMEPAD_BUTTON_DPAD_DOWN
 
-            WEST -> SDL_GAMEPAD_BUTTON_WEST
-            EAST -> SDL_GAMEPAD_BUTTON_EAST
-            NORTH -> SDL_GAMEPAD_BUTTON_NORTH
-            SOUTH -> SDL_GAMEPAD_BUTTON_SOUTH
+            South -> SDL_GAMEPAD_BUTTON_SOUTH
+            East -> SDL_GAMEPAD_BUTTON_EAST
+            West -> SDL_GAMEPAD_BUTTON_WEST
+            North -> SDL_GAMEPAD_BUTTON_NORTH
 
-            LEFT_STICK -> SDL_GAMEPAD_BUTTON_LEFT_STICK
-            RIGHT_STICK -> SDL_GAMEPAD_BUTTON_RIGHT_STICK
+            LeftStick -> SDL_GAMEPAD_BUTTON_LEFT_STICK
+            RightStick -> SDL_GAMEPAD_BUTTON_RIGHT_STICK
 
-            LEFT_SHOULDER -> SDL_GAMEPAD_BUTTON_LEFT_SHOULDER
-            RIGHT_SHOULDER -> SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER
+            LeftShoulder -> SDL_GAMEPAD_BUTTON_LEFT_SHOULDER
+            RightShoulder -> SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER
 
-            LEFT_PADDLE1 -> SDL_GAMEPAD_BUTTON_LEFT_PADDLE1
-            RIGHT_PADDLE1 -> SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1
-            LEFT_PADDLE2 -> SDL_GAMEPAD_BUTTON_LEFT_PADDLE2
-            RIGHT_PADDLE2 -> SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2
+            LeftPaddle_1 -> SDL_GAMEPAD_BUTTON_LEFT_PADDLE1
+            RightPaddle_1 -> SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1
+            LeftPaddle_2 -> SDL_GAMEPAD_BUTTON_LEFT_PADDLE2
+            RightPaddle_2 -> SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2
 
-            START -> SDL_GAMEPAD_BUTTON_START
-            BACK -> SDL_GAMEPAD_BUTTON_BACK
-            GUIDE -> SDL_GAMEPAD_BUTTON_GUIDE
+            Start -> SDL_GAMEPAD_BUTTON_START
+            Back -> SDL_GAMEPAD_BUTTON_BACK
+            Guide -> SDL_GAMEPAD_BUTTON_GUIDE
 
-            TOUCHPAD -> SDL_GAMEPAD_BUTTON_TOUCHPAD
+            Touchpad -> SDL_GAMEPAD_BUTTON_TOUCHPAD
 
-            MISC1 -> SDL_GAMEPAD_BUTTON_MISC1
-            MISC2 -> SDL_GAMEPAD_BUTTON_MISC2
-            MISC3 -> SDL_GAMEPAD_BUTTON_MISC3
-            MISC4 -> SDL_GAMEPAD_BUTTON_MISC4
-            MISC5 -> SDL_GAMEPAD_BUTTON_MISC5
-            MISC6 -> SDL_GAMEPAD_BUTTON_MISC6
+            Misc_1 -> SDL_GAMEPAD_BUTTON_MISC1
+            Misc_2 -> SDL_GAMEPAD_BUTTON_MISC2
+            Misc_3 -> SDL_GAMEPAD_BUTTON_MISC3
+            Misc_4 -> SDL_GAMEPAD_BUTTON_MISC4
+            Misc_5 -> SDL_GAMEPAD_BUTTON_MISC5
+            Misc_6 -> SDL_GAMEPAD_BUTTON_MISC6
         }
     }
 
@@ -108,39 +109,39 @@ public enum class GamepadButton {
         @OptIn(ExperimentalForeignApi::class)
         internal fun FromNativeValue(value: Int): GamepadButton? {
             return when (value) {
-                SDL_GAMEPAD_BUTTON_DPAD_LEFT -> DPAD_LEFT
-                SDL_GAMEPAD_BUTTON_DPAD_RIGHT -> DPAD_RIGHT
-                SDL_GAMEPAD_BUTTON_DPAD_UP -> DPAD_UP
-                SDL_GAMEPAD_BUTTON_DPAD_DOWN -> DPAD_DOWN
+                SDL_GAMEPAD_BUTTON_DPAD_LEFT -> Left
+                SDL_GAMEPAD_BUTTON_DPAD_RIGHT -> Right
+                SDL_GAMEPAD_BUTTON_DPAD_UP -> Up
+                SDL_GAMEPAD_BUTTON_DPAD_DOWN -> Down
 
-                SDL_GAMEPAD_BUTTON_WEST -> WEST
-                SDL_GAMEPAD_BUTTON_EAST -> EAST
-                SDL_GAMEPAD_BUTTON_NORTH -> NORTH
-                SDL_GAMEPAD_BUTTON_SOUTH -> SOUTH
+                SDL_GAMEPAD_BUTTON_SOUTH -> South
+                SDL_GAMEPAD_BUTTON_EAST -> East
+                SDL_GAMEPAD_BUTTON_WEST -> West
+                SDL_GAMEPAD_BUTTON_NORTH -> North
 
-                SDL_GAMEPAD_BUTTON_LEFT_STICK -> LEFT_STICK
-                SDL_GAMEPAD_BUTTON_RIGHT_STICK -> RIGHT_STICK
+                SDL_GAMEPAD_BUTTON_LEFT_STICK -> LeftStick
+                SDL_GAMEPAD_BUTTON_RIGHT_STICK -> RightStick
 
-                SDL_GAMEPAD_BUTTON_LEFT_SHOULDER -> LEFT_SHOULDER
-                SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER -> RIGHT_SHOULDER
+                SDL_GAMEPAD_BUTTON_LEFT_SHOULDER -> LeftShoulder
+                SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER -> RightShoulder
 
-                SDL_GAMEPAD_BUTTON_LEFT_PADDLE1 -> LEFT_PADDLE1
-                SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1 -> RIGHT_PADDLE1
-                SDL_GAMEPAD_BUTTON_LEFT_PADDLE2 -> LEFT_PADDLE2
-                SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2 -> RIGHT_PADDLE2
+                SDL_GAMEPAD_BUTTON_LEFT_PADDLE1 -> LeftPaddle_1
+                SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1 -> RightPaddle_1
+                SDL_GAMEPAD_BUTTON_LEFT_PADDLE2 -> LeftPaddle_2
+                SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2 -> RightPaddle_2
 
-                SDL_GAMEPAD_BUTTON_START -> START
-                SDL_GAMEPAD_BUTTON_BACK -> BACK
-                SDL_GAMEPAD_BUTTON_GUIDE -> GUIDE
+                SDL_GAMEPAD_BUTTON_START -> Start
+                SDL_GAMEPAD_BUTTON_BACK -> Back
+                SDL_GAMEPAD_BUTTON_GUIDE -> Guide
 
-                SDL_GAMEPAD_BUTTON_TOUCHPAD -> TOUCHPAD
+                SDL_GAMEPAD_BUTTON_TOUCHPAD -> Touchpad
 
-                SDL_GAMEPAD_BUTTON_MISC1 -> MISC1
-                SDL_GAMEPAD_BUTTON_MISC2 -> MISC2
-                SDL_GAMEPAD_BUTTON_MISC3 -> MISC3
-                SDL_GAMEPAD_BUTTON_MISC4 -> MISC4
-                SDL_GAMEPAD_BUTTON_MISC5 -> MISC5
-                SDL_GAMEPAD_BUTTON_MISC6 -> MISC6
+                SDL_GAMEPAD_BUTTON_MISC1 -> Misc_1
+                SDL_GAMEPAD_BUTTON_MISC2 -> Misc_2
+                SDL_GAMEPAD_BUTTON_MISC3 -> Misc_3
+                SDL_GAMEPAD_BUTTON_MISC4 -> Misc_4
+                SDL_GAMEPAD_BUTTON_MISC5 -> Misc_5
+                SDL_GAMEPAD_BUTTON_MISC6 -> Misc_6
                 else -> null
             }
         }
@@ -148,22 +149,24 @@ public enum class GamepadButton {
 }
 
 public enum class GamepadAxis {
-    LEFTX,
-    LEFTY,
-    RIGHTX,
-    RIGHTY,
-    LEFT_TRIGGER,
-    RIGHT_TRIGGER;
+    LeftX,
+    LeftY,
+
+    RightX,
+    RightY,
+
+    LeftTrigger,
+    RightTrigger;
 
     @OptIn(ExperimentalForeignApi::class)
     internal fun ToNativeValue(): Int {
         return when (this) {
-            LEFTX -> SDL_GAMEPAD_AXIS_LEFTX
-            LEFTY -> SDL_GAMEPAD_AXIS_LEFTY
-            RIGHTX -> SDL_GAMEPAD_AXIS_RIGHTX
-            RIGHTY -> SDL_GAMEPAD_AXIS_RIGHTY
-            LEFT_TRIGGER -> SDL_GAMEPAD_AXIS_LEFT_TRIGGER
-            RIGHT_TRIGGER -> SDL_GAMEPAD_AXIS_RIGHT_TRIGGER
+            LeftX -> SDL_GAMEPAD_AXIS_LEFTX
+            LeftY -> SDL_GAMEPAD_AXIS_LEFTY
+            RightX -> SDL_GAMEPAD_AXIS_RIGHTX
+            RightY -> SDL_GAMEPAD_AXIS_RIGHTY
+            LeftTrigger -> SDL_GAMEPAD_AXIS_LEFT_TRIGGER
+            RightTrigger -> SDL_GAMEPAD_AXIS_RIGHT_TRIGGER
         }
     }
 
@@ -171,12 +174,12 @@ public enum class GamepadAxis {
         @OptIn(ExperimentalForeignApi::class)
         internal fun FromNativeValue(value: Int): GamepadAxis? {
             return when (value) {
-                SDL_GAMEPAD_AXIS_LEFTX -> LEFTX
-                SDL_GAMEPAD_AXIS_LEFTY -> LEFTY
-                SDL_GAMEPAD_AXIS_RIGHTX -> RIGHTX
-                SDL_GAMEPAD_AXIS_RIGHTY -> RIGHTY
-                SDL_GAMEPAD_AXIS_LEFT_TRIGGER -> LEFT_TRIGGER
-                SDL_GAMEPAD_AXIS_RIGHT_TRIGGER -> RIGHT_TRIGGER
+                SDL_GAMEPAD_AXIS_LEFTX -> LeftX
+                SDL_GAMEPAD_AXIS_LEFTY -> LeftY
+                SDL_GAMEPAD_AXIS_RIGHTX -> RightX
+                SDL_GAMEPAD_AXIS_RIGHTY -> RightY
+                SDL_GAMEPAD_AXIS_LEFT_TRIGGER -> LeftTrigger
+                SDL_GAMEPAD_AXIS_RIGHT_TRIGGER -> RightTrigger
                 else -> null
             }
         }
