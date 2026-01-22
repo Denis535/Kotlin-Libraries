@@ -24,26 +24,34 @@ public open class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private var _Native: CPointer<SDL_Window>? = null
-
-    @OptIn(ExperimentalForeignApi::class)
     private val IsClosed: Boolean
         get() {
             return this._Native == null
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val ID: UInt
-        get() {
-            check(!this.IsClosed)
-            return SDL_GetWindowID(this._Native!!).also { SDL.ThrowErrorIfNeeded() }
-        }
+    private var _Native: CPointer<SDL_Window>? = null
 
     @OptIn(ExperimentalForeignApi::class)
-    public val Native: CPointer<SDL_Window>
+    private val Native: CPointer<SDL_Window>
         get() {
             check(!this.IsClosed)
             return this._Native!!
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val ID: UInt
+        get() {
+            check(!this.IsClosed)
+            return SDL_GetWindowID(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val Display: Display
+        get() {
+            check(!this.IsClosed)
+            val displayID = SDL_GetDisplayForWindow(this.Native).also { SDL.ThrowErrorIfNeeded() }
+            return Display(displayID)
         }
 
     @OptIn(ExperimentalForeignApi::class)
