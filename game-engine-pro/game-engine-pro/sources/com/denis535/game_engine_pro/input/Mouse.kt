@@ -22,21 +22,7 @@ public class Mouse : AutoCloseable {
             }
             field = value
         }
-    public var OnButtonPress: ((MouseButtonEvent) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
-    public var OnButtonRelease: ((MouseButtonEvent) -> Unit)? = null
+    public var OnButtonAction: ((MouseButtonActionEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -110,11 +96,12 @@ public class MouseMoveEvent(
     public val Delta: Pair<Float, Float>, // locked cursor only
 )
 
-public class MouseButtonEvent(
+public class MouseButtonActionEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val Button: MouseButton,
+    public val IsPressed: Boolean,
     public val ClickCount: Int,
 )
 

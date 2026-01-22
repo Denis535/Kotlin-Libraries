@@ -17,13 +17,14 @@ public class Gamepad : AutoCloseable {
 
 }
 
-public class GamepadButtonEvent(
+public class GamepadButtonActionEvent(
     public val Timestamp: Float,
     public val PlayerIndex: Int,
     public val Button: GamepadButton,
+    public val IsPressed: Boolean,
 )
 
-public class GamepadAxisMoveEvent(
+public class GamepadAxisChangeEvent(
     public val Timestamp: Float,
     public val PlayerIndex: Int,
     public val Axis: GamepadAxis,

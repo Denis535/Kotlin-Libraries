@@ -34,7 +34,7 @@ public abstract class ClientEngine : Engine {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest, windowProvider: () -> MainWindow) : super(manifest) {
-        SDL_Init(SDL_INIT_VIDEO or SDL_INIT_AUDIO).also { SDL.ThrowErrorIfNeeded() }
+        SDL_Init(SDL_INIT_VIDEO).also { SDL.ThrowErrorIfNeeded() }
         this.Window = windowProvider()
         this.Cursor = Cursor()
         this.Mouse = Mouse()
@@ -115,18 +115,13 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 val x = evt.x
                 val y = evt.y
-                val isPressed = evt.down
                 val button = MouseButton.FromNativeValue(evt.button.toInt())
+                val isPressed = evt.down
                 val clickCount = evt.clicks.toInt()
                 if (button != null) {
-                    val event = MouseButtonEvent(timestamp, windowID, Pair(x, y), button, clickCount)
-                    if (isPressed) {
-                        this.OnMouseButtonPress(event)
-                        this.Mouse.OnButtonPress?.invoke(event)
-                    } else {
-                        this.OnMouseButtonRelease(event)
-                        this.Mouse.OnButtonRelease?.invoke(event)
-                    }
+                    val event = MouseButtonActionEvent(timestamp, windowID, Pair(x, y), button, isPressed, clickCount)
+                    this.OnMouseButtonAction(event)
+                    this.Mouse.OnButtonAction?.invoke(event)
                 }
             }
             SDL_EVENT_MOUSE_WHEEL -> {
@@ -135,12 +130,11 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 val x = evt.mouse_x
                 val y = evt.mouse_y
-                val isDirectionNormal = evt.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
                 val scrollX: Float
                 val scrollY: Float
                 val integerScrollX: Int
                 val integerScrollY: Int
-                if (isDirectionNormal) {
+                if (evt.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL) {
                     scrollX = evt.x
                     scrollY = evt.y
                     integerScrollX = evt.integer_x
@@ -189,110 +183,61 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.key
                 val timestamp = this.Time.Time
                 val windowID = evt.windowID
+                val key = KeyboardKey.FromNativeValue(evt.scancode)
                 val isPressed = evt.down
                 val isRepeated = evt.repeat
-                val key = KeyboardKey.FromNativeValue(evt.scancode)
                 if (key != null) {
-                    val event = KeyboardKeyEvent(timestamp, windowID, key)
-                    if (isPressed) {
-                        if (!isRepeated) {
-                            this.OnKeyboardKeyPress(event)
-                            this.Keyboard.OnKeyPress?.invoke(event)
-                        } else {
-                            this.OnKeyboardKeyRepeat(event)
-                            this.Keyboard.OnKeyRepeat?.invoke(event)
-                        }
-                    } else {
-                        this.OnKeyboardKeyRelease(event)
-                        this.Keyboard.OnKeyRelease?.invoke(event)
-                    }
+                    val event = KeyboardKeyActionEvent(timestamp, windowID, key, isPressed, isRepeated)
+                    this.OnKeyboardKeyAction(event)
+                    this.Keyboard.OnKeyAction?.invoke(event)
                 }
             }
 
+            SDL_EVENT_GAMEPAD_ADDED -> {
+                val evt = event.pointed.gdevice
+                val joystickID = evt.which
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
+//                if (playerIndex != -1) {
+//                    // TODO
+//                }
+                if (playerIndex in 0..<4) {
+                    SDL_OpenGamepad(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                }
+            }
+            SDL_EVENT_GAMEPAD_REMOVED -> {
+                val evt = event.pointed.gdevice
+                val joystickID = evt.which
+                val gamepad = SDL_GetGamepadFromID(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                SDL_CloseGamepad(gamepad).also { SDL.ThrowErrorIfNeeded() }
+            }
             SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP -> {
                 val evt = event.pointed.gbutton
                 val timestamp = this.Time.Time
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(evt.which)
+                val joystickID = evt.which
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
                 val button = GamepadButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
                 if (button != null) {
-                    val event = GamepadButtonEvent(timestamp, playerIndex, button)
-//                    if (isPressed) {
-//                        this.OnGamepadButtonPress(event)
-//                        this.Gamepad.OnButtonPress?.invoke(event)
-//                    } else {
-//                        this.OnGamepadButtonRelease(event)
-//                        this.Gamepad.OnButtonRelease?.invoke(event)
-//                    }
+                    val event = GamepadButtonActionEvent(timestamp, playerIndex, button, isPressed)
+                    this.OnGamepadButtonAction(event)
+//                    this.Gamepad.OnButtonAction?.invoke(event)
                 }
             }
             SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
                 val evt = event.pointed.gaxis
                 val timestamp = this.Time.Time
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(evt.which)
+                val joystickID = evt.which
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
                 val axis = GamepadAxis.FromNativeValue(evt.axis.toInt())
                 val value = evt.value.let {
                     Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
                 }
                 if (axis != null) {
-                    val event = GamepadAxisMoveEvent(timestamp, playerIndex, axis, value)
-//                    this.OnGamepadAxisMove(event)
-//                    this.Gamepad.OnAxisMove?.invoke(event)
+                    val event = GamepadAxisChangeEvent(timestamp, playerIndex, axis, value)
+                    this.OnGamepadAxisChange(event)
+//                    this.Gamepad.OnAxisChange?.invoke(event)
                 }
             }
-
-//            SDL_EVENT_JOYSTICK_HAT_MOTION -> {
-//                val evt = event.pointed.jhat
-//                val timestamp = this.Time.Time
-//                val windowID = evt.windowID
-//                val joystickID = evt.which
-//                val hat = evt.hat
-//                val value = evt.value
-//                when (value.toUInt()) {
-//                    SDL_HAT_LEFT -> {
-//
-//                    }
-//                    SDL_HAT_RIGHT -> {
-//
-//                    }
-//                    SDL_HAT_UP -> {
-//
-//                    }
-//                    SDL_HAT_DOWN -> {
-//
-//                    }
-//                    SDL_HAT_LEFTUP -> {
-//
-//                    }
-//                    SDL_HAT_RIGHTUP -> {
-//
-//                    }
-//                    SDL_HAT_LEFTDOWN -> {
-//
-//                    }
-//                    SDL_HAT_RIGHTDOWN -> {
-//
-//                    }
-//                }
-//            }
-//            SDL_EVENT_JOYSTICK_BUTTON_DOWN, SDL_EVENT_JOYSTICK_BUTTON_UP -> {
-//                val evt = event.pointed.jbutton
-//                val timestamp = this.Time.Time
-//                val windowID = evt.windowID
-//                val joystickID = evt.which
-//                val button = evt.button
-//                val isPressed = evt.down
-//            }
-//            SDL_EVENT_JOYSTICK_AXIS_MOTION -> {
-//                val evt = event.pointed.jaxis
-//                val timestamp = this.Time.Time
-//                val windowID = evt.windowID
-//                val joystickID = evt.which
-//                val axis = evt.axis
-//                val value = evt.value.let {
-//                    Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
-//                }
-//            }
 
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
                 this.IsRunning = false
@@ -312,13 +257,13 @@ public abstract class ClientEngine : Engine {
     protected abstract fun OnTextInput(event: TextInputEvent)
 
     protected abstract fun OnMouseMove(event: MouseMoveEvent)
-    protected abstract fun OnMouseButtonPress(event: MouseButtonEvent)
-    protected abstract fun OnMouseButtonRelease(event: MouseButtonEvent)
+    protected abstract fun OnMouseButtonAction(event: MouseButtonActionEvent)
     protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
 
-    protected abstract fun OnKeyboardKeyPress(event: KeyboardKeyEvent)
-    protected abstract fun OnKeyboardKeyRepeat(event: KeyboardKeyEvent)
-    protected abstract fun OnKeyboardKeyRelease(event: KeyboardKeyEvent)
+    protected abstract fun OnKeyboardKeyAction(event: KeyboardKeyActionEvent)
+
+    protected open fun OnGamepadButtonAction(event: GamepadButtonActionEvent) {}
+    protected open fun OnGamepadAxisChange(event: GamepadAxisChangeEvent) {}
 
 }
 
