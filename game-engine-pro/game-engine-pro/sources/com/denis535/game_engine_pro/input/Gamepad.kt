@@ -23,7 +23,7 @@ public class GamepadButtonEvent(
     public val Button: GamepadButton,
 )
 
-public class GamepadAxisEvent(
+public class GamepadAxisMoveEvent(
     public val Timestamp: Float,
     public val PlayerIndex: Int,
     public val Axis: GamepadAxis,

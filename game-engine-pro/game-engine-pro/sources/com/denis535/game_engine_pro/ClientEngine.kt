@@ -217,6 +217,13 @@ public abstract class ClientEngine : Engine {
                 val isPressed = evt.down
                 if (button != null) {
                     val event = GamepadButtonEvent(timestamp, playerIndex, button)
+//                    if (isPressed) {
+//                        this.OnGamepadButtonPress(event)
+//                        this.Gamepad.OnButtonPress?.invoke(event)
+//                    } else {
+//                        this.OnGamepadButtonRelease(event)
+//                        this.Gamepad.OnButtonRelease?.invoke(event)
+//                    }
                 }
             }
             SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
@@ -228,7 +235,9 @@ public abstract class ClientEngine : Engine {
                     Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
                 }
                 if (axis != null) {
-                    val event = GamepadAxisEvent(timestamp, playerIndex, axis, value)
+                    val event = GamepadAxisMoveEvent(timestamp, playerIndex, axis, value)
+//                    this.OnGamepadAxisMove(event)
+//                    this.Gamepad.OnAxisMove?.invoke(event)
                 }
             }
 
