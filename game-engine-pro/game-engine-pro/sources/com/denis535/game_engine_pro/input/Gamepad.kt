@@ -8,7 +8,60 @@ public class Gamepad : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    internal constructor()
+    public val PlayerIndex: Int
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
+    public var OnButtonAction: ((GamepadButtonActionEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnAxisChange: ((GamepadAxisChangeEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val Name: String?
+        get() {
+            check(!this.IsClosed)
+            val gamepad = SDL_GetGamepadFromPlayerIndex(this.PlayerIndex).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GetGamepadName(gamepad).also { SDL.ThrowErrorIfNeeded() }?.toKString()
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val IsConnected: Boolean
+        get() {
+            check(!this.IsClosed)
+            val gamepad = SDL_GetGamepadFromPlayerIndex(this.PlayerIndex).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GamepadConnected(gamepad).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    internal constructor(playerIndex: Int) {
+        this.PlayerIndex = playerIndex
+    }
 
     public override fun close() {
         check(!this.IsClosed)

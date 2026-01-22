@@ -207,6 +207,7 @@ public abstract class ClientEngine : Engine {
             SDL_EVENT_GAMEPAD_REMOVED -> {
                 val evt = event.pointed.gdevice
                 val joystickID = evt.which
+//                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
                 val gamepad = SDL_GetGamepadFromID(joystickID).also { SDL.ThrowErrorIfNeeded() }
                 SDL_CloseGamepad(gamepad).also { SDL.ThrowErrorIfNeeded() }
             }
