@@ -51,25 +51,16 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnMouseMove(event: MouseMoveEvent) {
     }
 
-    protected override fun OnMouseButtonPress(event: MouseButtonEvent) {
-    }
-
-    protected override fun OnMouseButtonRelease(event: MouseButtonEvent) {
+    protected override fun OnMouseButtonAction(event: MouseButtonActionEvent) {
     }
 
     protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
     }
 
-    protected override fun OnKeyboardKeyPress(event: KeyboardKeyEvent) {
+    protected override fun OnKeyboardKeyAction(event: KeyboardKeyActionEvent) {
         if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
             this.Window.IsFullScreen = !this.Window.IsFullScreen
         }
-    }
-
-    protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyEvent) {
-    }
-
-    protected override fun OnKeyboardKeyRelease(event: KeyboardKeyEvent) {
     }
 
     protected override fun OnTextInput(event: TextInputEvent) {
