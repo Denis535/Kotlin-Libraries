@@ -32,6 +32,30 @@ public abstract class ClientEngine : Engine {
             return field
         }
 
+    public val Gamepad_0: Gamepad
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
+    public val Gamepad_1: Gamepad
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
+    public val Gamepad_2: Gamepad
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
+    public val Gamepad_3: Gamepad
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest, windowProvider: () -> MainWindow) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO).also { SDL.ThrowErrorIfNeeded() }
@@ -39,12 +63,20 @@ public abstract class ClientEngine : Engine {
         this.Cursor = Cursor()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
+        this.Gamepad_0 = Gamepad(0)
+        this.Gamepad_1 = Gamepad(1)
+        this.Gamepad_2 = Gamepad(2)
+        this.Gamepad_3 = Gamepad(3)
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
+        this.Gamepad_0.close()
+        this.Gamepad_1.close()
+        this.Gamepad_2.close()
+        this.Gamepad_3.close()
         this.Keyboard.close()
         this.Mouse.close()
         this.Cursor.close()
@@ -60,30 +92,30 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.window
                 val timestamp = this.Time.Time
                 val windowID = evt.windowID
-                val event = MouseFocusEvent(timestamp, windowID)
+                val event = MouseFocusEvent(timestamp, windowID, true)
                 this.OnMouseFocus(event)
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
                 val evt = event.pointed.window
                 val timestamp = this.Time.Time
                 val windowID = evt.windowID
-                val event = MouseFocusLostEvent(timestamp, windowID)
-                this.OnMouseFocusLost(event)
+                val event = MouseFocusEvent(timestamp, windowID, false)
+                this.OnMouseFocus(event)
             }
 
             SDL_EVENT_WINDOW_FOCUS_GAINED -> {
                 val evt = event.pointed.window
                 val timestamp = this.Time.Time
                 val windowID = evt.windowID
-                val event = KeyboardFocusEvent(timestamp, windowID)
+                val event = KeyboardFocusEvent(timestamp, windowID, true)
                 this.OnKeyboardFocus(event)
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
                 val evt = event.pointed.window
                 val timestamp = this.Time.Time
                 val windowID = evt.windowID
-                val event = KeyboardFocusLostEvent(timestamp, windowID)
-                this.OnKeyboardFocusLost(event)
+                val event = KeyboardFocusEvent(timestamp, windowID, false)
+                this.OnKeyboardFocus(event)
             }
 
             SDL_EVENT_TEXT_INPUT -> {
@@ -219,9 +251,16 @@ public abstract class ClientEngine : Engine {
                 val button = GamepadButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
                 if (button != null) {
+                    val gamepad = when (playerIndex) {
+                        0 -> this.Gamepad_0
+                        1 -> this.Gamepad_1
+                        2 -> this.Gamepad_2
+                        3 -> this.Gamepad_3
+                        else -> error("PlayerIndex $playerIndex is invalid")
+                    }
                     val event = GamepadButtonActionEvent(timestamp, playerIndex, button, isPressed)
                     this.OnGamepadButtonAction(event)
-//                    this.Gamepad.OnButtonAction?.invoke(event)
+                    gamepad.OnButtonAction?.invoke(event)
                 }
             }
             SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
@@ -234,9 +273,16 @@ public abstract class ClientEngine : Engine {
                     Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
                 }
                 if (axis != null) {
+                    val gamepad = when (playerIndex) {
+                        0 -> this.Gamepad_0
+                        1 -> this.Gamepad_1
+                        2 -> this.Gamepad_2
+                        3 -> this.Gamepad_3
+                        else -> error("PlayerIndex $playerIndex is invalid")
+                    }
                     val event = GamepadAxisChangeEvent(timestamp, playerIndex, axis, value)
                     this.OnGamepadAxisChange(event)
-//                    this.Gamepad.OnAxisChange?.invoke(event)
+                    gamepad.OnAxisChange?.invoke(event)
                 }
             }
 
@@ -250,11 +296,7 @@ public abstract class ClientEngine : Engine {
     protected abstract fun OnDraw()
 
     protected abstract fun OnMouseFocus(event: MouseFocusEvent)
-    protected abstract fun OnMouseFocusLost(event: MouseFocusLostEvent)
-
     protected abstract fun OnKeyboardFocus(event: KeyboardFocusEvent)
-    protected abstract fun OnKeyboardFocusLost(event: KeyboardFocusLostEvent)
-
     protected abstract fun OnTextInput(event: TextInputEvent)
 
     protected abstract fun OnMouseMove(event: MouseMoveEvent)
@@ -271,21 +313,13 @@ public abstract class ClientEngine : Engine {
 public class MouseFocusEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
-)
-
-public class MouseFocusLostEvent(
-    public val Timestamp: Float,
-    public val WindowID: UInt,
+    public val IsFocusGained: Boolean,
 )
 
 public class KeyboardFocusEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
-)
-
-public class KeyboardFocusLostEvent(
-    public val Timestamp: Float,
-    public val WindowID: UInt,
+    public val IsFocusGained: Boolean,
 )
 
 public class TextInputEvent(

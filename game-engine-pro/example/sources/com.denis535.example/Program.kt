@@ -39,13 +39,10 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnMouseFocus(event: MouseFocusEvent) {
     }
 
-    protected override fun OnMouseFocusLost(event: MouseFocusLostEvent) {
-    }
-
     protected override fun OnKeyboardFocus(event: KeyboardFocusEvent) {
     }
 
-    protected override fun OnKeyboardFocusLost(event: KeyboardFocusLostEvent) {
+    protected override fun OnTextInput(event: TextInputEvent) {
     }
 
     protected override fun OnMouseMove(event: MouseMoveEvent) {
@@ -61,9 +58,6 @@ private class ClientEngine2 : ClientEngine {
         if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
             this.Window.IsFullScreen = !this.Window.IsFullScreen
         }
-    }
-
-    protected override fun OnTextInput(event: TextInputEvent) {
     }
 
 }
