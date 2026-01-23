@@ -32,25 +32,7 @@ public abstract class ClientEngine : Engine {
             return field
         }
 
-    public val Gamepad_0: Gamepad
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public val Gamepad_1: Gamepad
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public val Gamepad_2: Gamepad
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public val Gamepad_3: Gamepad
+    public val Gamepads: List<Gamepad>
         get() {
             check(!this.IsClosed)
             return field
@@ -63,20 +45,14 @@ public abstract class ClientEngine : Engine {
         this.Cursor = Cursor()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
-        this.Gamepad_0 = Gamepad()
-        this.Gamepad_1 = Gamepad()
-        this.Gamepad_2 = Gamepad()
-        this.Gamepad_3 = Gamepad()
+        this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        this.Gamepad_0.close()
-        this.Gamepad_1.close()
-        this.Gamepad_2.close()
-        this.Gamepad_3.close()
+        this.Gamepads.asReversed().forEach { it.close() }
         this.Keyboard.close()
         this.Mouse.close()
         this.Cursor.close()
@@ -232,30 +208,19 @@ public abstract class ClientEngine : Engine {
 //                if (playerIndex != -1) {
 //                    // TODO
 //                }
-                if (playerIndex in 0..<4) {
-                    val gamepad = when (playerIndex) {
-                        0 -> this.Gamepad_0
-                        1 -> this.Gamepad_1
-                        2 -> this.Gamepad_2
-                        3 -> this.Gamepad_3
-                        else -> null
-                    }
-                    gamepad!!.NativeGamepad = SDL_OpenGamepad(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                val playerGamepad = this.Gamepads.getOrNull(playerIndex)
+                if (playerGamepad != null) {
+                    playerGamepad.NativeGamepad = SDL_OpenGamepad(joystickID).also { SDL.ThrowErrorIfNeeded() }
                 }
             }
             SDL_EVENT_GAMEPAD_REMOVED -> {
                 val evt = event.pointed.gdevice
                 val joystickID = evt.which
                 val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
-                if (playerIndex in 0..<4) {
-                    val gamepad = when (playerIndex) {
-                        0 -> this.Gamepad_0
-                        1 -> this.Gamepad_1
-                        2 -> this.Gamepad_2
-                        3 -> this.Gamepad_3
-                        else -> null
-                    }
-                    SDL_CloseGamepad(gamepad!!.NativeGamepad).also { SDL.ThrowErrorIfNeeded() }
+                val playerGamepad = this.Gamepads.getOrNull(playerIndex)
+                if (playerGamepad != null) {
+                    SDL_CloseGamepad(playerGamepad.NativeGamepad).also { SDL.ThrowErrorIfNeeded() }
+                    playerGamepad.NativeGamepad = null
                 }
             }
             SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP -> {
@@ -263,19 +228,15 @@ public abstract class ClientEngine : Engine {
                 val timestamp = this.Time.Time
                 val joystickID = evt.which
                 val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 val button = GamepadButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
-                if (button != null) {
-                    val event = GamepadButtonActionEvent(timestamp, playerIndex, button, isPressed)
-                    val gamepad = when (playerIndex) {
-                        0 -> this.Gamepad_0
-                        1 -> this.Gamepad_1
-                        2 -> this.Gamepad_2
-                        3 -> this.Gamepad_3
-                        else -> null
+                if (playerGamepad != null) {
+                    if (button != null) {
+                        val event = GamepadButtonActionEvent(timestamp, playerIndex, button, isPressed)
+                        this.OnGamepadButtonAction(event)
+                        playerGamepad.OnButtonAction?.invoke(event)
                     }
-                    this.OnGamepadButtonAction(event)
-                    gamepad!!.OnButtonAction?.invoke(event)
                 }
             }
             SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
@@ -283,21 +244,17 @@ public abstract class ClientEngine : Engine {
                 val timestamp = this.Time.Time
                 val joystickID = evt.which
                 val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 val axis = GamepadAxis.FromNativeValue(evt.axis.toInt())
                 val value = evt.value.let {
                     Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
                 }
-                if (axis != null) {
-                    val event = GamepadAxisChangeEvent(timestamp, playerIndex, axis, value)
-                    val gamepad = when (playerIndex) {
-                        0 -> this.Gamepad_0
-                        1 -> this.Gamepad_1
-                        2 -> this.Gamepad_2
-                        3 -> this.Gamepad_3
-                        else -> null
+                if (playerGamepad != null) {
+                    if (axis != null) {
+                        val event = GamepadAxisChangeEvent(timestamp, playerIndex, axis, value)
+                        this.OnGamepadAxisChange(event)
+                        playerGamepad.OnAxisChange?.invoke(event)
                     }
-                    this.OnGamepadAxisChange(event)
-                    gamepad!!.OnAxisChange?.invoke(event)
                 }
             }
 
