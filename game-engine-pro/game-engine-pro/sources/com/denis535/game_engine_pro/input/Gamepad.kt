@@ -1,5 +1,6 @@
 package com.denis535.game_engine_pro.input
 
+import com.denis535.game_engine_pro.math.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -12,6 +13,43 @@ public class Gamepad : AutoCloseable {
         get() {
             check(!this.IsClosed)
             return field
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private val Native: CPointer<cnames.structs.SDL_Gamepad>?
+        get() {
+            check(!this.IsClosed)
+            return SDL_GetGamepadFromID(this.ID).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private val ID: UInt
+        get() {
+            check(!this.IsClosed)
+            val joystick = SDL_GetJoystickFromPlayerIndex(this.PlayerIndex).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GetJoystickID(joystick).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsEnabled: Boolean
+        get() {
+            check(!this.IsClosed)
+            return SDL_GamepadConnected(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value) {
+                SDL_OpenGamepad(this.ID).also { SDL.ThrowErrorIfNeeded() }
+            } else {
+                SDL_CloseGamepad(this.Native).also { SDL.ThrowErrorIfNeeded() }
+            }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val Name: String?
+        get() {
+            check(!this.IsClosed)
+            return SDL_GetGamepadName(this.Native).also { SDL.ThrowErrorIfNeeded() }?.toKString()
         }
 
     public var OnButtonAction: ((GamepadButtonActionEvent) -> Unit)? = null
@@ -43,24 +81,31 @@ public class Gamepad : AutoCloseable {
             field = value
         }
 
-    @OptIn(ExperimentalForeignApi::class)
-    public val Name: String?
-        get() {
-            check(!this.IsClosed)
-            val gamepad = SDL_GetGamepadFromPlayerIndex(this.PlayerIndex).also { SDL.ThrowErrorIfNeeded() }
-            return SDL_GetGamepadName(gamepad).also { SDL.ThrowErrorIfNeeded() }?.toKString()
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val IsConnected: Boolean
-        get() {
-            check(!this.IsClosed)
-            val gamepad = SDL_GetGamepadFromPlayerIndex(this.PlayerIndex).also { SDL.ThrowErrorIfNeeded() }
-            return SDL_GamepadConnected(gamepad).also { SDL.ThrowErrorIfNeeded() }
-        }
-
     internal constructor(playerIndex: Int) {
         this.PlayerIndex = playerIndex
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun IsButtonPressed(button: GamepadButton): Boolean {
+        check(!this.IsClosed)
+        return SDL_GetGamepadButton(this.Native, button.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun GetAxisValue(axis: GamepadAxis): Float {
+        check(!this.IsClosed)
+        return SDL_GetGamepadAxis(this.Native, axis.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }.let {
+            Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun Rumble(lowFrequencyRumble: Float, highFrequencyRumble: Float, duration: Float) {
+        check(!this.IsClosed)
+        val lowFrequencyRumble = (lowFrequencyRumble * 0xFFFF).toInt().coerceIn(0, 0xFFFF).toUShort()
+        val highFrequencyRumble = (highFrequencyRumble * 0xFFFF).toInt().coerceIn(0, 0xFFFF).toUShort()
+        val duration = (duration * 1000).toUInt()
+        SDL_RumbleGamepad(this.Native, lowFrequencyRumble, highFrequencyRumble, duration).also { SDL.ThrowErrorIfNeeded() }
     }
 
     public override fun close() {
