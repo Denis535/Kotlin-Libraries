@@ -23,20 +23,14 @@ public open class MainWindow : AutoCloseable {
         ) : Description(title)
     }
 
-    @OptIn(ExperimentalForeignApi::class)
-    private val IsClosed: Boolean
-        get() {
-            return this._Native == null
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private var _Native: CPointer<SDL_Window>? = null
+    public var IsClosed: Boolean = false
+        private set
 
     @OptIn(ExperimentalForeignApi::class)
     private val Native: CPointer<SDL_Window>
         get() {
             check(!this.IsClosed)
-            return this._Native!!
+            return field
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -147,34 +141,6 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var IsMouseGrabbed: Boolean
-        get() {
-            return SDL_GetWindowMouseGrab(this.Native).also { SDL.ThrowErrorIfNeeded() }
-        }
-        set(value) {
-            SDL_SetWindowMouseGrab(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public var IsMouseCaptured: Boolean
-        get() {
-            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
-            return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
-        }
-        set(value) {
-            SDL_CaptureMouse(value).also { SDL.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public var IsMouseLocked: Boolean
-        get() {
-            return SDL_GetWindowRelativeMouseMode(this.Native).also { SDL.ThrowErrorIfNeeded() }
-        }
-        set(value) {
-            SDL_SetWindowRelativeMouseMode(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
     public val HasMouseFocus: Boolean
         get() {
             check(!this.IsClosed)
@@ -183,20 +149,56 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var IsKeyboardGrabbed: Boolean
-        get() {
-            return SDL_GetWindowKeyboardGrab(this.Native).also { SDL.ThrowErrorIfNeeded() }
-        }
-        set(value) {
-            SDL_SetWindowKeyboardGrab(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
     public val HasKeyboardFocus: Boolean
         get() {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_INPUT_FOCUS != 0UL
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsMouseLocked: Boolean
+        get() {
+            check(!this.IsClosed)
+            return SDL_GetWindowRelativeMouseMode(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            check(!this.IsClosed)
+            SDL_SetWindowRelativeMouseMode(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsMouseGrabbed: Boolean
+        get() {
+            check(!this.IsClosed)
+            return SDL_GetWindowMouseGrab(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            check(!this.IsClosed)
+            SDL_SetWindowMouseGrab(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsMouseCaptured: Boolean
+        get() {
+            check(!this.IsClosed)
+            val flags = SDL_GetWindowFlags(this.Native).also { SDL.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
+        }
+        set(value) {
+            check(!this.IsClosed)
+            SDL_CaptureMouse(value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsKeyboardGrabbed: Boolean
+        get() {
+            check(!this.IsClosed)
+            return SDL_GetWindowKeyboardGrab(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            check(!this.IsClosed)
+            SDL_SetWindowKeyboardGrab(this.Native, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -216,12 +218,12 @@ public open class MainWindow : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(description: Description) {
-        this._Native = run {
+        this.Native = run {
             when (description) {
                 is Description.FullScreen -> {
                     var flags = SDL_WINDOW_VULKAN or SDL_WINDOW_FULLSCREEN
                     if (description.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
-                    SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }.also {
+                    SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }!!.also {
                         SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { SDL.ThrowErrorIfNeeded() }
                         SDL_SetWindowMinimumSize(it, 320, 240).also { SDL.ThrowErrorIfNeeded() }
                     }
@@ -229,7 +231,7 @@ public open class MainWindow : AutoCloseable {
                 is Description.Window -> {
                     var flags = SDL_WINDOW_VULKAN
                     if (description.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
-                    SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }.also {
+                    SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }!!.also {
                         SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { SDL.ThrowErrorIfNeeded() }
                         SDL_SetWindowMinimumSize(it, 320, 240).also { SDL.ThrowErrorIfNeeded() }
                     }
@@ -241,10 +243,8 @@ public open class MainWindow : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        this._Native = run {
-            SDL_DestroyWindow(this.Native).also { SDL.ThrowErrorIfNeeded() }
-            null
-        }
+        SDL_DestroyWindow(this.Native).also { SDL.ThrowErrorIfNeeded() }
+        this.IsClosed = true
     }
 
     @OptIn(ExperimentalForeignApi::class)

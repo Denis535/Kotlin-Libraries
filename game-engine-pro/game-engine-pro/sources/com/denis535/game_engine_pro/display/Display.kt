@@ -3,7 +3,7 @@ package com.denis535.game_engine_pro.display
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public class Display(public val ID: UInt) {
+public data class Display(public val ID: UInt) {
 
     @OptIn(ExperimentalForeignApi::class)
     public val Name: String?
@@ -46,7 +46,7 @@ public class Display(public val ID: UInt) {
         }
 }
 
-public class DisplayMode(
+public data class DisplayMode(
     public val Width: Int,
     public val Height: Int,
     public val Density: Float,

@@ -10,21 +10,27 @@ public class Cursor : AutoCloseable {
         private set
 
     @OptIn(ExperimentalForeignApi::class)
-    private var Cursor: CPointer<SDL_Cursor>? = null
+    private var CustomCursor: CPointer<SDL_Cursor>? = null
         set(value) {
-            val prev = field
+            check(!this.IsClosed)
+            if (field != null) {
+                SDL_SetCursor(SDL_GetDefaultCursor().also { SDL.ThrowErrorIfNeeded() }).also { SDL.ThrowErrorIfNeeded() }
+                SDL_DestroyCursor(field).also { SDL.ThrowErrorIfNeeded() }
+            }
             field = value
-            if (prev != null) {
-                SDL_DestroyCursor(prev).also { SDL.ThrowErrorIfNeeded() }
+            if (field != null) {
+                SDL_SetCursor(field).also { SDL.ThrowErrorIfNeeded() }
             }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsVisible: Boolean
         get() {
+            check(!this.IsClosed)
             return SDL_CursorVisible().also { SDL.ThrowErrorIfNeeded() }
         }
         set(value) {
+            check(!this.IsClosed)
             if (value) {
                 SDL_ShowCursor().also { SDL.ThrowErrorIfNeeded() }
             } else {
@@ -35,13 +41,15 @@ public class Cursor : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public var Style: CursorStyle?
         get() {
+            check(!this.IsClosed)
             error("Not implemented")
         }
         set(value) {
+            check(!this.IsClosed)
             if (value != null) {
-                this.Cursor = SDL_CreateSystemCursor(value.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
+                this.CustomCursor = SDL_CreateSystemCursor(value.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
             } else {
-                this.Cursor = null
+                this.CustomCursor = null
             }
         }
 
@@ -50,8 +58,8 @@ public class Cursor : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
+        this.CustomCursor = null
         this.IsClosed = true
-        this.Cursor = null
     }
 
 }
