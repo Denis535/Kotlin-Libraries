@@ -17,6 +17,11 @@ public class Gamepad : AutoCloseable {
         }
         set(value) {
             check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
             field = value
         }
 
@@ -28,6 +33,36 @@ public class Gamepad : AutoCloseable {
                 return SDL_GamepadConnected(it).also { SDL.ThrowErrorIfNeeded() }
             }
             return false
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val Vendor: UShort
+        get() {
+            check(!this.IsClosed)
+            this.NativeGamepad?.let {
+                return SDL_GetGamepadVendor(it).also { SDL.ThrowErrorIfNeeded() }
+            }
+            return 0U
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val Product: UShort
+        get() {
+            check(!this.IsClosed)
+            this.NativeGamepad?.let {
+                return SDL_GetGamepadProduct(it).also { SDL.ThrowErrorIfNeeded() }
+            }
+            return 0U
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val ProductVersion: UShort
+        get() {
+            check(!this.IsClosed)
+            this.NativeGamepad?.let {
+                return SDL_GetGamepadProductVersion(it).also { SDL.ThrowErrorIfNeeded() }
+            }
+            return 0U
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -101,13 +136,24 @@ public class Gamepad : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Rumble(lowFrequencyRumble: Float, highFrequencyRumble: Float, duration: Float) {
+    public fun SetVibration(lowFrequencyRumble: Float, highFrequencyRumble: Float, duration: Float) {
         check(!this.IsClosed)
         this.NativeGamepad?.let {
             val lowFrequencyRumble = (lowFrequencyRumble * 0xFFFF).toInt().coerceIn(0, 0xFFFF).toUShort()
             val highFrequencyRumble = (highFrequencyRumble * 0xFFFF).toInt().coerceIn(0, 0xFFFF).toUShort()
             val duration = (duration * 1000).toUInt()
             SDL_RumbleGamepad(it, lowFrequencyRumble, highFrequencyRumble, duration).also { SDL.ThrowErrorIfNeeded() }
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun SetLedColor(red: Float, green: Float, blue: Float) {
+        check(!this.IsClosed)
+        this.NativeGamepad?.let {
+            val red = (red * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
+            val green = (green * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
+            val blue = (blue * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
+            SDL_SetGamepadLED(it, red, green, blue).also { SDL.ThrowErrorIfNeeded() }
         }
     }
 
