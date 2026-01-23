@@ -60,6 +60,12 @@ private class ClientEngine2 : ClientEngine {
         }
     }
 
+    protected override fun OnGamepadButtonAction(event: GamepadButtonActionEvent) {
+    }
+
+    protected override fun OnGamepadAxisChange(event: GamepadAxisChangeEvent) {
+    }
+
 }
 
 private class MainWindow2 : MainWindow {
