@@ -251,6 +251,7 @@ public open class MainWindow : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun Raise() {
+        check(!this.IsClosed)
         SDL_RaiseWindow(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
     }
 
