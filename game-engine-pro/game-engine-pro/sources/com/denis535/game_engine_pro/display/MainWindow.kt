@@ -216,26 +216,30 @@ public open class MainWindow : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(description: Description) {
-        this.NativeWindow = run {
-            when (description) {
-                is Description.FullScreen -> {
-                    var flags = SDL_WINDOW_VULKAN or SDL_WINDOW_FULLSCREEN
-                    if (description.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
-                    SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }!!.also {
-                        SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { SDL.ThrowErrorIfNeeded() }
-                        SDL_SetWindowMinimumSize(it, 320, 240).also { SDL.ThrowErrorIfNeeded() }
-                    }
-                }
-                is Description.Window -> {
-                    var flags = SDL_WINDOW_VULKAN
-                    if (description.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
-                    SDL_CreateWindow(description.Title, description.Width, description.Height, flags).also { SDL.ThrowErrorIfNeeded() }!!.also {
-                        SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { SDL.ThrowErrorIfNeeded() }
-                        SDL_SetWindowMinimumSize(it, 320, 240).also { SDL.ThrowErrorIfNeeded() }
-                    }
-                }
-            }
+        val properties = SDL_CreateProperties()
+        if (description is Description.FullScreen) {
+            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true)
+            SDL_SetStringProperty(properties, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title)
+            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong())
+            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong())
+            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong())
+            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong())
+            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable)
+            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true)
+        } else if (description is Description.Window) {
+            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, false)
+            SDL_SetStringProperty(properties, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title)
+            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong())
+            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong())
+            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong())
+            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong())
+            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable)
+            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true)
         }
+        this.NativeWindow = SDL_CreateWindowWithProperties(properties).also { SDL.ThrowErrorIfNeeded() }!!.also {
+            SDL_SetWindowMinimumSize(it, 320, 240).also { SDL.ThrowErrorIfNeeded() }
+        }
+        SDL_DestroyProperties(properties)
     }
 
     @OptIn(ExperimentalForeignApi::class)
