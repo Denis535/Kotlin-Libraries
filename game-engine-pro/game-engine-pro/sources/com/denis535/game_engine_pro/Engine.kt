@@ -51,12 +51,7 @@ public abstract class Engine : AutoCloseable {
         check(!this.IsClosed)
         val startTime = SDL_GetTicks().SDL_CheckError()
         run {
-            memScoped {
-                val event = this.alloc<SDL_Event>()
-                while (SDL_PollEvent(event.ptr).SDL_CheckError()) {
-                    this@Engine.ProcessEvent(event.ptr)
-                }
-            }
+            this.ProcessEvents()
             this.ProcessFixedFrame(fixedTimeStep)
             this.OnUpdate()
             if (this is ClientEngine) {
@@ -68,6 +63,17 @@ public abstract class Engine : AutoCloseable {
         Frame.Number++
         Frame.Time += deltaTime
         Frame.TimeStep = deltaTime
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun ProcessEvents() {
+        check(!this.IsClosed)
+        memScoped {
+            val event = this.alloc<SDL_Event>()
+            while (SDL_PollEvent(event.ptr).SDL_CheckError()) {
+                this@Engine.ProcessEvent(event.ptr)
+            }
+        }
     }
 
     @OptIn(ExperimentalForeignApi::class)
