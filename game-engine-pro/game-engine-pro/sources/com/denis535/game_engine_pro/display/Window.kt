@@ -37,37 +37,37 @@ public open class Window : AutoCloseable {
     private val NativeWindowID: UInt
         get() {
             check(!this.IsClosed)
-            return SDL_GetWindowID(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GetWindowID(this.NativeWindow).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public val Display: Display
         get() {
             check(!this.IsClosed)
-            return Display(SDL_GetDisplayForWindow(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() })
+            return Display(SDL_GetDisplayForWindow(this.NativeWindow).SDL_CheckError())
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsFullScreen: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_FULLSCREEN != 0UL
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowFullscreen(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowFullscreen(this.NativeWindow, value).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var Title: String
         get() {
             check(!this.IsClosed)
-            return SDL_GetWindowTitle(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }!!.toKString()
+            return SDL_GetWindowTitle(this.NativeWindow).SDL_CheckError()!!.toKString()
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowTitle(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowTitle(this.NativeWindow, value).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -77,13 +77,13 @@ public open class Window : AutoCloseable {
             memScoped {
                 val x = this.alloc<IntVar>()
                 val y = this.alloc<IntVar>()
-                SDL_GetWindowPosition(this@Window.NativeWindow, x.ptr, y.ptr).also { SDL.ThrowErrorIfNeeded() }
+                SDL_GetWindowPosition(this@Window.NativeWindow, x.ptr, y.ptr).SDL_CheckError()
                 return Pair(x.value, y.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowPosition(this.NativeWindow, value.first, value.second).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowPosition(this.NativeWindow, value.first, value.second).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -93,32 +93,32 @@ public open class Window : AutoCloseable {
             memScoped {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
-                SDL_GetWindowSize(this@Window.NativeWindow, width.ptr, height.ptr).also { SDL.ThrowErrorIfNeeded() }
+                SDL_GetWindowSize(this@Window.NativeWindow, width.ptr, height.ptr).SDL_CheckError()
                 return Pair(width.value, height.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowSize(this.NativeWindow, value.first, value.second).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowSize(this.NativeWindow, value.first, value.second).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsResizable: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_RESIZABLE != 0UL
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowResizable(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowResizable(this.NativeWindow, value).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsShown: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_HIDDEN == 0UL
         }
         set(value) {
@@ -134,7 +134,7 @@ public open class Window : AutoCloseable {
     public val IsVisible: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_HIDDEN == 0UL && flags and SDL_WINDOW_MINIMIZED == 0UL
         }
 
@@ -142,7 +142,7 @@ public open class Window : AutoCloseable {
     public val HasMouseFocus: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_MOUSE_FOCUS != 0UL
         }
 
@@ -150,7 +150,7 @@ public open class Window : AutoCloseable {
     public val HasKeyboardFocus: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_INPUT_FOCUS != 0UL
         }
 
@@ -158,59 +158,59 @@ public open class Window : AutoCloseable {
     public var IsMouseLocked: Boolean
         get() {
             check(!this.IsClosed)
-            return SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GetWindowRelativeMouseMode(this.NativeWindow).SDL_CheckError()
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowRelativeMouseMode(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowRelativeMouseMode(this.NativeWindow, value).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsMouseCaptured: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_CaptureMouse(value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_CaptureMouse(value).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsMouseGrabbed: Boolean
         get() {
             check(!this.IsClosed)
-            return SDL_GetWindowMouseGrab(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GetWindowMouseGrab(this.NativeWindow).SDL_CheckError()
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowMouseGrab(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowMouseGrab(this.NativeWindow, value).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsKeyboardGrabbed: Boolean
         get() {
             check(!this.IsClosed)
-            return SDL_GetWindowKeyboardGrab(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GetWindowKeyboardGrab(this.NativeWindow).SDL_CheckError()
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowKeyboardGrab(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetWindowKeyboardGrab(this.NativeWindow, value).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsTextInputEnabled: Boolean
         get() {
             check(!this.IsClosed)
-            return SDL_TextInputActive(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_TextInputActive(this.NativeWindow).SDL_CheckError()
         }
         set(value) {
             check(!this.IsClosed)
             if (value) {
-                SDL_StartTextInput(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+                SDL_StartTextInput(this.NativeWindow).SDL_CheckError()
             } else {
-                SDL_StopTextInput(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+                SDL_StopTextInput(this.NativeWindow).SDL_CheckError()
             }
         }
 
@@ -219,44 +219,44 @@ public open class Window : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(description: Description) {
-        val properties = SDL_CreateProperties().also { SDL.ThrowErrorIfNeeded() }.apply {
+        val properties = SDL_CreateProperties().SDL_CheckError().apply {
             if (description is Description.FullScreen) {
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong()).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong()).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true).SDL_CheckError()
+                SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title).SDL_CheckError()
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong()).SDL_CheckError()
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong()).SDL_CheckError()
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable).SDL_CheckError()
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true).SDL_CheckError()
             } else if (description is Description.Window) {
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, false).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong()).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong()).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable).also { SDL.ThrowErrorIfNeeded() }
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, false).SDL_CheckError()
+                SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title).SDL_CheckError()
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong()).SDL_CheckError()
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong()).SDL_CheckError()
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable).SDL_CheckError()
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true).SDL_CheckError()
             }
         }
-        this.NativeWindow = SDL_CreateWindowWithProperties(properties).also { SDL.ThrowErrorIfNeeded() }!!.apply {
-            SDL_SetWindowMinimumSize(this, 320, 240).also { SDL.ThrowErrorIfNeeded() }
+        this.NativeWindow = SDL_CreateWindowWithProperties(properties).SDL_CheckError()!!.apply {
+            SDL_SetWindowMinimumSize(this, 320, 240).SDL_CheckError()
         }
-        SDL_DestroyProperties(properties).also { SDL.ThrowErrorIfNeeded() }
+        SDL_DestroyProperties(properties).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        SDL_DestroyWindow(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+        SDL_DestroyWindow(this.NativeWindow).SDL_CheckError()
         this.IsClosed = true
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun Raise() {
         check(!this.IsClosed)
-        SDL_RaiseWindow(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+        SDL_RaiseWindow(this.NativeWindow).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -266,7 +266,7 @@ public open class Window : AutoCloseable {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
             event.window.windowID = this@Window.NativeWindowID
-            SDL_PushEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }
+            SDL_PushEvent(event.ptr).SDL_CheckError()
         }
     }
 

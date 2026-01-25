@@ -7,22 +7,22 @@ public object Utils {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun ShowInfoMessage(title: String?, message: String?) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title, message, null).also { SDL_ClearError() }
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title, message, null).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun ShowWarningMessage(title: String?, message: String?) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, title, message, null).also { SDL_ClearError() }
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, title, message, null).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun ShowErrorMessage(title: String?, message: String?) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, null).also { SDL_ClearError() }
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, null).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun Delay(durationMs: UInt) {
-        SDL_Delay(durationMs).also { SDL.ThrowErrorIfNeeded() }
+        SDL_Delay(durationMs).SDL_CheckError()
     }
 
 }

@@ -13,7 +13,7 @@ public fun Main(args: Array<String>) {
 
 private class ClientEngine2 : ClientEngine {
 
-    public constructor() : super(Manifest("Example"), { MainWindow2() }) {
+    public constructor() : super(Manifest("Example"), { Window2() }) {
     }
 
     public override fun close() {
@@ -68,7 +68,7 @@ private class ClientEngine2 : ClientEngine {
 
 }
 
-private class MainWindow2 : Window {
+private class Window2 : Window {
 
     public constructor() : super(Description.Window("Example", IsResizable = true)) {
         this.Raise()

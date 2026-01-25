@@ -27,16 +27,16 @@ public abstract class Engine : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal constructor(manifest: Manifest) {
-        SDL_Init(0U).also { SDL.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { SDL.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { SDL.ThrowErrorIfNeeded() }
+        SDL_Init(0U).SDL_CheckError()
+        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).SDL_CheckError()
+        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        SDL_Quit().also { SDL.ThrowErrorIfNeeded() }
+        SDL_Quit().SDL_CheckError()
         this.IsClosed = true
     }
 
@@ -55,11 +55,11 @@ public abstract class Engine : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     private fun ProcessFrame(fixedDeltaTime: Float) {
         check(!this.IsClosed)
-        val startTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
+        val startTime = SDL_GetTicks().SDL_CheckError()
         run {
             memScoped {
                 val event = this.alloc<SDL_Event>()
-                while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
+                while (SDL_PollEvent(event.ptr).SDL_CheckError()) {
                     this@Engine.ProcessEvent(event.ptr)
                 }
             }
@@ -79,7 +79,7 @@ public abstract class Engine : AutoCloseable {
                 this.OnDrawInternal()
             }
         }
-        val endTime = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
+        val endTime = SDL_GetTicks().SDL_CheckError()
         val deltaTime = (endTime - startTime).toFloat() / 1000f
         this.Time.Time += deltaTime
         this.Time.DeltaTime = deltaTime
@@ -108,7 +108,7 @@ public abstract class Engine : AutoCloseable {
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_QUIT
-            SDL_PushEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }
+            SDL_PushEvent(event.ptr).SDL_CheckError()
         }
     }
 

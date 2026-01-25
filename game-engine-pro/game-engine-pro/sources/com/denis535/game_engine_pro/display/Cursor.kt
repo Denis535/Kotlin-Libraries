@@ -14,12 +14,12 @@ public class Cursor : AutoCloseable {
         set(value) {
             check(!this.IsClosed)
             if (field != null) {
-                SDL_SetCursor(SDL_GetDefaultCursor().also { SDL.ThrowErrorIfNeeded() }).also { SDL.ThrowErrorIfNeeded() }
-                SDL_DestroyCursor(field).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetCursor(SDL_GetDefaultCursor().SDL_CheckError()).SDL_CheckError()
+                SDL_DestroyCursor(field).SDL_CheckError()
             }
             field = value
             if (field != null) {
-                SDL_SetCursor(field).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetCursor(field).SDL_CheckError()
             }
         }
 
@@ -27,14 +27,14 @@ public class Cursor : AutoCloseable {
     public var IsVisible: Boolean
         get() {
             check(!this.IsClosed)
-            return SDL_CursorVisible().also { SDL.ThrowErrorIfNeeded() }
+            return SDL_CursorVisible().SDL_CheckError()
         }
         set(value) {
             check(!this.IsClosed)
             if (value) {
-                SDL_ShowCursor().also { SDL.ThrowErrorIfNeeded() }
+                SDL_ShowCursor().SDL_CheckError()
             } else {
-                SDL_HideCursor().also { SDL.ThrowErrorIfNeeded() }
+                SDL_HideCursor().SDL_CheckError()
             }
         }
 
@@ -47,7 +47,7 @@ public class Cursor : AutoCloseable {
         set(value) {
             check(!this.IsClosed)
             if (value != null) {
-                this.NativeCustomCursor = SDL_CreateSystemCursor(value.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
+                this.NativeCustomCursor = SDL_CreateSystemCursor(value.ToNativeValue()).SDL_CheckError()
             } else {
                 this.NativeCustomCursor = null
             }

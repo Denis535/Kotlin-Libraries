@@ -40,7 +40,7 @@ public abstract class ClientEngine : Engine {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest, windowProvider: () -> Window) : super(manifest) {
-        SDL_Init(SDL_INIT_VIDEO).also { SDL.ThrowErrorIfNeeded() }
+        SDL_Init(SDL_INIT_VIDEO).SDL_CheckError()
         this.Window = windowProvider()
         this.Cursor = Cursor()
         this.Mouse = Mouse()
@@ -204,22 +204,22 @@ public abstract class ClientEngine : Engine {
             SDL_EVENT_GAMEPAD_ADDED -> {
                 val evt = event.pointed.gdevice
                 val joystickID = evt.which
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).SDL_CheckError()
 //                if (playerIndex != -1) {
 //                    // TODO
 //                }
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 if (playerGamepad != null) {
-                    playerGamepad.NativeGamepad = SDL_OpenGamepad(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                    playerGamepad.NativeGamepad = SDL_OpenGamepad(joystickID).SDL_CheckError()
                 }
             }
             SDL_EVENT_GAMEPAD_REMOVED -> {
                 val evt = event.pointed.gdevice
                 val joystickID = evt.which
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).SDL_CheckError()
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 if (playerGamepad != null) {
-                    SDL_CloseGamepad(playerGamepad.NativeGamepad).also { SDL.ThrowErrorIfNeeded() }
+                    SDL_CloseGamepad(playerGamepad.NativeGamepad).SDL_CheckError()
                     playerGamepad.NativeGamepad = null
                 }
             }
@@ -227,7 +227,7 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.gbutton
                 val timestamp = this.Time.Time
                 val joystickID = evt.which
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).SDL_CheckError()
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 val button = GamepadButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
@@ -243,7 +243,7 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.gaxis
                 val timestamp = this.Time.Time
                 val joystickID = evt.which
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).also { SDL.ThrowErrorIfNeeded() }
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).SDL_CheckError()
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 val axis = GamepadAxis.FromNativeValue(evt.axis.toInt())
                 val value = evt.value.let {

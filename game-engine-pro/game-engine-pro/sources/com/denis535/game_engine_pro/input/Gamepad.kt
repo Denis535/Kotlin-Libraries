@@ -30,7 +30,7 @@ public class Gamepad : AutoCloseable {
         get() {
             check(!this.IsClosed)
             this.NativeGamepad?.let {
-                return SDL_GamepadConnected(it).also { SDL.ThrowErrorIfNeeded() }
+                return SDL_GamepadConnected(it).SDL_CheckError()
             }
             return false
         }
@@ -40,7 +40,7 @@ public class Gamepad : AutoCloseable {
         get() {
             check(!this.IsClosed)
             this.NativeGamepad?.let {
-                return SDL_GetGamepadVendor(it).also { SDL.ThrowErrorIfNeeded() }
+                return SDL_GetGamepadVendor(it).SDL_CheckError()
             }
             return 0U
         }
@@ -50,7 +50,7 @@ public class Gamepad : AutoCloseable {
         get() {
             check(!this.IsClosed)
             this.NativeGamepad?.let {
-                return SDL_GetGamepadProduct(it).also { SDL.ThrowErrorIfNeeded() }
+                return SDL_GetGamepadProduct(it).SDL_CheckError()
             }
             return 0U
         }
@@ -60,7 +60,7 @@ public class Gamepad : AutoCloseable {
         get() {
             check(!this.IsClosed)
             this.NativeGamepad?.let {
-                return SDL_GetGamepadProductVersion(it).also { SDL.ThrowErrorIfNeeded() }
+                return SDL_GetGamepadProductVersion(it).SDL_CheckError()
             }
             return 0U
         }
@@ -70,7 +70,7 @@ public class Gamepad : AutoCloseable {
         get() {
             check(!this.IsClosed)
             this.NativeGamepad?.let {
-                return SDL_GetGamepadName(it).also { SDL.ThrowErrorIfNeeded() }?.toKString()
+                return SDL_GetGamepadName(it).SDL_CheckError()?.toKString()
             }
             return null
         }
@@ -110,7 +110,7 @@ public class Gamepad : AutoCloseable {
     public override fun close() {
         check(!this.IsClosed)
         this.NativeGamepad?.let {
-            SDL_CloseGamepad(it).also { SDL.ThrowErrorIfNeeded() }
+            SDL_CloseGamepad(it).SDL_CheckError()
         }
         this.IsClosed = true
     }
@@ -119,7 +119,7 @@ public class Gamepad : AutoCloseable {
     public fun IsButtonPressed(button: GamepadButton): Boolean {
         check(!this.IsClosed)
         this.NativeGamepad?.let {
-            return SDL_GetGamepadButton(it, button.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }
+            return SDL_GetGamepadButton(it, button.ToNativeValue()).SDL_CheckError()
         }
         return false
     }
@@ -128,7 +128,7 @@ public class Gamepad : AutoCloseable {
     public fun GetAxisValue(axis: GamepadAxis): Float {
         check(!this.IsClosed)
         this.NativeGamepad?.let {
-            return SDL_GetGamepadAxis(it, axis.ToNativeValue()).also { SDL.ThrowErrorIfNeeded() }.let {
+            return SDL_GetGamepadAxis(it, axis.ToNativeValue()).SDL_CheckError().let {
                 Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
             }
         }
@@ -142,7 +142,7 @@ public class Gamepad : AutoCloseable {
             val lowFrequencyRumble = (lowFrequencyRumble * 0xFFFF).toInt().coerceIn(0, 0xFFFF).toUShort()
             val highFrequencyRumble = (highFrequencyRumble * 0xFFFF).toInt().coerceIn(0, 0xFFFF).toUShort()
             val duration = (duration * 1000).toUInt()
-            SDL_RumbleGamepad(it, lowFrequencyRumble, highFrequencyRumble, duration).also { SDL.ThrowErrorIfNeeded() }
+            SDL_RumbleGamepad(it, lowFrequencyRumble, highFrequencyRumble, duration).SDL_CheckError()
         }
     }
 
@@ -153,7 +153,7 @@ public class Gamepad : AutoCloseable {
             val red = (red * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
             val green = (green * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
             val blue = (blue * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
-            SDL_SetGamepadLED(it, red, green, blue).also { SDL.ThrowErrorIfNeeded() }
+            SDL_SetGamepadLED(it, red, green, blue).SDL_CheckError()
         }
     }
 

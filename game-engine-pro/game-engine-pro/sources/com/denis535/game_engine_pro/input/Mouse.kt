@@ -64,7 +64,7 @@ public class Mouse : AutoCloseable {
         memScoped {
             val x = this.alloc<FloatVar>()
             val y = this.alloc<FloatVar>()
-            SDL_GetMouseState(x.ptr, y.ptr).also { SDL.ThrowErrorIfNeeded() }
+            SDL_GetMouseState(x.ptr, y.ptr).SDL_CheckError()
             return Pair(x.value, y.value)
         }
     }
@@ -75,7 +75,7 @@ public class Mouse : AutoCloseable {
         memScoped {
             val deltaX = this.alloc<FloatVar>()
             val deltaY = this.alloc<FloatVar>()
-            SDL_GetRelativeMouseState(deltaX.ptr, deltaY.ptr).also { SDL.ThrowErrorIfNeeded() }
+            SDL_GetRelativeMouseState(deltaX.ptr, deltaY.ptr).SDL_CheckError()
             return Pair(deltaX.value, deltaY.value)
         }
     }
@@ -83,7 +83,7 @@ public class Mouse : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public fun IsButtonPressed(button: MouseButton): Boolean {
         check(!this.IsClosed)
-        val state = SDL_GetMouseState(null, null).also { SDL.ThrowErrorIfNeeded() }
+        val state = SDL_GetMouseState(null, null).SDL_CheckError()
         return state and button.ToNativeMask() != 0u
     }
 
