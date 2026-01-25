@@ -19,12 +19,6 @@ public abstract class Engine : AutoCloseable {
             field = value
         }
 
-    public val Time: Time = Time()
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
     @OptIn(ExperimentalForeignApi::class)
     internal constructor(description: Description) {
         SDL_Init(0U).SDL_CheckError()
@@ -41,19 +35,19 @@ public abstract class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
+    public fun Run(fixedTimeStep: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
         check(!this.IsRunning)
         this.IsRunning = true
         this.OnStart()
         while (this.IsRunning) {
-            this.ProcessFrame(fixedDeltaTime)
+            this.ProcessFrame(fixedTimeStep)
         }
         this.OnStop()
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun ProcessFrame(fixedDeltaTime: Float) {
+    private fun ProcessFrame(fixedTimeStep: Float) {
         check(!this.IsClosed)
         val startTime = SDL_GetTicks().SDL_CheckError()
         run {
@@ -63,17 +57,7 @@ public abstract class Engine : AutoCloseable {
                     this@Engine.ProcessEvent(event.ptr)
                 }
             }
-            if (this.Time.Fixed.FrameCount == 0U) {
-                this.OnFixedUpdate()
-                this.Time.Fixed.DeltaTime = fixedDeltaTime
-                this.Time.Fixed.FrameCount++
-            } else {
-                while (this.Time.Fixed.Time <= this.Time.Time) {
-                    this.OnFixedUpdate()
-                    this.Time.Fixed.DeltaTime = fixedDeltaTime
-                    this.Time.Fixed.FrameCount++
-                }
-            }
+            this.ProcessFixedFrame(fixedTimeStep)
             this.OnUpdate()
             if (this is ClientEngine) {
                 this.OnDrawInternal()
@@ -81,9 +65,9 @@ public abstract class Engine : AutoCloseable {
         }
         val endTime = SDL_GetTicks().SDL_CheckError()
         val deltaTime = (endTime - startTime).toFloat() / 1000f
-        this.Time.Time += deltaTime
-        this.Time.DeltaTime = deltaTime
-        this.Time.FrameCount++
+        Frame.Number++
+        Frame.Time += deltaTime
+        Frame.TimeStep = deltaTime
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -92,6 +76,22 @@ public abstract class Engine : AutoCloseable {
         when (event.pointed.type) {
             SDL_EVENT_QUIT -> {
                 this.IsRunning = false
+            }
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun ProcessFixedFrame(fixedTimeStep: Float) {
+        check(!this.IsClosed)
+        if (FixedFrame.Number == 0U) {
+            this.OnFixedUpdate()
+            FixedFrame.Number++
+            FixedFrame.TimeStep = fixedTimeStep
+        } else {
+            while (FixedFrame.Time <= Frame.Time) {
+                this.OnFixedUpdate()
+                FixedFrame.Number++
+                FixedFrame.TimeStep = fixedTimeStep
             }
         }
     }
@@ -114,49 +114,39 @@ public abstract class Engine : AutoCloseable {
 
 }
 
-public class Time {
+public object Frame {
+
+    public var Number: UInt = 0U
+        internal set
 
     public var Time: Float = 0.0f
         internal set
 
-    public var DeltaTime: Float = 0.0f
-        internal set
-
-    public var FrameCount: UInt = 0U
+    public var TimeStep: Float = 0.0f
         internal set
 
     public val Fps: Float?
-        get() {
-            return if (this.DeltaTime > 0.0f) 1.0f / this.DeltaTime else null
-        }
-
-    public val Fixed: FixedTime = FixedTime()
-
-    internal constructor()
+        get() = if (this.TimeStep > 0.0f) 1.0f / this.TimeStep else null
 
     public override fun toString(): String {
-        return "Time: ${this.Time}"
+        return "Frame: ${this.Number}"
     }
 
 }
 
-public class FixedTime {
+public object FixedFrame {
+
+    public var Number: UInt = 0U
+        internal set
 
     public val Time: Float
-        get() {
-            return this.DeltaTime * this.FrameCount.toFloat()
-        }
+        get() = this.Number.toFloat() * this.TimeStep
 
-    public var DeltaTime: Float = 0.0f
+    public var TimeStep: Float = 0.0f
         internal set
-
-    public var FrameCount: UInt = 0U
-        internal set
-
-    internal constructor()
 
     public override fun toString(): String {
-        return "FixedTime: ${this.Time}"
+        return "FixedFrame: ${this.Number}"
     }
 
 }

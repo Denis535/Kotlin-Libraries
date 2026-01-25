@@ -66,14 +66,14 @@ public abstract class ClientEngine : Engine {
         when (event.pointed.type) {
             SDL_EVENT_WINDOW_MOUSE_ENTER -> {
                 val evt = event.pointed.window
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val event = MouseFocusEvent(timestamp, windowID, true)
                 this.OnMouseFocus(event)
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
                 val evt = event.pointed.window
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val event = MouseFocusEvent(timestamp, windowID, false)
                 this.OnMouseFocus(event)
@@ -81,14 +81,14 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_WINDOW_FOCUS_GAINED -> {
                 val evt = event.pointed.window
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val event = KeyboardFocusEvent(timestamp, windowID, true)
                 this.OnKeyboardFocus(event)
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
                 val evt = event.pointed.window
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val event = KeyboardFocusEvent(timestamp, windowID, false)
                 this.OnKeyboardFocus(event)
@@ -96,7 +96,7 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_TEXT_INPUT -> {
                 val evt = event.pointed.text
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val text = evt.text?.toKStringFromUtf8()
                 if (text != null) {
@@ -107,7 +107,7 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val x = evt.x
                 val y = evt.y
@@ -119,7 +119,7 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val evt = event.pointed.button
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val x = evt.x
                 val y = evt.y
@@ -134,7 +134,7 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_MOUSE_WHEEL -> {
                 val evt = event.pointed.wheel
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val x = evt.mouse_x
                 val y = evt.mouse_y
@@ -189,7 +189,7 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val evt = event.pointed.key
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val key = KeyboardKey.FromNativeValue(evt.scancode)
                 val isPressed = evt.down
@@ -225,7 +225,7 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP -> {
                 val evt = event.pointed.gbutton
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val joystickID = evt.which
                 val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).SDL_CheckError()
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
@@ -241,7 +241,7 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
                 val evt = event.pointed.gaxis
-                val timestamp = this.Time.Time
+                val timestamp = Frame.Time
                 val joystickID = evt.which
                 val playerIndex = SDL_GetGamepadPlayerIndexForID(joystickID).SDL_CheckError()
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
