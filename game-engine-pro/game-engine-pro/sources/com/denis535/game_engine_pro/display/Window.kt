@@ -4,7 +4,7 @@ import cnames.structs.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public open class MainWindow : AutoCloseable {
+public open class Window : AutoCloseable {
     public sealed class Description(
         public val Title: String,
     ) {
@@ -77,7 +77,7 @@ public open class MainWindow : AutoCloseable {
             memScoped {
                 val x = this.alloc<IntVar>()
                 val y = this.alloc<IntVar>()
-                SDL_GetWindowPosition(this@MainWindow.NativeWindow, x.ptr, y.ptr).also { SDL.ThrowErrorIfNeeded() }
+                SDL_GetWindowPosition(this@Window.NativeWindow, x.ptr, y.ptr).also { SDL.ThrowErrorIfNeeded() }
                 return Pair(x.value, y.value)
             }
         }
@@ -93,7 +93,7 @@ public open class MainWindow : AutoCloseable {
             memScoped {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
-                SDL_GetWindowSize(this@MainWindow.NativeWindow, width.ptr, height.ptr).also { SDL.ThrowErrorIfNeeded() }
+                SDL_GetWindowSize(this@Window.NativeWindow, width.ptr, height.ptr).also { SDL.ThrowErrorIfNeeded() }
                 return Pair(width.value, height.value)
             }
         }
@@ -166,17 +166,6 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var IsMouseGrabbed: Boolean
-        get() {
-            check(!this.IsClosed)
-            return SDL_GetWindowMouseGrab(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
-        }
-        set(value) {
-            check(!this.IsClosed)
-            SDL_SetWindowMouseGrab(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
     public var IsMouseCaptured: Boolean
         get() {
             check(!this.IsClosed)
@@ -186,6 +175,17 @@ public open class MainWindow : AutoCloseable {
         set(value) {
             check(!this.IsClosed)
             SDL_CaptureMouse(value).also { SDL.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsMouseGrabbed: Boolean
+        get() {
+            check(!this.IsClosed)
+            return SDL_GetWindowMouseGrab(this.NativeWindow).also { SDL.ThrowErrorIfNeeded() }
+        }
+        set(value) {
+            check(!this.IsClosed)
+            SDL_SetWindowMouseGrab(this.NativeWindow, value).also { SDL.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -214,32 +214,36 @@ public open class MainWindow : AutoCloseable {
             }
         }
 
+//    public val Video: Video
+//    public val Audio: Audio
+
     @OptIn(ExperimentalForeignApi::class)
     public constructor(description: Description) {
-        val properties = SDL_CreateProperties()
-        if (description is Description.FullScreen) {
-            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true)
-            SDL_SetStringProperty(properties, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title)
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong())
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong())
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong())
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong())
-            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable)
-            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true)
-        } else if (description is Description.Window) {
-            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, false)
-            SDL_SetStringProperty(properties, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title)
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong())
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong())
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong())
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong())
-            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable)
-            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true)
+        val properties = SDL_CreateProperties().also { SDL.ThrowErrorIfNeeded() }.apply {
+            if (description is Description.FullScreen) {
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong()).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong()).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true).also { SDL.ThrowErrorIfNeeded() }
+            } else if (description is Description.Window) {
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, false).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong()).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong()).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable).also { SDL.ThrowErrorIfNeeded() }
+                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true).also { SDL.ThrowErrorIfNeeded() }
+            }
         }
-        this.NativeWindow = SDL_CreateWindowWithProperties(properties).also { SDL.ThrowErrorIfNeeded() }!!.also {
-            SDL_SetWindowMinimumSize(it, 320, 240).also { SDL.ThrowErrorIfNeeded() }
+        this.NativeWindow = SDL_CreateWindowWithProperties(properties).also { SDL.ThrowErrorIfNeeded() }!!.apply {
+            SDL_SetWindowMinimumSize(this, 320, 240).also { SDL.ThrowErrorIfNeeded() }
         }
-        SDL_DestroyProperties(properties)
+        SDL_DestroyProperties(properties).also { SDL.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -261,7 +265,7 @@ public open class MainWindow : AutoCloseable {
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
-            event.window.windowID = this@MainWindow.NativeWindowID
+            event.window.windowID = this@Window.NativeWindowID
             SDL_PushEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }
         }
     }

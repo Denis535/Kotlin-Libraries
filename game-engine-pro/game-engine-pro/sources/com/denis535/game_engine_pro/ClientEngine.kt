@@ -8,7 +8,7 @@ import kotlinx.cinterop.*
 
 public abstract class ClientEngine : Engine {
 
-    public val Window: MainWindow
+    public val Window: Window
         get() {
             check(!this.IsClosed)
             return field
@@ -39,7 +39,7 @@ public abstract class ClientEngine : Engine {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest, windowProvider: () -> MainWindow) : super(manifest) {
+    public constructor(manifest: Manifest, windowProvider: () -> Window) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO).also { SDL.ThrowErrorIfNeeded() }
         this.Window = windowProvider()
         this.Cursor = Cursor()

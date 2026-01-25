@@ -21,8 +21,8 @@ public object Utils {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Sleep(time: UInt) {
-        SDL_Delay(time).also { SDL.ThrowErrorIfNeeded() }
+    public fun Delay(durationMs: UInt) {
+        SDL_Delay(durationMs).also { SDL.ThrowErrorIfNeeded() }
     }
 
 }

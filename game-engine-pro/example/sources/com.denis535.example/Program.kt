@@ -27,7 +27,7 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnDraw() {
-        Utils.Sleep(10U)
+        Utils.Delay(10U)
     }
 
     protected override fun OnUpdate() {
@@ -68,7 +68,7 @@ private class ClientEngine2 : ClientEngine {
 
 }
 
-private class MainWindow2 : MainWindow {
+private class MainWindow2 : Window {
 
     public constructor() : super(Description.Window("Example", IsResizable = true)) {
         this.Raise()
