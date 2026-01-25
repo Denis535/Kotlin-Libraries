@@ -4,7 +4,12 @@ import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
 public abstract class Engine : AutoCloseable {
-    public class Description(public val Id: String?, public val Name: String? = null, public val Version: String? = null, public val Creator: String? = null)
+    public class Description(
+        public val Id: String?,
+        public val Name: String? = null,
+        public val Version: String? = null,
+        public val Creator: String? = null,
+    )
 
     public var IsClosed: Boolean = false
         private set
