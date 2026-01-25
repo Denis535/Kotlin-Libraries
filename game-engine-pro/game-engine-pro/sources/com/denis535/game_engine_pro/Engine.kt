@@ -6,11 +6,8 @@ import kotlinx.cinterop.*
 public abstract class Engine : AutoCloseable {
     public class Manifest(public val Id: String?, public val Name: String? = null, public val Version: String? = null, public val Creator: String? = null)
 
-    @OptIn(ExperimentalForeignApi::class)
-    public val IsClosed: Boolean
-        get() {
-            return SDL_WasInit(0U).also { SDL.ThrowErrorIfNeeded() } == 0U
-        }
+    public var IsClosed: Boolean = false
+        private set
 
     public var IsRunning: Boolean = false
         get() {
@@ -30,7 +27,6 @@ public abstract class Engine : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal constructor(manifest: Manifest) {
-        check(SDL_WasInit(0U).also { SDL.ThrowErrorIfNeeded() } == 0U)
         SDL_Init(0U).also { SDL.ThrowErrorIfNeeded() }
         SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { SDL.ThrowErrorIfNeeded() }
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { SDL.ThrowErrorIfNeeded() }
@@ -41,6 +37,7 @@ public abstract class Engine : AutoCloseable {
         check(!this.IsClosed)
         check(!this.IsRunning)
         SDL_Quit().also { SDL.ThrowErrorIfNeeded() }
+        this.IsClosed = true
     }
 
     @OptIn(ExperimentalForeignApi::class)
