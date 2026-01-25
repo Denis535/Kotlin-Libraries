@@ -4,7 +4,7 @@ import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
 public abstract class Engine : AutoCloseable {
-    public class Manifest(public val Id: String?, public val Name: String? = null, public val Version: String? = null, public val Creator: String? = null)
+    public class Description(public val Id: String?, public val Name: String? = null, public val Version: String? = null, public val Creator: String? = null)
 
     public var IsClosed: Boolean = false
         private set
@@ -26,10 +26,10 @@ public abstract class Engine : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal constructor(manifest: Manifest) {
+    internal constructor(description: Description) {
         SDL_Init(0U).SDL_CheckError()
-        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).SDL_CheckError()
-        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).SDL_CheckError()
+        SDL_SetAppMetadata(description.Name, description.Version, description.Id).SDL_CheckError()
+        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, description.Creator).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)

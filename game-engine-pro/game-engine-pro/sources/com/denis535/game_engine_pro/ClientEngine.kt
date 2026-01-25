@@ -39,7 +39,7 @@ public abstract class ClientEngine : Engine {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest, windowProvider: () -> Window) : super(manifest) {
+    public constructor(description: Description, windowProvider: () -> Window) : super(description) {
         SDL_Init(SDL_INIT_VIDEO).SDL_CheckError()
         this.Window = windowProvider()
         this.Cursor = Cursor()

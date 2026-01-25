@@ -13,7 +13,7 @@ public fun Main(args: Array<String>) {
 
 private class ClientEngine2 : ClientEngine {
 
-    public constructor() : super(Manifest("Example"), { Window2() }) {
+    public constructor() : super(Description("Example"), { Window2() }) {
     }
 
     public override fun close() {

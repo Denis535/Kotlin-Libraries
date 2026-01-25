@@ -5,8 +5,7 @@ import kotlinx.cinterop.*
 public abstract class ServerEngine : Engine {
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest) : super(manifest) {
-    }
+    public constructor(description: Description) : super(description)
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
