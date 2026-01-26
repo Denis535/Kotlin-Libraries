@@ -27,10 +27,10 @@ public class Storage : AutoCloseable {
         }
         memScoped {
             val info = this.alloc<SDL_PathInfo>()
-            return if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
-                info.type == SDL_PathType.SDL_PATHTYPE_FILE
+            if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
+                return info.type == SDL_PathType.SDL_PATHTYPE_FILE
             } else {
-                false
+                return false
             }
         }
     }
@@ -43,11 +43,10 @@ public class Storage : AutoCloseable {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Storage.NativeStorage, path, length.ptr).SDL_CheckError()) {
-                ByteArray(length.value.toInt()).apply {
-                    this.usePinned {
-                        if (SDL_ReadStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
-                            return it.get()
-                        }
+                val data = ByteArray(length.value.toInt())
+                data.usePinned {
+                    if (SDL_ReadStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
+                        return data
                     }
                 }
             }
@@ -60,8 +59,8 @@ public class Storage : AutoCloseable {
         while (!SDL_StorageReady(this.NativeStorage).SDL_CheckError()) {
             SDL_Delay(10U).SDL_CheckError()
         }
-        return data.usePinned {
-            SDL_WriteStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), it.get().size.toULong()).SDL_CheckError()
+        data.usePinned {
+            return SDL_WriteStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), it.get().size.toULong()).SDL_CheckError()
         }
     }
 
@@ -74,16 +73,16 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetDirectoryContent(directory: String): List<String>? {
+    public fun GetDirectoryContent(path: String): List<String>? {
         val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userdata, _, filename ->
-            val result = userdata!!.asStableRef<MutableList<String>>().get()
-            result += filename!!.toKString()
+            val list = userdata!!.asStableRef<MutableList<String>>().get()
+            list += filename!!.toKString()
             SDL_EnumerationResult.SDL_ENUM_CONTINUE
         }
         val result = mutableListOf<String>()
         val resultStableRef = StableRef.create(result)
         try {
-            if (SDL_EnumerateStorageDirectory(this.NativeStorage, directory, callback, resultStableRef.asCPointer()).SDL_CheckError()) {
+            if (SDL_EnumerateStorageDirectory(this.NativeStorage, path, callback, resultStableRef.asCPointer()).SDL_CheckError()) {
                 return result
             }
         } finally {
