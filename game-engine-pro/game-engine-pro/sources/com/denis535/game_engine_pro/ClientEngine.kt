@@ -105,6 +105,66 @@ public abstract class ClientEngine : Engine {
                 }
             }
 
+            SDL_EVENT_FINGER_DOWN -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val touchscreenID = evt.touchID
+                val windowID = evt.windowID
+                val fingerID = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+                val pressure = evt.pressure
+            }
+            SDL_EVENT_FINGER_UP -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val touchscreenID = evt.touchID
+                val windowID = evt.windowID
+                val fingerID = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+            }
+            SDL_EVENT_FINGER_MOTION -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val touchscreenID = evt.touchID
+                val windowID = evt.windowID
+                val fingerID = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+                val deltaX = evt.dx
+                val deltaY = evt.dy
+                val pressure = evt.pressure
+            }
+            SDL_EVENT_FINGER_CANCELED -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val touchscreenID = evt.touchID
+                val windowID = evt.windowID
+                val fingerID = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+            }
+
+            SDL_EVENT_PINCH_BEGIN -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+            }
+            SDL_EVENT_PINCH_END -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+            }
+            SDL_EVENT_PINCH_UPDATE -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+            }
+
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
                 val timestamp = Frame.Time
@@ -157,35 +217,6 @@ public abstract class ClientEngine : Engine {
                 this.OnMouseWheelScroll(event)
                 this.Mouse.OnWheelScroll?.invoke(event)
             }
-
-//            SDL_EVENT_FINGER_DOWN -> {
-//                val evt = event.pointed.tfinger
-//                val timestamp = time.Time
-//                val windowID = evt.windowID
-//                val fingerID = evt.fingerID
-//                val x = evt.x
-//                val y = evt.y
-//                val pressure = evt.pressure
-//            }
-//            SDL_EVENT_FINGER_UP, SDL_EVENT_FINGER_CANCELED -> {
-//                val evt = evt.pointed.tfinger
-//                val timestamp = time.Time
-//                val windowID = evt.windowID
-//                val fingerID = evt.fingerID
-//                val x = evt.x
-//                val y = evt.y
-//            }
-//            SDL_EVENT_FINGER_MOTION -> {
-//                val evt = event.pointed.tfinger
-//                val timestamp = time.Time
-//                val windowID = evt.windowID
-//                val fingerID = evt.fingerID
-//                val x = evt.x
-//                val y = evt.y
-//                val deltaX = evt.dx
-//                val deltaY = evt.dy
-//                val pressure = evt.pressure
-//            }
 
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val evt = event.pointed.key
