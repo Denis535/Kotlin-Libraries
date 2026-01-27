@@ -102,7 +102,6 @@ public class MouseButtonActionEvent(
     public val Button: MouseButton,
     public val IsPressed: Boolean,
     public val ClickCount: Int,
-    public val Cursor: Pair<Float, Float>, // unlocked cursor only
 )
 
 public class MouseWheelScrollEvent(
@@ -110,7 +109,6 @@ public class MouseWheelScrollEvent(
     public val WindowID: UInt,
     public val Scroll: Pair<Float, Float>,
     public val IntegerScroll: Pair<Int, Int>,
-    public val Cursor: Pair<Float, Float>, // unlocked cursor only
 )
 
 public enum class MouseButton {

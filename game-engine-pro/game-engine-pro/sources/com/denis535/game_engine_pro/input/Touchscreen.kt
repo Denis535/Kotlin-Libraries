@@ -8,6 +8,36 @@ public class Touchscreen : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
+    public var OnTouch: ((TouchEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
+    public var OnZoom: ((ZoomEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
     internal constructor()
 
     public override fun close() {

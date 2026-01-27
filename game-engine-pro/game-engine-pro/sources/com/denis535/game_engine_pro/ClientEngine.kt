@@ -20,6 +20,12 @@ public abstract class ClientEngine : Engine {
             return field
         }
 
+    public val Touchscreen: Touchscreen
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
     public val Mouse: Mouse
         get() {
             check(!this.IsClosed)
@@ -42,11 +48,12 @@ public abstract class ClientEngine : Engine {
     public constructor(description: Description, windowProvider: () -> Window) : super(description) {
         SDL_Init(SDL_INIT_VIDEO).SDL_CheckError()
         this.Window = windowProvider()
+        this.Window.IsShown = true
         this.Cursor = Cursor()
+        this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
         this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
-        this.Window.IsShown = true
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -56,6 +63,7 @@ public abstract class ClientEngine : Engine {
         this.Gamepads.asReversed().forEach { it.close() }
         this.Keyboard.close()
         this.Mouse.close()
+        this.Touchscreen.close()
         this.Cursor.close()
         this.Window.close()
         super.close()
@@ -89,14 +97,14 @@ public abstract class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val event = MouseFocusEvent(timestamp, windowID, true)
-                this.OnMouseFocus(event)
+                this.OnFocus(event)
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val event = MouseFocusEvent(timestamp, windowID, false)
-                this.OnMouseFocus(event)
+                this.OnFocus(event)
             }
 
             SDL_EVENT_WINDOW_FOCUS_GAINED -> {
@@ -104,14 +112,14 @@ public abstract class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val event = KeyboardFocusEvent(timestamp, windowID, true)
-                this.OnKeyboardFocus(event)
+                this.OnFocus(event)
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val event = KeyboardFocusEvent(timestamp, windowID, false)
-                this.OnKeyboardFocus(event)
+                this.OnFocus(event)
             }
 
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
@@ -128,7 +136,7 @@ public abstract class ClientEngine : Engine {
                 val text = evt.text?.toKStringFromUtf8()
                 if (text != null) {
                     val event = TextInputEvent(timestamp, windowID, text)
-                    this.OnTextInput(event)
+                    this.OnInput(event)
                 }
             }
 
@@ -142,6 +150,8 @@ public abstract class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
+                this.OnTouch(event)
+                this.Touchscreen.OnTouch?.invoke(event)
             }
             SDL_EVENT_FINGER_MOTION -> {
                 val evt = event.pointed.tfinger
@@ -155,6 +165,8 @@ public abstract class ClientEngine : Engine {
                 val deltaY = evt.dy
                 val pressure = evt.pressure
                 val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
+                this.OnTouch(event)
+                this.Touchscreen.OnTouch?.invoke(event)
             }
             SDL_EVENT_FINGER_UP -> {
                 val evt = event.pointed.tfinger
@@ -166,6 +178,8 @@ public abstract class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 val event = TouchEvent(timestamp, windowID, fingerID, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
+                this.OnTouch(event)
+                this.Touchscreen.OnTouch?.invoke(event)
             }
             SDL_EVENT_FINGER_CANCELED -> {
                 val evt = event.pointed.tfinger
@@ -177,6 +191,8 @@ public abstract class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
+                this.OnTouch(event)
+                this.Touchscreen.OnTouch?.invoke(event)
             }
 
             SDL_EVENT_PINCH_BEGIN -> {
@@ -185,6 +201,8 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 val zoom = evt.scale
                 val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
+                this.OnZoom(event)
+                this.Touchscreen.OnZoom?.invoke(event)
             }
             SDL_EVENT_PINCH_UPDATE -> {
                 val evt = event.pointed.pinch
@@ -192,6 +210,8 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 val zoom = evt.scale
                 val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
+                this.OnZoom(event)
+                this.Touchscreen.OnZoom?.invoke(event)
             }
             SDL_EVENT_PINCH_END -> {
                 val evt = event.pointed.pinch
@@ -199,12 +219,15 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 val zoom = evt.scale
                 val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
+                this.OnZoom(event)
+                this.Touchscreen.OnZoom?.invoke(event)
             }
 
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
+                val mouseID = evt.which
                 val x = evt.x
                 val y = evt.y
                 val deltaX = evt.xrel
@@ -217,13 +240,12 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.button
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val x = evt.x
-                val y = evt.y
+                val mouseID = evt.which
                 val button = MouseButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
                 val clickCount = evt.clicks.toInt()
                 if (button != null) {
-                    val event = MouseButtonActionEvent(timestamp, windowID, button, isPressed, clickCount, Pair(x, y))
+                    val event = MouseButtonActionEvent(timestamp, windowID, button, isPressed, clickCount)
                     this.OnMouseButtonAction(event)
                     this.Mouse.OnButtonAction?.invoke(event)
                 }
@@ -232,8 +254,7 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.wheel
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val x = evt.mouse_x
-                val y = evt.mouse_y
+                val mouseID = evt.which
                 val scrollX: Float
                 val scrollY: Float
                 val integerScrollX: Int
@@ -249,7 +270,7 @@ public abstract class ClientEngine : Engine {
                     integerScrollX = -evt.integer_x
                     integerScrollY = -evt.integer_y
                 }
-                val event = MouseWheelScrollEvent(timestamp, windowID, Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY), Pair(x, y))
+                val event = MouseWheelScrollEvent(timestamp, windowID, Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
                 this.OnMouseWheelScroll(event)
                 this.Mouse.OnWheelScroll?.invoke(event)
             }
@@ -318,9 +339,9 @@ public abstract class ClientEngine : Engine {
                 }
                 if (playerGamepad != null) {
                     if (axis != null) {
-                        val event = GamepadAxisChangeEvent(timestamp, playerIndex, axis, value)
-                        this.OnGamepadAxisChange(event)
-                        playerGamepad.OnAxisChange?.invoke(event)
+                        val event = GamepadAxisActionEvent(timestamp, playerIndex, axis, value)
+                        this.OnGamepadAxisAction(event)
+                        playerGamepad.OnAxisAction?.invoke(event)
                     }
                 }
             }
@@ -330,9 +351,12 @@ public abstract class ClientEngine : Engine {
     internal fun OnDrawInternal() = this.OnDraw()
     protected abstract fun OnDraw()
 
-    protected abstract fun OnMouseFocus(event: MouseFocusEvent)
-    protected abstract fun OnKeyboardFocus(event: KeyboardFocusEvent)
-    protected abstract fun OnTextInput(event: TextInputEvent)
+    protected abstract fun OnFocus(event: MouseFocusEvent)
+    protected abstract fun OnFocus(event: KeyboardFocusEvent)
+    protected abstract fun OnInput(event: TextInputEvent)
+
+    protected abstract fun OnTouch(event: TouchEvent)
+    protected abstract fun OnZoom(event: ZoomEvent)
 
     protected abstract fun OnMouseMove(event: MouseMoveEvent)
     protected abstract fun OnMouseButtonAction(event: MouseButtonActionEvent)
@@ -341,7 +365,7 @@ public abstract class ClientEngine : Engine {
     protected abstract fun OnKeyboardKeyAction(event: KeyboardKeyActionEvent)
 
     protected abstract fun OnGamepadButtonAction(event: GamepadButtonActionEvent)
-    protected abstract fun OnGamepadAxisChange(event: GamepadAxisChangeEvent)
+    protected abstract fun OnGamepadAxisAction(event: GamepadAxisActionEvent)
 
 }
 

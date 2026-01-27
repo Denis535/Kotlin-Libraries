@@ -36,13 +36,19 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnFixedUpdate() {
     }
 
-    protected override fun OnMouseFocus(event: MouseFocusEvent) {
+    protected override fun OnFocus(event: MouseFocusEvent) {
     }
 
-    protected override fun OnKeyboardFocus(event: KeyboardFocusEvent) {
+    protected override fun OnFocus(event: KeyboardFocusEvent) {
     }
 
-    protected override fun OnTextInput(event: TextInputEvent) {
+    protected override fun OnInput(event: TextInputEvent) {
+    }
+
+    protected override fun OnTouch(event: TouchEvent) {
+    }
+
+    protected override fun OnZoom(event: ZoomEvent) {
     }
 
     protected override fun OnMouseMove(event: MouseMoveEvent) {
@@ -63,7 +69,7 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnGamepadButtonAction(event: GamepadButtonActionEvent) {
     }
 
-    protected override fun OnGamepadAxisChange(event: GamepadAxisChangeEvent) {
+    protected override fun OnGamepadAxisAction(event: GamepadAxisActionEvent) {
     }
 
 }

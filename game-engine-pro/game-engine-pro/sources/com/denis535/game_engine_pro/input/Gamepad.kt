@@ -89,7 +89,7 @@ public class Gamepad : AutoCloseable {
             }
             field = value
         }
-    public var OnAxisChange: ((GamepadAxisChangeEvent) -> Unit)? = null
+    public var OnAxisAction: ((GamepadAxisActionEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -166,7 +166,7 @@ public class GamepadButtonActionEvent(
     public val IsPressed: Boolean,
 )
 
-public class GamepadAxisChangeEvent(
+public class GamepadAxisActionEvent(
     public val Timestamp: Float,
     public val PlayerIndex: Int,
     public val Axis: GamepadAxis,
