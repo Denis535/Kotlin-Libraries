@@ -46,6 +46,7 @@ public abstract class ClientEngine : Engine {
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
         this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
+        this.Window.IsShown = true
     }
 
     @OptIn(ExperimentalForeignApi::class)

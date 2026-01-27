@@ -10,9 +10,7 @@ public class Storage : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public val IsReady: Boolean
-        get() {
-            return SDL_StorageReady(this.NativeStorage).SDL_CheckError()
-        }
+        get() = SDL_StorageReady(this.NativeStorage).SDL_CheckError()
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(group: String, name: String) {
