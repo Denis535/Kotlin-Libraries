@@ -141,15 +141,7 @@ public abstract class ClientEngine : Engine {
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-            }
-            SDL_EVENT_FINGER_UP -> {
-                val evt = event.pointed.tfinger
-                val timestamp = Frame.Time
-                val touchscreenID = evt.touchID
-                val windowID = evt.windowID
-                val fingerID = evt.fingerID
-                val x = evt.x
-                val y = evt.y
+                val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
             }
             SDL_EVENT_FINGER_MOTION -> {
                 val evt = event.pointed.tfinger
@@ -162,6 +154,18 @@ public abstract class ClientEngine : Engine {
                 val deltaX = evt.dx
                 val deltaY = evt.dy
                 val pressure = evt.pressure
+                val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
+            }
+            SDL_EVENT_FINGER_UP -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val touchscreenID = evt.touchID
+                val windowID = evt.windowID
+                val fingerID = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+                val pressure = evt.pressure
+                val event = TouchEvent(timestamp, windowID, fingerID, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
             }
             SDL_EVENT_FINGER_CANCELED -> {
                 val evt = event.pointed.tfinger
@@ -171,6 +175,8 @@ public abstract class ClientEngine : Engine {
                 val fingerID = evt.fingerID
                 val x = evt.x
                 val y = evt.y
+                val pressure = evt.pressure
+                val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
             }
 
             SDL_EVENT_PINCH_BEGIN -> {
@@ -178,18 +184,21 @@ public abstract class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val zoom = evt.scale
-            }
-            SDL_EVENT_PINCH_END -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
             }
             SDL_EVENT_PINCH_UPDATE -> {
                 val evt = event.pointed.pinch
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
+            }
+            SDL_EVENT_PINCH_END -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
             }
 
             SDL_EVENT_MOUSE_MOTION -> {
@@ -214,7 +223,7 @@ public abstract class ClientEngine : Engine {
                 val isPressed = evt.down
                 val clickCount = evt.clicks.toInt()
                 if (button != null) {
-                    val event = MouseButtonActionEvent(timestamp, windowID, Pair(x, y), button, isPressed, clickCount)
+                    val event = MouseButtonActionEvent(timestamp, windowID, button, isPressed, clickCount, Pair(x, y))
                     this.OnMouseButtonAction(event)
                     this.Mouse.OnButtonAction?.invoke(event)
                 }
@@ -240,7 +249,7 @@ public abstract class ClientEngine : Engine {
                     integerScrollX = -evt.integer_x
                     integerScrollY = -evt.integer_y
                 }
-                val event = MouseWheelScrollEvent(timestamp, windowID, Pair(x, y), Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
+                val event = MouseWheelScrollEvent(timestamp, windowID, Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY), Pair(x, y))
                 this.OnMouseWheelScroll(event)
                 this.Mouse.OnWheelScroll?.invoke(event)
             }
