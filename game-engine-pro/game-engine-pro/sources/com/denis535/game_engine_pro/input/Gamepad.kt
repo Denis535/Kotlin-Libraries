@@ -161,6 +161,7 @@ public class Gamepad : AutoCloseable {
 
 public class GamepadButtonActionEvent(
     public val Timestamp: Float,
+    public val DeviceID: UInt,
     public val PlayerIndex: Int,
     public val Button: GamepadButton,
     public val IsPressed: Boolean,
@@ -168,6 +169,7 @@ public class GamepadButtonActionEvent(
 
 public class GamepadAxisActionEvent(
     public val Timestamp: Float,
+    public val DeviceID: UInt,
     public val PlayerIndex: Int,
     public val Axis: GamepadAxis,
     public val Value: Float,
