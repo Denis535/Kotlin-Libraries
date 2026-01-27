@@ -64,6 +64,25 @@ public abstract class ClientEngine : Engine {
     internal override fun ProcessEvent(event: CPointer<SDL_Event>) {
         super.ProcessEvent(event)
         when (event.pointed.type) {
+            SDL_EVENT_WINDOW_SHOWN -> {
+            }
+            SDL_EVENT_WINDOW_HIDDEN -> {
+            }
+            SDL_EVENT_WINDOW_MOVED -> {
+            }
+            SDL_EVENT_WINDOW_RESIZED -> {
+            }
+            SDL_EVENT_WINDOW_MINIMIZED -> {
+            }
+            SDL_EVENT_WINDOW_MAXIMIZED -> {
+            }
+            SDL_EVENT_WINDOW_RESTORED -> {
+            }
+            SDL_EVENT_WINDOW_EXPOSED -> {
+            }
+            SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED -> {
+            }
+
             SDL_EVENT_WINDOW_MOUSE_ENTER -> {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time

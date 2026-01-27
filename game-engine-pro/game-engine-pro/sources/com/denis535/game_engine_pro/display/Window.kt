@@ -103,6 +103,18 @@ public open class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public val SizeInPixels: Pair<Int, Int>
+        get() {
+            check(!this.IsClosed)
+            memScoped {
+                val width = this.alloc<IntVar>()
+                val height = this.alloc<IntVar>()
+                SDL_GetWindowSizeInPixels(this@Window.NativeWindow, width.ptr, height.ptr).SDL_CheckError()
+                return Pair(width.value, height.value)
+            }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public var IsResizable: Boolean
         get() {
             check(!this.IsClosed)

@@ -9,6 +9,12 @@ public class Storage : AutoCloseable {
     private val NativeStorage: CPointer<cnames.structs.SDL_Storage>
 
     @OptIn(ExperimentalForeignApi::class)
+    public val IsReady: Boolean
+        get() {
+            return SDL_StorageReady(this.NativeStorage).SDL_CheckError()
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public constructor(group: String, name: String) {
         val properties = SDL_CreateProperties().SDL_CheckError()
         this.NativeStorage = SDL_OpenUserStorage(group, name, properties).SDL_CheckError()!!
@@ -41,9 +47,6 @@ public class Storage : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun CheckEntity(path: String): Boolean {
-        while (!SDL_StorageReady(this.NativeStorage).SDL_CheckError()) {
-            SDL_Delay(10U).SDL_CheckError()
-        }
         memScoped {
             val info = this.alloc<SDL_PathInfo>()
             if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
@@ -55,16 +58,13 @@ public class Storage : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun LoadEntity(path: String): ByteArray? {
-        while (!SDL_StorageReady(this.NativeStorage).SDL_CheckError()) {
-            SDL_Delay(10U).SDL_CheckError()
-        }
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Storage.NativeStorage, path, length.ptr).SDL_CheckError()) {
-                val content = ByteArray(length.value.toInt())
-                content.usePinned {
+                val data = ByteArray(length.value.toInt())
+                data.usePinned {
                     if (SDL_ReadStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
-                        return content
+                        return data
                     }
                 }
             }
@@ -73,11 +73,8 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun SaveEntity(path: String, content: ByteArray): Boolean {
-        while (!SDL_StorageReady(this.NativeStorage).SDL_CheckError()) {
-            SDL_Delay(10U).SDL_CheckError()
-        }
-        content.usePinned {
+    public fun SaveEntity(path: String, data: ByteArray): Boolean {
+        data.usePinned {
             if (SDL_WriteStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), it.get().size.toULong()).SDL_CheckError()) {
                 return true
             }
@@ -87,9 +84,6 @@ public class Storage : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun Delete(path: String): Boolean {
-        while (!SDL_StorageReady(this.NativeStorage).SDL_CheckError()) {
-            SDL_Delay(10U).SDL_CheckError()
-        }
         if (SDL_RemoveStoragePath(this.NativeStorage, path).SDL_CheckError()) {
             return true
         }
