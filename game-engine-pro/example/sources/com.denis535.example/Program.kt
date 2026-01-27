@@ -42,13 +42,13 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnFocus(event: KeyboardFocusEvent) {
     }
 
-    protected override fun OnText(event: TextEvent) {
-    }
-
     protected override fun OnTouch(event: TouchEvent) {
     }
 
     protected override fun OnZoom(event: ZoomEvent) {
+    }
+
+    protected override fun OnText(event: TextEvent) {
     }
 
     protected override fun OnMouseMove(event: MouseMoveEvent) {

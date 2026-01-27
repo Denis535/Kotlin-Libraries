@@ -122,49 +122,6 @@ public abstract class ClientEngine : Engine {
                 this.OnFocus(event)
             }
 
-            SDL_EVENT_PINCH_BEGIN -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
-                this.OnZoom(event)
-            }
-            SDL_EVENT_PINCH_UPDATE -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
-                this.OnZoom(event)
-            }
-            SDL_EVENT_PINCH_END -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
-                this.OnZoom(event)
-            }
-
-            SDL_EVENT_TEXT_INPUT -> {
-                val evt = event.pointed.text
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val text = evt.text?.toKStringFromUtf8()
-                if (text != null) {
-                    val event = TextEvent(timestamp, windowID, text)
-                    this.OnText(event)
-                }
-            }
-
-            SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-//                val evt = event.pointed.window
-//                val timestamp = Frame.Time
-//                val windowID = evt.windowID
-                this.IsRunning = false
-            }
-
             SDL_EVENT_FINGER_DOWN -> {
                 val evt = event.pointed.tfinger
                 val timestamp = Frame.Time
@@ -218,6 +175,49 @@ public abstract class ClientEngine : Engine {
                 val event = TouchEvent(timestamp, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
                 this.OnTouch(event)
                 this.Touchscreen.OnTouch?.invoke(event)
+            }
+
+            SDL_EVENT_PINCH_BEGIN -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
+                this.OnZoom(event)
+            }
+            SDL_EVENT_PINCH_UPDATE -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
+                this.OnZoom(event)
+            }
+            SDL_EVENT_PINCH_END -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
+                this.OnZoom(event)
+            }
+
+            SDL_EVENT_TEXT_INPUT -> {
+                val evt = event.pointed.text
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val text = evt.text?.toKStringFromUtf8()
+                if (text != null) {
+                    val event = TextEvent(timestamp, windowID, text)
+                    this.OnText(event)
+                }
+            }
+
+            SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
+//                val evt = event.pointed.window
+//                val timestamp = Frame.Time
+//                val windowID = evt.windowID
+                this.IsRunning = false
             }
 
             SDL_EVENT_MOUSE_MOTION -> {
@@ -350,17 +350,14 @@ public abstract class ClientEngine : Engine {
 
     protected abstract fun OnFocus(event: MouseFocusEvent)
     protected abstract fun OnFocus(event: KeyboardFocusEvent)
+    protected abstract fun OnTouch(event: TouchEvent)
     protected abstract fun OnZoom(event: ZoomEvent)
     protected abstract fun OnText(event: TextEvent)
-
-    protected abstract fun OnTouch(event: TouchEvent)
 
     protected abstract fun OnMouseMove(event: MouseMoveEvent)
     protected abstract fun OnMouseButtonAction(event: MouseButtonActionEvent)
     protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
-
     protected abstract fun OnKeyboardKeyAction(event: KeyboardKeyActionEvent)
-
     protected abstract fun OnGamepadButtonAction(event: GamepadButtonActionEvent)
     protected abstract fun OnGamepadAxisAction(event: GamepadAxisActionEvent)
 
