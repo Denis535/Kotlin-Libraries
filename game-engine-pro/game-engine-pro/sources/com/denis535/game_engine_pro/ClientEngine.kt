@@ -96,30 +96,38 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val event = MouseFocusEvent(timestamp, windowID, true)
-                this.OnFocus(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = MouseFocusEvent(timestamp, windowID, true)
+                    this.OnFocus(event)
+                }
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val event = MouseFocusEvent(timestamp, windowID, false)
-                this.OnFocus(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = MouseFocusEvent(timestamp, windowID, false)
+                    this.OnFocus(event)
+                }
             }
 
             SDL_EVENT_WINDOW_FOCUS_GAINED -> {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val event = KeyboardFocusEvent(timestamp, windowID, true)
-                this.OnFocus(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = KeyboardFocusEvent(timestamp, windowID, true)
+                    this.OnFocus(event)
+                }
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val event = KeyboardFocusEvent(timestamp, windowID, false)
-                this.OnFocus(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = KeyboardFocusEvent(timestamp, windowID, false)
+                    this.OnFocus(event)
+                }
             }
 
             SDL_EVENT_FINGER_DOWN -> {
@@ -131,9 +139,11 @@ public abstract class ClientEngine : Engine {
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
-                this.OnTouch(event)
-                this.Touchscreen.OnTouch?.invoke(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
+                    this.OnTouch(event)
+                    this.Touchscreen.OnTouch?.invoke(event)
+                }
             }
             SDL_EVENT_FINGER_MOTION -> {
                 val evt = event.pointed.tfinger
@@ -146,9 +156,11 @@ public abstract class ClientEngine : Engine {
                 val deltaX = evt.dx
                 val deltaY = evt.dy
                 val pressure = evt.pressure
-                val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
-                this.OnTouch(event)
-                this.Touchscreen.OnTouch?.invoke(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
+                    this.OnTouch(event)
+                    this.Touchscreen.OnTouch?.invoke(event)
+                }
             }
             SDL_EVENT_FINGER_UP -> {
                 val evt = event.pointed.tfinger
@@ -159,9 +171,11 @@ public abstract class ClientEngine : Engine {
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
-                this.OnTouch(event)
-                this.Touchscreen.OnTouch?.invoke(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
+                    this.OnTouch(event)
+                    this.Touchscreen.OnTouch?.invoke(event)
+                }
             }
             SDL_EVENT_FINGER_CANCELED -> {
                 val evt = event.pointed.tfinger
@@ -172,9 +186,11 @@ public abstract class ClientEngine : Engine {
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
-                this.OnTouch(event)
-                this.Touchscreen.OnTouch?.invoke(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
+                    this.OnTouch(event)
+                    this.Touchscreen.OnTouch?.invoke(event)
+                }
             }
 
             SDL_EVENT_PINCH_BEGIN -> {
@@ -182,24 +198,30 @@ public abstract class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
-                this.OnZoom(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
+                    this.OnZoom(event)
+                }
             }
             SDL_EVENT_PINCH_UPDATE -> {
                 val evt = event.pointed.pinch
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
-                this.OnZoom(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
+                    this.OnZoom(event)
+                }
             }
             SDL_EVENT_PINCH_END -> {
                 val evt = event.pointed.pinch
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
-                this.OnZoom(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
+                    this.OnZoom(event)
+                }
             }
 
             SDL_EVENT_TEXT_INPUT -> {
@@ -207,9 +229,11 @@ public abstract class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val text = evt.text?.toKStringFromUtf8()
-                if (text != null) {
-                    val event = TextEvent(timestamp, windowID, text)
-                    this.OnText(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    if (text != null) {
+                        val event = TextEvent(timestamp, windowID, text)
+                        this.OnText(event)
+                    }
                 }
             }
 
@@ -229,9 +253,11 @@ public abstract class ClientEngine : Engine {
                 val y = evt.y
                 val deltaX = evt.xrel
                 val deltaY = evt.yrel
-                val event = MouseMoveEvent(timestamp, deviceID, windowID, Pair(x, y), Pair(deltaX, deltaY))
-                this.OnMouseMove(event)
-                this.Mouse.OnMove?.invoke(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = MouseMoveEvent(timestamp, deviceID, windowID, Pair(x, y), Pair(deltaX, deltaY))
+                    this.OnMouseMove(event)
+                    this.Mouse.OnMove?.invoke(event)
+                }
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val evt = event.pointed.button
@@ -241,10 +267,12 @@ public abstract class ClientEngine : Engine {
                 val button = MouseButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
                 val clickCount = evt.clicks.toInt()
-                if (button != null) {
-                    val event = MouseButtonActionEvent(timestamp, deviceID, windowID, button, isPressed, clickCount)
-                    this.OnMouseButtonAction(event)
-                    this.Mouse.OnButtonAction?.invoke(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    if (button != null) {
+                        val event = MouseButtonActionEvent(timestamp, deviceID, windowID, button, isPressed, clickCount)
+                        this.OnMouseButtonAction(event)
+                        this.Mouse.OnButtonAction?.invoke(event)
+                    }
                 }
             }
             SDL_EVENT_MOUSE_WHEEL -> {
@@ -267,9 +295,11 @@ public abstract class ClientEngine : Engine {
                     integerScrollX = -evt.integer_x
                     integerScrollY = -evt.integer_y
                 }
-                val event = MouseWheelScrollEvent(timestamp, deviceID, windowID, Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
-                this.OnMouseWheelScroll(event)
-                this.Mouse.OnWheelScroll?.invoke(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = MouseWheelScrollEvent(timestamp, deviceID, windowID, Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
+                    this.OnMouseWheelScroll(event)
+                    this.Mouse.OnWheelScroll?.invoke(event)
+                }
             }
 
             SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
@@ -279,10 +309,12 @@ public abstract class ClientEngine : Engine {
                 val key = KeyboardKey.FromNativeValue(evt.scancode)
                 val isPressed = evt.down
                 val isRepeated = evt.repeat
-                if (key != null) {
-                    val event = KeyboardKeyActionEvent(timestamp, windowID, key, isPressed, isRepeated)
-                    this.OnKeyboardKeyAction(event)
-                    this.Keyboard.OnKeyAction?.invoke(event)
+                if (windowID == this.Window.NativeWindowID) {
+                    if (key != null) {
+                        val event = KeyboardKeyActionEvent(timestamp, windowID, key, isPressed, isRepeated)
+                        this.OnKeyboardKeyAction(event)
+                        this.Keyboard.OnKeyAction?.invoke(event)
+                    }
                 }
             }
 

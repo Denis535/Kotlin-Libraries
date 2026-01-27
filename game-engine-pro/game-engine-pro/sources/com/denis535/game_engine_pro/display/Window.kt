@@ -34,7 +34,7 @@ public open class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    private val NativeWindowID: UInt
+    internal val NativeWindowID: UInt
         get() {
             check(!this.IsClosed)
             return SDL_GetWindowID(this.NativeWindow).SDL_CheckError()
