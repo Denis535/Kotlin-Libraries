@@ -23,21 +23,6 @@ public class Touchscreen : AutoCloseable {
             field = value
         }
 
-    public var OnZoom: ((ZoomEvent) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
-
     internal constructor()
 
     public override fun close() {
@@ -57,22 +42,9 @@ public class TouchEvent(
     public val Pressure: Float, // [0..1]
 )
 
-public class ZoomEvent(
-    public val Timestamp: Float,
-    public val WindowID: UInt,
-    public val State: ZoomState,
-    public val Zoom: Float, // value <= 1 or value >= 1
-)
-
 public enum class TouchState {
     Begin,
     Changed,
     End,
     Canceled;
-}
-
-public enum class ZoomState {
-    Begin,
-    Changed,
-    End;
 }

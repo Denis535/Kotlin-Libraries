@@ -42,7 +42,7 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnFocus(event: KeyboardFocusEvent) {
     }
 
-    protected override fun OnTextInput(event: TextInputEvent) {
+    protected override fun OnText(event: TextEvent) {
     }
 
     protected override fun OnTouch(event: TouchEvent) {

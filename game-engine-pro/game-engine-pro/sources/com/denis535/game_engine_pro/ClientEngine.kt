@@ -122,11 +122,29 @@ public abstract class ClientEngine : Engine {
                 this.OnFocus(event)
             }
 
-            SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-//                val evt = event.pointed.window
-//                val timestamp = Frame.Time
-//                val windowID = evt.windowID
-                this.IsRunning = false
+            SDL_EVENT_PINCH_BEGIN -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
+                this.OnZoom(event)
+            }
+            SDL_EVENT_PINCH_UPDATE -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
+                this.OnZoom(event)
+            }
+            SDL_EVENT_PINCH_END -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val zoom = evt.scale
+                val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
+                this.OnZoom(event)
             }
 
             SDL_EVENT_TEXT_INPUT -> {
@@ -135,9 +153,16 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 val text = evt.text?.toKStringFromUtf8()
                 if (text != null) {
-                    val event = TextInputEvent(timestamp, windowID, text)
-                    this.OnTextInput(event)
+                    val event = TextEvent(timestamp, windowID, text)
+                    this.OnText(event)
                 }
+            }
+
+            SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
+//                val evt = event.pointed.window
+//                val timestamp = Frame.Time
+//                val windowID = evt.windowID
+                this.IsRunning = false
             }
 
             SDL_EVENT_FINGER_DOWN -> {
@@ -193,34 +218,6 @@ public abstract class ClientEngine : Engine {
                 val event = TouchEvent(timestamp, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
                 this.OnTouch(event)
                 this.Touchscreen.OnTouch?.invoke(event)
-            }
-
-            SDL_EVENT_PINCH_BEGIN -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
-                this.OnZoom(event)
-                this.Touchscreen.OnZoom?.invoke(event)
-            }
-            SDL_EVENT_PINCH_UPDATE -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
-                this.OnZoom(event)
-                this.Touchscreen.OnZoom?.invoke(event)
-            }
-            SDL_EVENT_PINCH_END -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val zoom = evt.scale
-                val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
-                this.OnZoom(event)
-                this.Touchscreen.OnZoom?.invoke(event)
             }
 
             SDL_EVENT_MOUSE_MOTION -> {
@@ -353,10 +350,10 @@ public abstract class ClientEngine : Engine {
 
     protected abstract fun OnFocus(event: MouseFocusEvent)
     protected abstract fun OnFocus(event: KeyboardFocusEvent)
-    protected abstract fun OnTextInput(event: TextInputEvent)
+    protected abstract fun OnZoom(event: ZoomEvent)
+    protected abstract fun OnText(event: TextEvent)
 
     protected abstract fun OnTouch(event: TouchEvent)
-    protected abstract fun OnZoom(event: ZoomEvent)
 
     protected abstract fun OnMouseMove(event: MouseMoveEvent)
     protected abstract fun OnMouseButtonAction(event: MouseButtonActionEvent)
@@ -381,8 +378,21 @@ public class KeyboardFocusEvent(
     public val IsFocusGained: Boolean,
 )
 
-public class TextInputEvent(
+public class ZoomEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+    public val State: ZoomState,
+    public val Zoom: Float, // value <= 1 or value >= 1
+)
+
+public class TextEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Text: String,
 )
+
+public enum class ZoomState {
+    Begin,
+    Changed,
+    End;
+}
