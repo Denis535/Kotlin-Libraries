@@ -114,6 +114,13 @@ public abstract class ClientEngine : Engine {
                 this.OnKeyboardFocus(event)
             }
 
+            SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
+//                val evt = event.pointed.window
+//                val timestamp = Frame.Time
+//                val windowID = evt.windowID
+                this.IsRunning = false
+            }
+
             SDL_EVENT_TEXT_INPUT -> {
                 val evt = event.pointed.text
                 val timestamp = Frame.Time
@@ -307,10 +314,6 @@ public abstract class ClientEngine : Engine {
                         playerGamepad.OnAxisChange?.invoke(event)
                     }
                 }
-            }
-
-            SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-                this.IsRunning = false
             }
         }
     }
