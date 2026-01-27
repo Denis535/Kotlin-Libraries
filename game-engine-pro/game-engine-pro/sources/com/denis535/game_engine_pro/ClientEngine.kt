@@ -143,54 +143,54 @@ public abstract class ClientEngine : Engine {
             SDL_EVENT_FINGER_DOWN -> {
                 val evt = event.pointed.tfinger
                 val timestamp = Frame.Time
-                val touchscreenID = evt.touchID
                 val windowID = evt.windowID
-                val fingerID = evt.fingerID
+                val touchscreenID = evt.touchID
+                val id = evt.fingerID
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
+                val event = TouchEvent(timestamp, windowID, id, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
                 this.OnTouch(event)
                 this.Touchscreen.OnTouch?.invoke(event)
             }
             SDL_EVENT_FINGER_MOTION -> {
                 val evt = event.pointed.tfinger
                 val timestamp = Frame.Time
-                val touchscreenID = evt.touchID
                 val windowID = evt.windowID
-                val fingerID = evt.fingerID
+                val touchscreenID = evt.touchID
+                val id = evt.fingerID
                 val x = evt.x
                 val y = evt.y
                 val deltaX = evt.dx
                 val deltaY = evt.dy
                 val pressure = evt.pressure
-                val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
+                val event = TouchEvent(timestamp, windowID, id, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
                 this.OnTouch(event)
                 this.Touchscreen.OnTouch?.invoke(event)
             }
             SDL_EVENT_FINGER_UP -> {
                 val evt = event.pointed.tfinger
                 val timestamp = Frame.Time
-                val touchscreenID = evt.touchID
                 val windowID = evt.windowID
-                val fingerID = evt.fingerID
+                val touchscreenID = evt.touchID
+                val id = evt.fingerID
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                val event = TouchEvent(timestamp, windowID, fingerID, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
+                val event = TouchEvent(timestamp, windowID, id, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
                 this.OnTouch(event)
                 this.Touchscreen.OnTouch?.invoke(event)
             }
             SDL_EVENT_FINGER_CANCELED -> {
                 val evt = event.pointed.tfinger
                 val timestamp = Frame.Time
-                val touchscreenID = evt.touchID
                 val windowID = evt.windowID
-                val fingerID = evt.fingerID
+                val touchscreenID = evt.touchID
+                val id = evt.fingerID
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                val event = TouchEvent(timestamp, windowID, fingerID, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
+                val event = TouchEvent(timestamp, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
                 this.OnTouch(event)
                 this.Touchscreen.OnTouch?.invoke(event)
             }
