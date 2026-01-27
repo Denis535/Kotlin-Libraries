@@ -136,7 +136,7 @@ public abstract class ClientEngine : Engine {
                 val text = evt.text?.toKStringFromUtf8()
                 if (text != null) {
                     val event = TextInputEvent(timestamp, windowID, text)
-                    this.OnInput(event)
+                    this.OnTextInput(event)
                 }
             }
 
@@ -353,7 +353,7 @@ public abstract class ClientEngine : Engine {
 
     protected abstract fun OnFocus(event: MouseFocusEvent)
     protected abstract fun OnFocus(event: KeyboardFocusEvent)
-    protected abstract fun OnInput(event: TextInputEvent)
+    protected abstract fun OnTextInput(event: TextInputEvent)
 
     protected abstract fun OnTouch(event: TouchEvent)
     protected abstract fun OnZoom(event: ZoomEvent)
