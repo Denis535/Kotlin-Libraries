@@ -27,11 +27,16 @@ public class Touchscreen : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal constructor() {
-        memScoped {
-            val devicesCount = this.alloc<IntVar>()
-            val devices = SDL_GetTouchDevices(devicesCount.ptr).SDL_CheckError()
-            this@Touchscreen.NativeDeviceID = (0 until devicesCount.value).asSequence().map { devices!![it] }.firstOrNull { SDL_GetTouchDeviceType(it).SDL_CheckError() == SDL_TOUCH_DEVICE_DIRECT }
-            SDL_free(devices).SDL_CheckError()
+        this.NativeDeviceID = run {
+            memScoped {
+                val devicesCount = this.alloc<IntVar>()
+                val devices = SDL_GetTouchDevices(devicesCount.ptr).SDL_CheckError()
+                try {
+                    (0 until devicesCount.value).asSequence().map { devices!![it] }.firstOrNull { SDL_GetTouchDeviceType(it).SDL_CheckError() == SDL_TOUCH_DEVICE_DIRECT }
+                } finally {
+                    SDL_free(devices).SDL_CheckError()
+                }
+            }
         }
     }
 
