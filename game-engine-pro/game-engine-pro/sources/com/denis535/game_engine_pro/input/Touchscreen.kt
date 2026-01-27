@@ -8,6 +8,8 @@ public class Touchscreen : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
+    internal val NativeDeviceID: ULong?
+
     public var OnTouch: ((TouchEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
@@ -23,7 +25,15 @@ public class Touchscreen : AutoCloseable {
             field = value
         }
 
-    internal constructor()
+    @OptIn(ExperimentalForeignApi::class)
+    internal constructor() {
+        memScoped {
+            val devicesCount = this.alloc<IntVar>()
+            val devices = SDL_GetTouchDevices(devicesCount.ptr).SDL_CheckError()
+            this@Touchscreen.NativeDeviceID = (0 until devicesCount.value).asSequence().map { devices!![it] }.firstOrNull { SDL_GetTouchDeviceType(it).SDL_CheckError() == SDL_TOUCH_DEVICE_DIRECT }
+            SDL_free(devices).SDL_CheckError()
+        }
+    }
 
     public override fun close() {
         check(!this.IsClosed)
@@ -33,8 +43,8 @@ public class Touchscreen : AutoCloseable {
 }
 
 public class TouchEvent(
+    internal val NativeDeviceID: ULong,
     public val Timestamp: Float,
-    public val DeviceID: ULong,
     public val WindowID: UInt,
     public val ID: ULong,
     public val State: TouchState,

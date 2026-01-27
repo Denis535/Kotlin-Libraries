@@ -10,7 +10,7 @@ public class Gamepad : AutoCloseable {
         private set
 
     @OptIn(ExperimentalForeignApi::class)
-    internal var NativeGamepad: CPointer<cnames.structs.SDL_Gamepad>? = null
+    internal var NativeDevice: CPointer<cnames.structs.SDL_Gamepad>? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -29,7 +29,7 @@ public class Gamepad : AutoCloseable {
     public val IsConnected: Boolean
         get() {
             check(!this.IsClosed)
-            this.NativeGamepad?.let {
+            this.NativeDevice?.let {
                 return SDL_GamepadConnected(it).SDL_CheckError()
             }
             return false
@@ -39,7 +39,7 @@ public class Gamepad : AutoCloseable {
     public val Vendor: UShort
         get() {
             check(!this.IsClosed)
-            this.NativeGamepad?.let {
+            this.NativeDevice?.let {
                 return SDL_GetGamepadVendor(it).SDL_CheckError()
             }
             return 0U
@@ -49,7 +49,7 @@ public class Gamepad : AutoCloseable {
     public val Product: UShort
         get() {
             check(!this.IsClosed)
-            this.NativeGamepad?.let {
+            this.NativeDevice?.let {
                 return SDL_GetGamepadProduct(it).SDL_CheckError()
             }
             return 0U
@@ -59,7 +59,7 @@ public class Gamepad : AutoCloseable {
     public val ProductVersion: UShort
         get() {
             check(!this.IsClosed)
-            this.NativeGamepad?.let {
+            this.NativeDevice?.let {
                 return SDL_GetGamepadProductVersion(it).SDL_CheckError()
             }
             return 0U
@@ -69,7 +69,7 @@ public class Gamepad : AutoCloseable {
     public val Name: String?
         get() {
             check(!this.IsClosed)
-            this.NativeGamepad?.let {
+            this.NativeDevice?.let {
                 return SDL_GetGamepadName(it).SDL_CheckError()?.toKString()
             }
             return null
@@ -109,7 +109,7 @@ public class Gamepad : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        this.NativeGamepad?.let {
+        this.NativeDevice?.let {
             SDL_CloseGamepad(it).SDL_CheckError()
         }
         this.IsClosed = true
@@ -118,7 +118,7 @@ public class Gamepad : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public fun IsButtonPressed(button: GamepadButton): Boolean {
         check(!this.IsClosed)
-        this.NativeGamepad?.let {
+        this.NativeDevice?.let {
             return SDL_GetGamepadButton(it, button.ToNativeValue()).SDL_CheckError()
         }
         return false
@@ -127,7 +127,7 @@ public class Gamepad : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public fun GetAxisValue(axis: GamepadAxis): Float {
         check(!this.IsClosed)
-        this.NativeGamepad?.let {
+        this.NativeDevice?.let {
             return SDL_GetGamepadAxis(it, axis.ToNativeValue()).SDL_CheckError().let {
                 Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
             }
@@ -138,7 +138,7 @@ public class Gamepad : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public fun SetVibration(lowFrequencyRumble: Float, highFrequencyRumble: Float, duration: Float) {
         check(!this.IsClosed)
-        this.NativeGamepad?.let {
+        this.NativeDevice?.let {
             val lowFrequencyRumble = (lowFrequencyRumble * 0xFFFF).toInt().coerceIn(0, 0xFFFF).toUShort()
             val highFrequencyRumble = (highFrequencyRumble * 0xFFFF).toInt().coerceIn(0, 0xFFFF).toUShort()
             val duration = (duration * 1000).toUInt()
@@ -149,7 +149,7 @@ public class Gamepad : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public fun SetLedColor(red: Float, green: Float, blue: Float) {
         check(!this.IsClosed)
-        this.NativeGamepad?.let {
+        this.NativeDevice?.let {
             val red = (red * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
             val green = (green * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
             val blue = (blue * 0xFF).toInt().coerceIn(0, 0xFF).toUByte()
@@ -160,16 +160,16 @@ public class Gamepad : AutoCloseable {
 }
 
 public class GamepadButtonActionEvent(
+    internal val NativeDeviceID: UInt,
     public val Timestamp: Float,
-    public val DeviceID: UInt,
     public val PlayerIndex: Int,
     public val Button: GamepadButton,
     public val IsPressed: Boolean,
 )
 
 public class GamepadAxisActionEvent(
+    internal val NativeDeviceID: UInt,
     public val Timestamp: Float,
-    public val DeviceID: UInt,
     public val PlayerIndex: Int,
     public val Axis: GamepadAxis,
     public val Value: Float,

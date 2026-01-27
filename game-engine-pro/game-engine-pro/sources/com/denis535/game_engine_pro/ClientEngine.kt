@@ -132,23 +132,23 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_FINGER_DOWN -> {
                 val evt = event.pointed.tfinger
+                val nativeDeviceID = evt.touchID
                 val timestamp = Frame.Time
-                val deviceID = evt.touchID
                 val windowID = evt.windowID
                 val id = evt.fingerID
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
+                    val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
                     this.OnTouch(event)
                     this.Touchscreen.OnTouch?.invoke(event)
                 }
             }
             SDL_EVENT_FINGER_MOTION -> {
                 val evt = event.pointed.tfinger
+                val nativeDeviceID = evt.touchID
                 val timestamp = Frame.Time
-                val deviceID = evt.touchID
                 val windowID = evt.windowID
                 val id = evt.fingerID
                 val x = evt.x
@@ -157,37 +157,37 @@ public abstract class ClientEngine : Engine {
                 val deltaY = evt.dy
                 val pressure = evt.pressure
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
+                    val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
                     this.OnTouch(event)
                     this.Touchscreen.OnTouch?.invoke(event)
                 }
             }
             SDL_EVENT_FINGER_UP -> {
                 val evt = event.pointed.tfinger
+                val nativeDeviceID = evt.touchID
                 val timestamp = Frame.Time
-                val deviceID = evt.touchID
                 val windowID = evt.windowID
                 val id = evt.fingerID
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
+                    val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
                     this.OnTouch(event)
                     this.Touchscreen.OnTouch?.invoke(event)
                 }
             }
             SDL_EVENT_FINGER_CANCELED -> {
                 val evt = event.pointed.tfinger
+                val nativeDeviceID = evt.touchID
                 val timestamp = Frame.Time
-                val deviceID = evt.touchID
                 val windowID = evt.windowID
                 val id = evt.fingerID
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = TouchEvent(timestamp, deviceID, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
+                    val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
                     this.OnTouch(event)
                     this.Touchscreen.OnTouch?.invoke(event)
                 }
@@ -246,30 +246,30 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
+                val nativeDeviceID = evt.which
                 val timestamp = Frame.Time
-                val deviceID = evt.which
                 val windowID = evt.windowID
                 val x = evt.x
                 val y = evt.y
                 val deltaX = evt.xrel
                 val deltaY = evt.yrel
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = MouseMoveEvent(timestamp, deviceID, windowID, Pair(x, y), Pair(deltaX, deltaY))
+                    val event = MouseMoveEvent(nativeDeviceID, timestamp, windowID, Pair(x, y), Pair(deltaX, deltaY))
                     this.OnMouseMove(event)
                     this.Mouse.OnMove?.invoke(event)
                 }
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val evt = event.pointed.button
+                val nativeDeviceID = evt.which
                 val timestamp = Frame.Time
-                val deviceID = evt.which
                 val windowID = evt.windowID
                 val button = MouseButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
                 val clickCount = evt.clicks.toInt()
                 if (windowID == this.Window.NativeWindowID) {
                     if (button != null) {
-                        val event = MouseButtonActionEvent(timestamp, deviceID, windowID, button, isPressed, clickCount)
+                        val event = MouseButtonActionEvent(nativeDeviceID, timestamp, windowID, button, isPressed, clickCount)
                         this.OnMouseButtonAction(event)
                         this.Mouse.OnButtonAction?.invoke(event)
                     }
@@ -277,8 +277,8 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_MOUSE_WHEEL -> {
                 val evt = event.pointed.wheel
+                val nativeDeviceID = evt.which
                 val timestamp = Frame.Time
-                val deviceID = evt.which
                 val windowID = evt.windowID
                 val scrollX: Float
                 val scrollY: Float
@@ -296,7 +296,7 @@ public abstract class ClientEngine : Engine {
                     integerScrollY = -evt.integer_y
                 }
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = MouseWheelScrollEvent(timestamp, deviceID, windowID, Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
+                    val event = MouseWheelScrollEvent(nativeDeviceID, timestamp, windowID, Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
                     this.OnMouseWheelScroll(event)
                     this.Mouse.OnWheelScroll?.invoke(event)
                 }
@@ -320,37 +320,37 @@ public abstract class ClientEngine : Engine {
 
             SDL_EVENT_GAMEPAD_ADDED -> {
                 val evt = event.pointed.gdevice
-                val deviceID = evt.which
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(deviceID).SDL_CheckError()
+                val nativeDeviceID = evt.which
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(nativeDeviceID).SDL_CheckError()
 //                if (playerIndex != -1) {
 //                    // TODO
 //                }
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 if (playerGamepad != null) {
-                    playerGamepad.NativeGamepad = SDL_OpenGamepad(deviceID).SDL_CheckError()
+                    playerGamepad.NativeDevice = SDL_OpenGamepad(nativeDeviceID).SDL_CheckError()
                 }
             }
             SDL_EVENT_GAMEPAD_REMOVED -> {
                 val evt = event.pointed.gdevice
-                val deviceID = evt.which
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(deviceID).SDL_CheckError()
+                val nativeDeviceID = evt.which
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(nativeDeviceID).SDL_CheckError()
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 if (playerGamepad != null) {
-                    SDL_CloseGamepad(playerGamepad.NativeGamepad).SDL_CheckError()
-                    playerGamepad.NativeGamepad = null
+                    SDL_CloseGamepad(playerGamepad.NativeDevice).SDL_CheckError()
+                    playerGamepad.NativeDevice = null
                 }
             }
             SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP -> {
                 val evt = event.pointed.gbutton
+                val nativeDeviceID = evt.which
                 val timestamp = Frame.Time
-                val deviceID = evt.which
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(deviceID).SDL_CheckError()
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(nativeDeviceID).SDL_CheckError()
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 val button = GamepadButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
                 if (playerGamepad != null) {
                     if (button != null) {
-                        val event = GamepadButtonActionEvent(timestamp, deviceID, playerIndex, button, isPressed)
+                        val event = GamepadButtonActionEvent(nativeDeviceID, timestamp, playerIndex, button, isPressed)
                         this.OnGamepadButtonAction(event)
                         playerGamepad.OnButtonAction?.invoke(event)
                     }
@@ -358,9 +358,9 @@ public abstract class ClientEngine : Engine {
             }
             SDL_EVENT_GAMEPAD_AXIS_MOTION -> {
                 val evt = event.pointed.gaxis
+                val nativeDeviceID = evt.which
                 val timestamp = Frame.Time
-                val deviceID = evt.which
-                val playerIndex = SDL_GetGamepadPlayerIndexForID(deviceID).SDL_CheckError()
+                val playerIndex = SDL_GetGamepadPlayerIndexForID(nativeDeviceID).SDL_CheckError()
                 val playerGamepad = this.Gamepads.getOrNull(playerIndex)
                 val axis = GamepadAxis.FromNativeValue(evt.axis.toInt())
                 val value = evt.value.let {
@@ -368,7 +368,7 @@ public abstract class ClientEngine : Engine {
                 }
                 if (playerGamepad != null) {
                     if (axis != null) {
-                        val event = GamepadAxisActionEvent(timestamp, deviceID, playerIndex, axis, value)
+                        val event = GamepadAxisActionEvent(nativeDeviceID, timestamp, playerIndex, axis, value)
                         this.OnGamepadAxisAction(event)
                         playerGamepad.OnAxisAction?.invoke(event)
                     }

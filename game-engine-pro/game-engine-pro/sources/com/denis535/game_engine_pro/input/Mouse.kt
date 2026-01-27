@@ -90,16 +90,16 @@ public class Mouse : AutoCloseable {
 }
 
 public class MouseMoveEvent(
+    internal val NativeDeviceID: UInt,
     public val Timestamp: Float,
-    public val DeviceID: UInt,
     public val WindowID: UInt,
     public val Cursor: Pair<Float, Float>, // unlocked cursor only
     public val Delta: Pair<Float, Float>, // locked cursor only
 )
 
 public class MouseButtonActionEvent(
+    internal val NativeDeviceID: UInt,
     public val Timestamp: Float,
-    public val DeviceID: UInt,
     public val WindowID: UInt,
     public val Button: MouseButton,
     public val IsPressed: Boolean,
@@ -107,8 +107,8 @@ public class MouseButtonActionEvent(
 )
 
 public class MouseWheelScrollEvent(
+    internal val NativeDeviceID: UInt,
     public val Timestamp: Float,
-    public val DeviceID: UInt,
     public val WindowID: UInt,
     public val Scroll: Pair<Float, Float>,
     public val IntegerScroll: Pair<Int, Int>,
