@@ -3,7 +3,7 @@ package com.denis535.game_engine_pro
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public open class Engine : AutoCloseable {
+public abstract class Engine : AutoCloseable {
     public class Description(
         public val Title: String,
         public val Group: String,
