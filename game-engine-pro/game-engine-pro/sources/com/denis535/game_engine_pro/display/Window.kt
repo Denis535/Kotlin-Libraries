@@ -116,19 +116,11 @@ public open class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var IsShown: Boolean
+    public val IsShown: Boolean
         get() {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_HIDDEN == 0UL
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value) {
-                SDL_ShowWindow(this.NativeWindow)
-            } else {
-                SDL_HideWindow(this.NativeWindow)
-            }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -264,6 +256,18 @@ public open class Window : AutoCloseable {
         check(!this.IsClosed)
         SDL_DestroyWindow(this.NativeWindow).SDL_CheckError()
         this.IsClosed = true
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun Show() {
+        check(!this.IsClosed)
+        SDL_ShowWindow(this.NativeWindow).SDL_CheckError()
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun Hide() {
+        check(!this.IsClosed)
+        SDL_HideWindow(this.NativeWindow).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)

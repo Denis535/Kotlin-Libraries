@@ -15,12 +15,12 @@ public class Content : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(path: String, isUnsafe: Boolean = false) {
-        this.NativeStorage = if (isUnsafe) {
-            SDL_OpenFileStorage(path).SDL_CheckError()!!
+        if (isUnsafe) {
+            this.NativeStorage = SDL_OpenFileStorage(path).SDL_CheckError()!!
         } else {
             val properties = SDL_CreateProperties().SDL_CheckError()
             try {
-                SDL_OpenTitleStorage(path, properties).SDL_CheckError()!!
+                this.NativeStorage = SDL_OpenTitleStorage(path, properties).SDL_CheckError()!!
             } finally {
                 SDL_DestroyProperties(properties).SDL_CheckError()
             }

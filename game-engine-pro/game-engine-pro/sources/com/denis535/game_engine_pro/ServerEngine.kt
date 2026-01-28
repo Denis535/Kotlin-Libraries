@@ -2,7 +2,7 @@ package com.denis535.game_engine_pro
 
 import kotlinx.cinterop.*
 
-public abstract class ServerEngine : Engine {
+public open class ServerEngine : Engine {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(description: Description) : super(description)

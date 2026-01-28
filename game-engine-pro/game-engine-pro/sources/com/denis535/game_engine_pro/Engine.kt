@@ -3,13 +3,18 @@ package com.denis535.game_engine_pro
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public abstract class Engine : AutoCloseable {
+public open class Engine : AutoCloseable {
     public class Description(
-        public val Id: String?,
-        public val Name: String? = null,
+        public val Title: String,
+        public val Group: String,
+        public val Name: String,
         public val Version: String? = null,
         public val Creator: String? = null,
-    )
+        public val Url: String? = null,
+    ) {
+        public val ID: String
+            get() = "${this.Group}.${this.Name}"
+    }
 
     public var IsClosed: Boolean = false
         private set
@@ -24,11 +29,71 @@ public abstract class Engine : AutoCloseable {
             field = value
         }
 
+    public var OnStartCallback: (() -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnStopCallback: (() -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
+    public var OnUpdateCallback: (() -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnFixedUpdateCallback: (() -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
     @OptIn(ExperimentalForeignApi::class)
     internal constructor(description: Description) {
         SDL_Init(0U).SDL_CheckError()
-        SDL_SetAppMetadata(description.Name, description.Version, description.Id).SDL_CheckError()
+        SDL_SetAppMetadata(description.Title, description.Version, description.ID).SDL_CheckError()
+        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_TYPE_STRING, "game").SDL_CheckError()
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, description.Creator).SDL_CheckError()
+        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_URL_STRING, description.Url).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -44,11 +109,11 @@ public abstract class Engine : AutoCloseable {
         check(!this.IsClosed)
         check(!this.IsRunning)
         this.IsRunning = true
-        this.OnStart()
+        this.OnStartCallback?.invoke()
         while (this.IsRunning) {
             this.ProcessFrame(fixedTimeStep)
         }
-        this.OnStop()
+        this.OnStopCallback?.invoke()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -58,9 +123,9 @@ public abstract class Engine : AutoCloseable {
         run {
             this.ProcessEvents()
             this.ProcessFixedFrame(fixedTimeStep)
-            this.OnUpdate()
+            this.OnUpdateCallback?.invoke()
             if (this is ClientEngine) {
-                this.OnDrawInternal()
+                this.OnDrawCallback?.invoke()
             }
         }
         val endTime = SDL_GetTicks().SDL_CheckError()
@@ -95,23 +160,17 @@ public abstract class Engine : AutoCloseable {
     private fun ProcessFixedFrame(fixedTimeStep: Float) {
         check(!this.IsClosed)
         if (FixedFrame.Number == 0U) {
-            this.OnFixedUpdate()
+            this.OnFixedUpdateCallback?.invoke()
             FixedFrame.Number++
             FixedFrame.TimeStep = fixedTimeStep
         } else {
             while (FixedFrame.Time <= Frame.Time) {
-                this.OnFixedUpdate()
+                this.OnFixedUpdateCallback?.invoke()
                 FixedFrame.Number++
                 FixedFrame.TimeStep = fixedTimeStep
             }
         }
     }
-
-    protected abstract fun OnStart()
-    protected abstract fun OnStop()
-
-    protected abstract fun OnUpdate()
-    protected abstract fun OnFixedUpdate()
 
     @OptIn(ExperimentalForeignApi::class)
     public fun RequestQuit() {

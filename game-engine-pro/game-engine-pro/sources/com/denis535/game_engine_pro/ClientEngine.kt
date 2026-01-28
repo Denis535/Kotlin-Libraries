@@ -7,7 +7,7 @@ import com.denis535.game_engine_pro.utils.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public abstract class ClientEngine : Engine {
+public open class ClientEngine : Engine {
 
     public val Window: Window
         get() {
@@ -45,16 +45,190 @@ public abstract class ClientEngine : Engine {
             return field
         }
 
+    public var OnDrawCallback: (() -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
+    public var OnMouseFocusCallback: ((MouseFocusEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnKeyboardFocusCallback: ((KeyboardFocusEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
+    public var OnTouchCallback: ((TouchEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnZoomCallback: ((ZoomEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
+    public var OnMouseMoveCallback: ((MouseMoveEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnMouseButtonActionCallback: ((MouseButtonActionEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnMouseWheelScrollCallback: ((MouseWheelScrollEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnKeyboardKeyActionCallback: ((KeyboardKeyActionEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnGamepadButtonActionCallback: ((GamepadButtonActionEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnGamepadAxisActionCallback: ((GamepadAxisActionEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
+    public var OnTextCallback: ((TextEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
     @OptIn(ExperimentalForeignApi::class)
     public constructor(description: Description, windowProvider: () -> Window) : super(description) {
         SDL_Init(SDL_INIT_VIDEO).SDL_CheckError()
         this.Window = windowProvider()
-        this.Window.IsShown = true
         this.Cursor = Cursor()
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
         this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
+        this.Window.Show()
+        this.Window.Raise()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -99,7 +273,7 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
                     val event = MouseFocusEvent(timestamp, windowID, true)
-                    this.OnFocus(event)
+                    this.OnMouseFocusCallback?.invoke(event)
                 }
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
@@ -108,7 +282,7 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
                     val event = MouseFocusEvent(timestamp, windowID, false)
-                    this.OnFocus(event)
+                    this.OnMouseFocusCallback?.invoke(event)
                 }
             }
 
@@ -118,7 +292,7 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
                     val event = KeyboardFocusEvent(timestamp, windowID, true)
-                    this.OnFocus(event)
+                    this.OnKeyboardFocusCallback?.invoke(event)
                 }
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
@@ -127,7 +301,7 @@ public abstract class ClientEngine : Engine {
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
                     val event = KeyboardFocusEvent(timestamp, windowID, false)
-                    this.OnFocus(event)
+                    this.OnKeyboardFocusCallback?.invoke(event)
                 }
             }
 
@@ -143,7 +317,7 @@ public abstract class ClientEngine : Engine {
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
                     if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Begin, Point2(x, y), Point2(0f, 0f), pressure)
-                        this.OnTouch(event)
+                        this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
@@ -162,7 +336,7 @@ public abstract class ClientEngine : Engine {
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
                     if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Changed, Point2(x, y), Point2(deltaX, deltaY), pressure)
-                        this.OnTouch(event)
+                        this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
@@ -179,7 +353,7 @@ public abstract class ClientEngine : Engine {
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
                     if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.End, Point2(x, y), Point2(0f, 0f), pressure)
-                        this.OnTouch(event)
+                        this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
@@ -196,7 +370,7 @@ public abstract class ClientEngine : Engine {
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
                     if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Canceled, Point2(x, y), Point2(0f, 0f), pressure)
-                        this.OnTouch(event)
+                        this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
@@ -209,7 +383,7 @@ public abstract class ClientEngine : Engine {
                 val zoom = evt.scale
                 if (windowID == this.Window.NativeWindowID) {
                     val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
-                    this.OnZoom(event)
+                    this.OnZoomCallback?.invoke(event)
                 }
             }
             SDL_EVENT_PINCH_UPDATE -> {
@@ -219,7 +393,7 @@ public abstract class ClientEngine : Engine {
                 val zoom = evt.scale
                 if (windowID == this.Window.NativeWindowID) {
                     val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
-                    this.OnZoom(event)
+                    this.OnZoomCallback?.invoke(event)
                 }
             }
             SDL_EVENT_PINCH_END -> {
@@ -229,20 +403,7 @@ public abstract class ClientEngine : Engine {
                 val zoom = evt.scale
                 if (windowID == this.Window.NativeWindowID) {
                     val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
-                    this.OnZoom(event)
-                }
-            }
-
-            SDL_EVENT_TEXT_INPUT -> {
-                val evt = event.pointed.text
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val text = evt.text?.toKStringFromUtf8()
-                if (windowID == this.Window.NativeWindowID) {
-                    if (text != null) {
-                        val event = TextEvent(timestamp, windowID, text)
-                        this.OnText(event)
-                    }
+                    this.OnZoomCallback?.invoke(event)
                 }
             }
 
@@ -264,7 +425,7 @@ public abstract class ClientEngine : Engine {
                 val deltaY = evt.yrel
                 if (windowID == this.Window.NativeWindowID) {
                     val event = MouseMoveEvent(nativeDeviceID, timestamp, windowID, Point2(x, y), Point2(deltaX, deltaY))
-                    this.OnMouseMove(event)
+                    this.OnMouseMoveCallback?.invoke(event)
                     this.Mouse.OnMoveCallback?.invoke(event)
                 }
             }
@@ -279,7 +440,7 @@ public abstract class ClientEngine : Engine {
                 if (windowID == this.Window.NativeWindowID) {
                     if (button != null) {
                         val event = MouseButtonActionEvent(nativeDeviceID, timestamp, windowID, button, isPressed, clickCount)
-                        this.OnMouseButtonAction(event)
+                        this.OnMouseButtonActionCallback?.invoke(event)
                         this.Mouse.OnButtonActionCallback?.invoke(event)
                     }
                 }
@@ -306,7 +467,7 @@ public abstract class ClientEngine : Engine {
                 }
                 if (windowID == this.Window.NativeWindowID) {
                     val event = MouseWheelScrollEvent(nativeDeviceID, timestamp, windowID, Point2(scrollX, scrollY), Point2I(integerScrollX, integerScrollY))
-                    this.OnMouseWheelScroll(event)
+                    this.OnMouseWheelScrollCallback?.invoke(event)
                     this.Mouse.OnWheelScrollCallback?.invoke(event)
                 }
             }
@@ -321,7 +482,7 @@ public abstract class ClientEngine : Engine {
                 if (windowID == this.Window.NativeWindowID) {
                     if (key != null) {
                         val event = KeyboardKeyActionEvent(timestamp, windowID, key, isPressed, isRepeated)
-                        this.OnKeyboardKeyAction(event)
+                        this.OnKeyboardKeyActionCallback?.invoke(event)
                         this.Keyboard.OnKeyActionCallback?.invoke(event)
                     }
                 }
@@ -360,7 +521,7 @@ public abstract class ClientEngine : Engine {
                 if (playerGamepad != null) {
                     if (button != null) {
                         val event = GamepadButtonActionEvent(nativeDeviceID, timestamp, playerIndex, button, isPressed)
-                        this.OnGamepadButtonAction(event)
+                        this.OnGamepadButtonActionCallback?.invoke(event)
                         playerGamepad.OnButtonActionCallback?.invoke(event)
                     }
                 }
@@ -378,29 +539,26 @@ public abstract class ClientEngine : Engine {
                 if (playerGamepad != null) {
                     if (axis != null) {
                         val event = GamepadAxisActionEvent(nativeDeviceID, timestamp, playerIndex, axis, value)
-                        this.OnGamepadAxisAction(event)
+                        this.OnGamepadAxisActionCallback?.invoke(event)
                         playerGamepad.OnAxisActionCallback?.invoke(event)
+                    }
+                }
+            }
+
+            SDL_EVENT_TEXT_INPUT -> {
+                val evt = event.pointed.text
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val text = evt.text?.toKStringFromUtf8()
+                if (windowID == this.Window.NativeWindowID) {
+                    if (text != null) {
+                        val event = TextEvent(timestamp, windowID, text)
+                        this.OnTextCallback?.invoke(event)
                     }
                 }
             }
         }
     }
-
-    internal fun OnDrawInternal() = this.OnDraw()
-    protected abstract fun OnDraw()
-
-    protected abstract fun OnFocus(event: MouseFocusEvent)
-    protected abstract fun OnFocus(event: KeyboardFocusEvent)
-    protected abstract fun OnTouch(event: TouchEvent)
-    protected abstract fun OnZoom(event: ZoomEvent)
-    protected abstract fun OnText(event: TextEvent)
-
-    protected abstract fun OnMouseMove(event: MouseMoveEvent)
-    protected abstract fun OnMouseButtonAction(event: MouseButtonActionEvent)
-    protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
-    protected abstract fun OnKeyboardKeyAction(event: KeyboardKeyActionEvent)
-    protected abstract fun OnGamepadButtonAction(event: GamepadButtonActionEvent)
-    protected abstract fun OnGamepadAxisAction(event: GamepadAxisActionEvent)
 
 }
 

@@ -15,8 +15,11 @@ public class Storage : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public constructor(group: String, name: String) {
         val properties = SDL_CreateProperties().SDL_CheckError()
-        this.NativeStorage = SDL_OpenUserStorage(group, name, properties).SDL_CheckError()!!
-        SDL_DestroyProperties(properties).SDL_CheckError()
+        try {
+            this.NativeStorage = SDL_OpenUserStorage(group, name, properties).SDL_CheckError()!!
+        } finally {
+            SDL_DestroyProperties(properties).SDL_CheckError()
+        }
     }
 
     @OptIn(ExperimentalForeignApi::class)
