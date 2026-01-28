@@ -143,7 +143,7 @@ public abstract class ClientEngine : Engine {
                     if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
                         this.OnTouch(event)
-                        this.Touchscreen.OnTouch?.invoke(event)
+                        this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -162,7 +162,7 @@ public abstract class ClientEngine : Engine {
                     if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
                         this.OnTouch(event)
-                        this.Touchscreen.OnTouch?.invoke(event)
+                        this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -179,7 +179,7 @@ public abstract class ClientEngine : Engine {
                     if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
                         this.OnTouch(event)
-                        this.Touchscreen.OnTouch?.invoke(event)
+                        this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -196,7 +196,7 @@ public abstract class ClientEngine : Engine {
                     if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
                         this.OnTouch(event)
-                        this.Touchscreen.OnTouch?.invoke(event)
+                        this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -264,7 +264,7 @@ public abstract class ClientEngine : Engine {
                 if (windowID == this.Window.NativeWindowID) {
                     val event = MouseMoveEvent(nativeDeviceID, timestamp, windowID, Pair(x, y), Pair(deltaX, deltaY))
                     this.OnMouseMove(event)
-                    this.Mouse.OnMove?.invoke(event)
+                    this.Mouse.OnMoveCallback?.invoke(event)
                 }
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
@@ -279,7 +279,7 @@ public abstract class ClientEngine : Engine {
                     if (button != null) {
                         val event = MouseButtonActionEvent(nativeDeviceID, timestamp, windowID, button, isPressed, clickCount)
                         this.OnMouseButtonAction(event)
-                        this.Mouse.OnButtonAction?.invoke(event)
+                        this.Mouse.OnButtonActionCallback?.invoke(event)
                     }
                 }
             }
@@ -306,7 +306,7 @@ public abstract class ClientEngine : Engine {
                 if (windowID == this.Window.NativeWindowID) {
                     val event = MouseWheelScrollEvent(nativeDeviceID, timestamp, windowID, Pair(scrollX, scrollY), Pair(integerScrollX, integerScrollY))
                     this.OnMouseWheelScroll(event)
-                    this.Mouse.OnWheelScroll?.invoke(event)
+                    this.Mouse.OnWheelScrollCallback?.invoke(event)
                 }
             }
 
@@ -321,7 +321,7 @@ public abstract class ClientEngine : Engine {
                     if (key != null) {
                         val event = KeyboardKeyActionEvent(timestamp, windowID, key, isPressed, isRepeated)
                         this.OnKeyboardKeyAction(event)
-                        this.Keyboard.OnKeyAction?.invoke(event)
+                        this.Keyboard.OnKeyActionCallback?.invoke(event)
                     }
                 }
             }
@@ -360,7 +360,7 @@ public abstract class ClientEngine : Engine {
                     if (button != null) {
                         val event = GamepadButtonActionEvent(nativeDeviceID, timestamp, playerIndex, button, isPressed)
                         this.OnGamepadButtonAction(event)
-                        playerGamepad.OnButtonAction?.invoke(event)
+                        playerGamepad.OnButtonActionCallback?.invoke(event)
                     }
                 }
             }
@@ -378,7 +378,7 @@ public abstract class ClientEngine : Engine {
                     if (axis != null) {
                         val event = GamepadAxisActionEvent(nativeDeviceID, timestamp, playerIndex, axis, value)
                         this.OnGamepadAxisAction(event)
-                        playerGamepad.OnAxisAction?.invoke(event)
+                        playerGamepad.OnAxisActionCallback?.invoke(event)
                     }
                 }
             }

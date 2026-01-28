@@ -75,7 +75,7 @@ public class Gamepad : AutoCloseable {
             return null
         }
 
-    public var OnButtonAction: ((GamepadButtonActionEvent) -> Unit)? = null
+    public var OnButtonActionCallback: ((GamepadButtonActionEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -89,7 +89,7 @@ public class Gamepad : AutoCloseable {
             }
             field = value
         }
-    public var OnAxisAction: ((GamepadAxisActionEvent) -> Unit)? = null
+    public var OnAxisActionCallback: ((GamepadAxisActionEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field

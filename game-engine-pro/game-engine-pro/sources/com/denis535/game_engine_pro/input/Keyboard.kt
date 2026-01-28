@@ -8,7 +8,7 @@ public class Keyboard : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    public var OnKeyAction: ((KeyboardKeyActionEvent) -> Unit)? = null
+    public var OnKeyActionCallback: ((KeyboardKeyActionEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field

@@ -8,7 +8,7 @@ public class Mouse : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    public var OnMove: ((MouseMoveEvent) -> Unit)? = null
+    public var OnMoveCallback: ((MouseMoveEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -22,7 +22,7 @@ public class Mouse : AutoCloseable {
             }
             field = value
         }
-    public var OnButtonAction: ((MouseButtonActionEvent) -> Unit)? = null
+    public var OnButtonActionCallback: ((MouseButtonActionEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -36,7 +36,7 @@ public class Mouse : AutoCloseable {
             }
             field = value
         }
-    public var OnWheelScroll: ((MouseWheelScrollEvent) -> Unit)? = null
+    public var OnWheelScrollCallback: ((MouseWheelScrollEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
