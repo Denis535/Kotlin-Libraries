@@ -229,7 +229,7 @@ public open class ClientEngine : Engine {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest) : super(manifest) {
-        SDL_Init(SDL_INIT_VIDEO).SDL_CheckError()
+        SDL_Init(SDL_INIT_VIDEO or SDL_INIT_SENSOR or SDL_INIT_GAMEPAD).SDL_CheckError()
         this.Cursor = Cursor()
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()

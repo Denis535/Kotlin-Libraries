@@ -78,6 +78,7 @@ public abstract class Engine : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal constructor(manifest: Manifest) {
+        SDL_SetHint(SDL_HINT_STORAGE_USER_DRIVER, "generic").SDL_CheckError()
         SDL_Init(0U).SDL_CheckError()
         SDL_SetAppMetadata(manifest.Title, manifest.Version, manifest.ID).SDL_CheckError()
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_TYPE_STRING, "game").SDL_CheckError()

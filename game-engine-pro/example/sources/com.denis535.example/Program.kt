@@ -25,10 +25,17 @@ public fun Main(args: Array<String>) {
 
 private class ClientEngine2 : ClientEngine {
 
+    public val Content: Content
+    public val Storage: Storage
+
     public constructor(manifest: Manifest) : super(manifest) {
+        this.Content = Content("content")
+        this.Storage = Storage(manifest.Group, manifest.Name)
     }
 
     public override fun close() {
+        this.Storage.close()
+        this.Content.close()
         super.close()
     }
 
