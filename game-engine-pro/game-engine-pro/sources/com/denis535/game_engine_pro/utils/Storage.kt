@@ -25,7 +25,7 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetContents(path: String): List<String>? {
+    public fun GetDirectoryContents(path: String): List<String>? {
         val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userdata, _, filename ->
             val list = userdata!!.asStableRef<MutableList<String>>().get()
             list += filename!!.toKString()
@@ -41,6 +41,17 @@ public class Storage : AutoCloseable {
             resultStableRef.dispose()
         }
         return null
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun CheckDirectory(path: String): Boolean {
+        memScoped {
+            val info = this.alloc<SDL_PathInfo>()
+            if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
+                return info.type == SDL_PathType.SDL_PATHTYPE_DIRECTORY
+            }
+        }
+        return false
     }
 
     @OptIn(ExperimentalForeignApi::class)

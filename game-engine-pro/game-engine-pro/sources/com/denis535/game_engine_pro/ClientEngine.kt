@@ -139,8 +139,8 @@ public abstract class ClientEngine : Engine {
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                    if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Begin, Pair(x, y), Pair(0f, 0f), pressure)
                         this.OnTouch(event)
                         this.Touchscreen.OnTouch?.invoke(event)
@@ -158,8 +158,8 @@ public abstract class ClientEngine : Engine {
                 val deltaX = evt.dx
                 val deltaY = evt.dy
                 val pressure = evt.pressure
-                if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                    if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Changed, Pair(x, y), Pair(deltaX, deltaY), pressure)
                         this.OnTouch(event)
                         this.Touchscreen.OnTouch?.invoke(event)
@@ -175,8 +175,8 @@ public abstract class ClientEngine : Engine {
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                    if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.End, Pair(x, y), Pair(0f, 0f), pressure)
                         this.OnTouch(event)
                         this.Touchscreen.OnTouch?.invoke(event)
@@ -192,8 +192,8 @@ public abstract class ClientEngine : Engine {
                 val x = evt.x
                 val y = evt.y
                 val pressure = evt.pressure
-                if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                    if (windowID == this.Window.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Canceled, Pair(x, y), Pair(0f, 0f), pressure)
                         this.OnTouch(event)
                         this.Touchscreen.OnTouch?.invoke(event)
