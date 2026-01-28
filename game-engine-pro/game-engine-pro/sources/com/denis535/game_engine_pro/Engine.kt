@@ -4,17 +4,6 @@ import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
 public abstract class Engine : AutoCloseable {
-    public class Description(
-        public val Title: String,
-        public val Group: String,
-        public val Name: String,
-        public val Version: String? = null,
-        public val Creator: String? = null,
-        public val Url: String? = null,
-    ) {
-        public val ID: String
-            get() = "${this.Group}.${this.Name}"
-    }
 
     public var IsClosed: Boolean = false
         private set
@@ -88,12 +77,12 @@ public abstract class Engine : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal constructor(description: Description) {
+    internal constructor(manifest: Manifest) {
         SDL_Init(0U).SDL_CheckError()
-        SDL_SetAppMetadata(description.Title, description.Version, description.ID).SDL_CheckError()
+        SDL_SetAppMetadata(manifest.Title, manifest.Version, manifest.ID).SDL_CheckError()
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_TYPE_STRING, "game").SDL_CheckError()
-        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, description.Creator).SDL_CheckError()
-        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_URL_STRING, description.Url).SDL_CheckError()
+        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).SDL_CheckError()
+        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_URL_STRING, manifest.Url).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -182,6 +171,18 @@ public abstract class Engine : AutoCloseable {
         }
     }
 
+}
+
+public class Manifest(
+    public val Title: String,
+    public val Group: String,
+    public val Name: String,
+    public val Version: String? = null,
+    public val Creator: String? = null,
+    public val Url: String? = null,
+) {
+    public val ID: String
+        get() = "${this.Group}.${this.Name}"
 }
 
 public object Frame {

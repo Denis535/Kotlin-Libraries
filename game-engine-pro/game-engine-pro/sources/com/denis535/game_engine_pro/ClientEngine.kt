@@ -9,10 +9,19 @@ import kotlinx.cinterop.*
 
 public open class ClientEngine : Engine {
 
-    public val Window: Window
+    public var Window: Window? = null
         get() {
             check(!this.IsClosed)
             return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
         }
 
     public val Cursor: Cursor
@@ -219,16 +228,13 @@ public open class ClientEngine : Engine {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(description: Description, windowProvider: () -> Window) : super(description) {
+    public constructor(manifest: Manifest) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO).SDL_CheckError()
-        this.Window = windowProvider()
         this.Cursor = Cursor()
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
         this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
-        this.Window.Show()
-        this.Window.Raise()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -240,7 +246,7 @@ public open class ClientEngine : Engine {
         this.Mouse.close()
         this.Touchscreen.close()
         this.Cursor.close()
-        this.Window.close()
+        this.Window?.close()
         super.close()
     }
 
@@ -271,7 +277,7 @@ public open class ClientEngine : Engine {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = MouseFocusEvent(timestamp, windowID, true)
                     this.OnMouseFocusCallback?.invoke(event)
                 }
@@ -280,7 +286,7 @@ public open class ClientEngine : Engine {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = MouseFocusEvent(timestamp, windowID, false)
                     this.OnMouseFocusCallback?.invoke(event)
                 }
@@ -290,7 +296,7 @@ public open class ClientEngine : Engine {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = KeyboardFocusEvent(timestamp, windowID, true)
                     this.OnKeyboardFocusCallback?.invoke(event)
                 }
@@ -299,7 +305,7 @@ public open class ClientEngine : Engine {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = KeyboardFocusEvent(timestamp, windowID, false)
                     this.OnKeyboardFocusCallback?.invoke(event)
                 }
@@ -315,7 +321,7 @@ public open class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
-                    if (windowID == this.Window.NativeWindowID) {
+                    if (windowID == this.Window?.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Begin, Point2(x, y), Point2(0f, 0f), pressure)
                         this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
@@ -334,7 +340,7 @@ public open class ClientEngine : Engine {
                 val deltaY = evt.dy
                 val pressure = evt.pressure
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
-                    if (windowID == this.Window.NativeWindowID) {
+                    if (windowID == this.Window?.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Changed, Point2(x, y), Point2(deltaX, deltaY), pressure)
                         this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
@@ -351,7 +357,7 @@ public open class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
-                    if (windowID == this.Window.NativeWindowID) {
+                    if (windowID == this.Window?.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.End, Point2(x, y), Point2(0f, 0f), pressure)
                         this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
@@ -368,7 +374,7 @@ public open class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
-                    if (windowID == this.Window.NativeWindowID) {
+                    if (windowID == this.Window?.NativeWindowID) {
                         val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Canceled, Point2(x, y), Point2(0f, 0f), pressure)
                         this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
@@ -381,7 +387,7 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val zoom = evt.scale
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
                     this.OnZoomCallback?.invoke(event)
                 }
@@ -391,7 +397,7 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val zoom = evt.scale
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
                     this.OnZoomCallback?.invoke(event)
                 }
@@ -401,7 +407,7 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val zoom = evt.scale
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
                     this.OnZoomCallback?.invoke(event)
                 }
@@ -423,7 +429,7 @@ public open class ClientEngine : Engine {
                 val y = evt.y
                 val deltaX = evt.xrel
                 val deltaY = evt.yrel
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = MouseMoveEvent(nativeDeviceID, timestamp, windowID, Point2(x, y), Point2(deltaX, deltaY))
                     this.OnMouseMoveCallback?.invoke(event)
                     this.Mouse.OnMoveCallback?.invoke(event)
@@ -437,7 +443,7 @@ public open class ClientEngine : Engine {
                 val button = MouseButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
                 val clickCount = evt.clicks.toInt()
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     if (button != null) {
                         val event = MouseButtonActionEvent(nativeDeviceID, timestamp, windowID, button, isPressed, clickCount)
                         this.OnMouseButtonActionCallback?.invoke(event)
@@ -465,7 +471,7 @@ public open class ClientEngine : Engine {
                     integerScrollX = -evt.integer_x
                     integerScrollY = -evt.integer_y
                 }
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     val event = MouseWheelScrollEvent(nativeDeviceID, timestamp, windowID, Point2(scrollX, scrollY), Point2I(integerScrollX, integerScrollY))
                     this.OnMouseWheelScrollCallback?.invoke(event)
                     this.Mouse.OnWheelScrollCallback?.invoke(event)
@@ -479,7 +485,7 @@ public open class ClientEngine : Engine {
                 val key = KeyboardKey.FromNativeValue(evt.scancode)
                 val isPressed = evt.down
                 val isRepeated = evt.repeat
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     if (key != null) {
                         val event = KeyboardKeyActionEvent(timestamp, windowID, key, isPressed, isRepeated)
                         this.OnKeyboardKeyActionCallback?.invoke(event)
@@ -550,7 +556,7 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 val text = evt.text?.toKStringFromUtf8()
-                if (windowID == this.Window.NativeWindowID) {
+                if (windowID == this.Window?.NativeWindowID) {
                     if (text != null) {
                         val event = TextEvent(timestamp, windowID, text)
                         this.OnTextCallback?.invoke(event)

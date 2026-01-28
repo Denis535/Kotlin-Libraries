@@ -6,13 +6,16 @@ import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.utils.*
 
 public fun Main(args: Array<String>) {
-    ClientEngine2().apply {
+    ClientEngine2(Manifest("Example", "com.denis535", "example", null, "Denis535")).apply {
+        this.Window = Window2(WindowDescription.Window("Example", IsResizable = true))
+        this.Window!!.Show()
+        this.Window!!.Raise()
         this.OnDrawCallback = {
             Utils.Delay(10U)
         }
         this.OnKeyboardKeyActionCallback = { event ->
             if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
-                this.Window.IsFullScreen = !this.Window.IsFullScreen
+                this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen
             }
         }
     }.use {
@@ -22,7 +25,7 @@ public fun Main(args: Array<String>) {
 
 private class ClientEngine2 : ClientEngine {
 
-    public constructor() : super(Description("Example", "com.denis535", "example", null, "Denis535"), { Window2() }) {
+    public constructor(manifest: Manifest) : super(manifest) {
     }
 
     public override fun close() {
@@ -33,7 +36,7 @@ private class ClientEngine2 : ClientEngine {
 
 private class Window2 : Window {
 
-    public constructor() : super(Description.Window("Example", IsResizable = true)) {
+    public constructor(description: WindowDescription) : super(description) {
     }
 
     public override fun close() {
