@@ -1,5 +1,6 @@
 package com.denis535.game_engine_pro.input
 
+import com.denis535.game_engine_pro.utils.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -59,24 +60,24 @@ public class Mouse : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetCursor(): Pair<Float, Float> { // unlocked cursor only
+    public fun GetCursor(): Point2 { // unlocked cursor only
         check(!this.IsClosed)
         memScoped {
             val x = this.alloc<FloatVar>()
             val y = this.alloc<FloatVar>()
             SDL_GetMouseState(x.ptr, y.ptr).SDL_CheckError()
-            return Pair(x.value, y.value)
+            return Point2(x.value, y.value)
         }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetDelta(): Pair<Float, Float> { // locked cursor only
+    public fun GetDelta(): Point2 { // locked cursor only
         check(!this.IsClosed)
         memScoped {
             val deltaX = this.alloc<FloatVar>()
             val deltaY = this.alloc<FloatVar>()
             SDL_GetRelativeMouseState(deltaX.ptr, deltaY.ptr).SDL_CheckError()
-            return Pair(deltaX.value, deltaY.value)
+            return Point2(deltaX.value, deltaY.value)
         }
     }
 
@@ -93,8 +94,8 @@ public class MouseMoveEvent(
     internal val NativeDeviceID: UInt,
     public val Timestamp: Float,
     public val WindowID: UInt,
-    public val Cursor: Pair<Float, Float>, // unlocked cursor only
-    public val Delta: Pair<Float, Float>, // locked cursor only
+    public val Cursor: Point2, // unlocked cursor only
+    public val Delta: Point2, // locked cursor only
 )
 
 public class MouseButtonActionEvent(
@@ -110,8 +111,8 @@ public class MouseWheelScrollEvent(
     internal val NativeDeviceID: UInt,
     public val Timestamp: Float,
     public val WindowID: UInt,
-    public val Scroll: Pair<Float, Float>,
-    public val IntegerScroll: Pair<Int, Int>,
+    public val Scroll: Point2,
+    public val IntegerScroll: Point2I,
 )
 
 public enum class MouseButton {

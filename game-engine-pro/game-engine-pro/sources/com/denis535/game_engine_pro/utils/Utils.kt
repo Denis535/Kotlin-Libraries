@@ -26,3 +26,12 @@ public object Utils {
     }
 
 }
+
+public data class Point2(public val X: Float, public val Y: Float)
+public data class Point2I(public val X: Int, public val Y: Int)
+
+public data class Size2(public val Width: Float, public val Height: Float)
+public data class Size2I(public val Width: Int, public val Height: Int)
+
+public data class Rect2(public val Point: Point2, public val Size: Size2)
+public data class Rect2I(public val Point: Point2I, public val Size: Size2I)

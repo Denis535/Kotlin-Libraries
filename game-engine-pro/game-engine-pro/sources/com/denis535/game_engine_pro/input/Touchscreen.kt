@@ -1,5 +1,6 @@
 package com.denis535.game_engine_pro.input
 
+import com.denis535.game_engine_pro.utils.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -21,7 +22,7 @@ public class Touchscreen : AutoCloseable {
                     try {
                         return List(count.value) { i ->
                             val touch = touches!![i]!!
-                            Touch(touch.pointed.id, Pair(touch.pointed.x, touch.pointed.y), touch.pointed.pressure)
+                            Touch(touch.pointed.id, Point2(touch.pointed.x, touch.pointed.y), touch.pointed.pressure)
                         }
                     } finally {
                         SDL_free(touches)
@@ -72,14 +73,14 @@ public class TouchEvent(
     public val WindowID: UInt,
     public val ID: ULong,
     public val State: TouchState,
-    public val Point: Pair<Float, Float>, // [0..1]
-    public val Delta: Pair<Float, Float>, // [-1..1]
+    public val Point: Point2, // [0..1]
+    public val Delta: Point2, // [-1..1]
     public val Pressure: Float, // [0..1]
 )
 
 public class Touch(
     public val ID: ULong,
-    public val Point: Pair<Float, Float>, // [0..1]
+    public val Point: Point2, // [0..1]
     public val Pressure: Float, // [0..1]
 )
 

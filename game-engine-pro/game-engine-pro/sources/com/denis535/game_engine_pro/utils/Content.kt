@@ -1,6 +1,6 @@
 package com.denis535.game_engine_pro.utils
 
-import cnames.structs.SDL_Storage
+import cnames.structs.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -52,7 +52,7 @@ public class Content : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun CheckDirectory(path: String): Boolean {
+    public fun IsDirectory(path: String): Boolean {
         memScoped {
             val info = this.alloc<SDL_PathInfo>()
             if (SDL_GetStoragePathInfo(this@Content.NativeStorage, path, info.ptr).SDL_CheckError()) {
@@ -63,7 +63,7 @@ public class Content : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun CheckAsset(path: String): Boolean {
+    public fun IsAsset(path: String): Boolean {
         memScoped {
             val info = this.alloc<SDL_PathInfo>()
             if (SDL_GetStoragePathInfo(this@Content.NativeStorage, path, info.ptr).SDL_CheckError()) {

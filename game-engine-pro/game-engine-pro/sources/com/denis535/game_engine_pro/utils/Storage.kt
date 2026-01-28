@@ -44,7 +44,7 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun CheckDirectory(path: String): Boolean {
+    public fun IsDirectory(path: String): Boolean {
         memScoped {
             val info = this.alloc<SDL_PathInfo>()
             if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
@@ -55,7 +55,7 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun CheckEntity(path: String): Boolean {
+    public fun IsEntity(path: String): Boolean {
         memScoped {
             val info = this.alloc<SDL_PathInfo>()
             if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
