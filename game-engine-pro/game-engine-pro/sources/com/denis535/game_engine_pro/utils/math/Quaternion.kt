@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro.math
+package com.denis535.game_engine_pro.utils.math
 
 public data class Quaternion(
     public val X: Float,

@@ -10,9 +10,9 @@ The basis for further game engine development.
 
 ###### com.denis535.game_engine_pro.input
 
-###### com.denis535.game_engine_pro.math
-
 ###### com.denis535.game_engine_pro.utils
+
+###### com.denis535.game_engine_pro.utils.math
 
 # Links
 
