@@ -51,7 +51,7 @@ public class Content : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetDirectoryContents(path: String): List<String>? {
+    public fun GetDirectoryContents(path: String): List<String> {
         val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userdata, _, filename ->
             val list = userdata!!.asStableRef<MutableList<String>>().get()
             list += filename!!.toKString()
@@ -63,30 +63,32 @@ public class Content : AutoCloseable {
             if (SDL_EnumerateStorageDirectory(this.NativeStorage, path, callback, resultStableRef.asCPointer()).SDL_CheckError()) {
                 return result
             }
+            error("Couldn't enumerate directory: $path")
         } finally {
             resultStableRef.dispose()
         }
-        return null
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Load(path: String): ByteArray? {
+    public fun Load(path: String): ByteArray {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Content.NativeStorage, path, length.ptr).SDL_CheckError()) {
-                val data = ByteArray(length.value.toInt())
-                data.usePinned {
-                    if (SDL_ReadStorageFile(this@Content.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
-                        return data
+                if (length.value >= 0U && length.value < UInt.MAX_VALUE) {
+                    val data = ByteArray(length.value.toInt())
+                    data.usePinned {
+                        if (SDL_ReadStorageFile(this@Content.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
+                            return data
+                        }
                     }
                 }
             }
         }
-        return null
+        error("Couldn't load file: $path")
     }
 
-    public fun LoadText(path: String): String? {
-        return this.Load(path)?.decodeToString()
+    public fun LoadText(path: String): String {
+        return this.Load(path).decodeToString()
     }
 
 }

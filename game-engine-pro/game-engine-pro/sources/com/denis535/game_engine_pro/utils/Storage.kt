@@ -62,52 +62,54 @@ public class Storage : AutoCloseable {
             if (SDL_EnumerateStorageDirectory(this.NativeStorage, path, callback, resultStableRef.asCPointer()).SDL_CheckError()) {
                 return result
             }
+            error("Couldn't enumerate directory: $path")
         } finally {
             resultStableRef.dispose()
         }
-        return null
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Load(path: String): ByteArray? {
+    public fun Load(path: String): ByteArray {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Storage.NativeStorage, path, length.ptr).SDL_CheckError()) {
-                val data = ByteArray(length.value.toInt())
-                data.usePinned {
-                    if (SDL_ReadStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
-                        return data
+                if (length.value >= 0U && length.value < UInt.MAX_VALUE) {
+                    val data = ByteArray(length.value.toInt())
+                    data.usePinned {
+                        if (SDL_ReadStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
+                            return data
+                        }
                     }
                 }
             }
         }
-        return null
+        error("Couldn't load file: $path")
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Save(path: String, data: ByteArray): Boolean {
+    public fun Save(path: String, data: ByteArray) {
         data.usePinned {
             if (SDL_WriteStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), it.get().size.toULong()).SDL_CheckError()) {
-                return true
+                return
             }
         }
-        return false
+        error("Couldn't save file: $path")
     }
 
-    public fun LoadText(path: String): String? {
-        return this.Load(path)?.decodeToString()
+    public fun LoadText(path: String): String {
+        return this.Load(path).decodeToString()
     }
 
-    public fun SaveText(path: String, text: String): Boolean {
-        return this.Save(path, text.encodeToByteArray())
+    public fun SaveText(path: String, text: String) {
+        this.Save(path, text.encodeToByteArray())
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Delete(path: String): Boolean {
+    public fun Delete(path: String) {
         if (SDL_RemoveStoragePath(this.NativeStorage, path).SDL_CheckError()) {
-            return true
+            return
         }
-        return false
+        error("Couldn't delete file or directory: $path")
     }
 
 }

@@ -6,12 +6,12 @@ import kotlinx.cinterop.*
 public object Utils {
 
     @OptIn(ExperimentalForeignApi::class)
-    public val BasePath: String?
-        get() = SDL_GetBasePath().SDL_CheckError()?.toKString()
-
-    @OptIn(ExperimentalForeignApi::class)
     public val IsMainThread: Boolean
         get() = SDL_IsMainThread().SDL_CheckError()
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val BasePath: String?
+        get() = SDL_GetBasePath().SDL_CheckError()?.toKString()
 
     @OptIn(ExperimentalForeignApi::class)
     public fun ShowInfoMessage(title: String?, message: String?) {
