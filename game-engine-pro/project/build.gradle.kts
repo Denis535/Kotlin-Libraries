@@ -4,12 +4,8 @@ plugins {
     this.id("maven-publish")
 }
 
-group = project.group
-version = project.version
-description = project.description
-
 kotlin {
-    mingwX64()
+    this.mingwX64()
     this.linuxX64()
     this.linuxArm64()
     this.sourceSets {
@@ -17,7 +13,7 @@ kotlin {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
             this.dependencies {
-                this.implementation("io.github.denis535:sdl:3.4.0.7")
+                this.implementation(this.project(":game-engine-pro-internal"))
             }
         }
         val mingwX64Main by getting {}

@@ -9,10 +9,6 @@ plugins {
 //    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
-group = project.group
-version = project.version
-description = project.description
-
 kotlin {
     this.mingwX64 {
         this.compilations["main"].cinterops {

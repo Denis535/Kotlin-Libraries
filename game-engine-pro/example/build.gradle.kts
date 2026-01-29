@@ -2,10 +2,6 @@ plugins {
     this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0"
 }
 
-group = project.group
-version = project.version
-description = project.description
-
 kotlin {
     this.mingwX64 {
         this.binaries {
