@@ -2,8 +2,6 @@ package com.denis535.game_engine_pro
 
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
-import com.denis535.game_engine_pro.utils.*
-import com.denis535.game_engine_pro.utils.math.Math
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -322,7 +320,7 @@ public open class ClientEngine : Engine {
                 val pressure = evt.pressure
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
                     if (windowID == this.Window?.NativeWindowID) {
-                        val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Begin, Point2(x, y), Point2(0f, 0f), pressure)
+                        val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Begin, Vector2(x, y), Vector2(0f, 0f), pressure)
                         this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
@@ -341,7 +339,7 @@ public open class ClientEngine : Engine {
                 val pressure = evt.pressure
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
                     if (windowID == this.Window?.NativeWindowID) {
-                        val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Changed, Point2(x, y), Point2(deltaX, deltaY), pressure)
+                        val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Changed, Vector2(x, y), Vector2(deltaX, deltaY), pressure)
                         this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
@@ -358,7 +356,7 @@ public open class ClientEngine : Engine {
                 val pressure = evt.pressure
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
                     if (windowID == this.Window?.NativeWindowID) {
-                        val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.End, Point2(x, y), Point2(0f, 0f), pressure)
+                        val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.End, Vector2(x, y), Vector2(0f, 0f), pressure)
                         this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
@@ -375,7 +373,7 @@ public open class ClientEngine : Engine {
                 val pressure = evt.pressure
                 if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
                     if (windowID == this.Window?.NativeWindowID) {
-                        val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Canceled, Point2(x, y), Point2(0f, 0f), pressure)
+                        val event = TouchEvent(nativeDeviceID, timestamp, windowID, id, TouchState.Canceled, Vector2(x, y), Vector2(0f, 0f), pressure)
                         this.OnTouchCallback?.invoke(event)
                         this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
@@ -430,7 +428,7 @@ public open class ClientEngine : Engine {
                 val deltaX = evt.xrel
                 val deltaY = evt.yrel
                 if (windowID == this.Window?.NativeWindowID) {
-                    val event = MouseMoveEvent(nativeDeviceID, timestamp, windowID, Point2(x, y), Point2(deltaX, deltaY))
+                    val event = MouseMoveEvent(nativeDeviceID, timestamp, windowID, Vector2(x, y), Vector2(deltaX, deltaY))
                     this.OnMouseMoveCallback?.invoke(event)
                     this.Mouse.OnMoveCallback?.invoke(event)
                 }
@@ -472,7 +470,7 @@ public open class ClientEngine : Engine {
                     integerScrollY = -evt.integer_y
                 }
                 if (windowID == this.Window?.NativeWindowID) {
-                    val event = MouseWheelScrollEvent(nativeDeviceID, timestamp, windowID, Point2(scrollX, scrollY), Point2I(integerScrollX, integerScrollY))
+                    val event = MouseWheelScrollEvent(nativeDeviceID, timestamp, windowID, Vector2(scrollX, scrollY), Vector2I(integerScrollX, integerScrollY))
                     this.OnMouseWheelScrollCallback?.invoke(event)
                     this.Mouse.OnWheelScrollCallback?.invoke(event)
                 }

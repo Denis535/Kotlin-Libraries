@@ -1,6 +1,6 @@
 package com.denis535.game_engine_pro.input
 
-import com.denis535.game_engine_pro.utils.math.*
+import com.denis535.game_engine_pro.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 

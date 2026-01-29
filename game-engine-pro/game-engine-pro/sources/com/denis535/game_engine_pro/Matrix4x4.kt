@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro.utils.math
+package com.denis535.game_engine_pro
 
 // Column-major
 // m00 m10 m20 m30 - x-column: x-axis, position.x

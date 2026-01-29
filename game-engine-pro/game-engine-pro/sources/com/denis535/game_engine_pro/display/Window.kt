@@ -1,7 +1,7 @@
 package com.denis535.game_engine_pro.display
 
 import cnames.structs.*
-import com.denis535.game_engine_pro.utils.*
+import com.denis535.game_engine_pro.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -55,14 +55,14 @@ public open class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var Position: Point2I
+    public var Position: Vector2I
         get() {
             check(!this.IsClosed)
             memScoped {
                 val x = this.alloc<IntVar>()
                 val y = this.alloc<IntVar>()
                 SDL_GetWindowPosition(this@Window.NativeWindow, x.ptr, y.ptr).SDL_CheckError()
-                return Point2I(x.value, y.value)
+                return Vector2I(x.value, y.value)
             }
         }
         set(value) {
@@ -71,19 +71,19 @@ public open class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var Size: Size2I
+    public var Size: Vector2I
         get() {
             check(!this.IsClosed)
             memScoped {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
                 SDL_GetWindowSize(this@Window.NativeWindow, width.ptr, height.ptr).SDL_CheckError()
-                return Size2I(width.value, height.value)
+                return Vector2I(width.value, height.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowSize(this.NativeWindow, value.Width, value.Height).SDL_CheckError()
+            SDL_SetWindowSize(this.NativeWindow, value.X, value.Y).SDL_CheckError()
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -115,14 +115,14 @@ public open class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val Resolution: Size2I
+    public val Resolution: Vector2I
         get() {
             check(!this.IsClosed)
             memScoped {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
                 SDL_GetWindowSizeInPixels(this@Window.NativeWindow, width.ptr, height.ptr).SDL_CheckError()
-                return Size2I(width.value, height.value)
+                return Vector2I(width.value, height.value)
             }
         }
 
