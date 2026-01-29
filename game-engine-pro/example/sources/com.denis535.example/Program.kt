@@ -44,11 +44,13 @@ private class ClientEngine2 : ClientEngine {
     public val Storage: Storage
 
     public constructor(manifest: Manifest) : super(manifest) {
-        this.Content = Content("content")
+        this.Content = Content(null)
         this.Storage = Storage(manifest.Group, manifest.Name)
     }
 
     public override fun close() {
+        check(!this.IsClosed)
+        check(!this.IsRunning)
         this.Storage.close()
         this.Content.close()
         super.close()
