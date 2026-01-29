@@ -13,6 +13,15 @@ public fun Main(args: Array<String>) {
         this.OnDrawCallback = {
             Utils.Delay(10U)
         }
+        this.OnMouseMoveCallback = { event ->
+            println(event.Cursor)
+        }
+        this.OnMouseButtonActionCallback = { event ->
+            println(event.Button)
+        }
+        this.OnMouseWheelScrollCallback = { event ->
+            println(event.Scroll.Y)
+        }
         this.OnKeyboardKeyActionCallback = { event ->
             if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
                 this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen

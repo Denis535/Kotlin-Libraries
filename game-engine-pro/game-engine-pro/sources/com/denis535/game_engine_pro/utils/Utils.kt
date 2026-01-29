@@ -6,6 +6,10 @@ import kotlinx.cinterop.*
 public object Utils {
 
     @OptIn(ExperimentalForeignApi::class)
+    public val IsMainThread: Boolean
+        get() = SDL_IsMainThread().SDL_CheckError()
+
+    @OptIn(ExperimentalForeignApi::class)
     public fun ShowInfoMessage(title: String?, message: String?) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title, message, null).SDL_CheckError()
     }

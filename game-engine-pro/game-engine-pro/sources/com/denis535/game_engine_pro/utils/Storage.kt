@@ -28,6 +28,28 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
+    public fun IsFile(path: String): Boolean {
+        memScoped {
+            val info = this.alloc<SDL_PathInfo>()
+            if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
+                return info.type == SDL_PathType.SDL_PATHTYPE_FILE
+            }
+        }
+        return false
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun IsDirectory(path: String): Boolean {
+        memScoped {
+            val info = this.alloc<SDL_PathInfo>()
+            if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
+                return info.type == SDL_PathType.SDL_PATHTYPE_DIRECTORY
+            }
+        }
+        return false
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
     public fun GetDirectoryContents(path: String): List<String>? {
         val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userdata, _, filename ->
             val list = userdata!!.asStableRef<MutableList<String>>().get()
@@ -47,29 +69,7 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun IsDirectory(path: String): Boolean {
-        memScoped {
-            val info = this.alloc<SDL_PathInfo>()
-            if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
-                return info.type == SDL_PathType.SDL_PATHTYPE_DIRECTORY
-            }
-        }
-        return false
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public fun IsEntity(path: String): Boolean {
-        memScoped {
-            val info = this.alloc<SDL_PathInfo>()
-            if (SDL_GetStoragePathInfo(this@Storage.NativeStorage, path, info.ptr).SDL_CheckError()) {
-                return info.type == SDL_PathType.SDL_PATHTYPE_FILE
-            }
-        }
-        return false
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public fun LoadEntity(path: String): ByteArray? {
+    public fun Load(path: String): ByteArray? {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Storage.NativeStorage, path, length.ptr).SDL_CheckError()) {
@@ -85,13 +85,21 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun SaveEntity(path: String, data: ByteArray): Boolean {
+    public fun Save(path: String, data: ByteArray): Boolean {
         data.usePinned {
             if (SDL_WriteStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), it.get().size.toULong()).SDL_CheckError()) {
                 return true
             }
         }
         return false
+    }
+
+    public fun LoadText(path: String): String? {
+        return this.Load(path)?.decodeToString()
+    }
+
+    public fun SaveText(path: String, text: String): Boolean {
+        return this.Save(path, text.encodeToByteArray())
     }
 
     @OptIn(ExperimentalForeignApi::class)
