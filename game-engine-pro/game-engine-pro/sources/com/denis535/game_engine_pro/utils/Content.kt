@@ -74,7 +74,7 @@ public class Content : AutoCloseable {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Content.NativeStorage, path, length.ptr).SDL_CheckError()) {
-                if (length.value >= 0U && length.value < UInt.MAX_VALUE) {
+                if (length.value >= 0U && length.value <= UInt.MAX_VALUE) {
                     val data = ByteArray(length.value.toInt())
                     data.usePinned {
                         if (SDL_ReadStorageFile(this@Content.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
