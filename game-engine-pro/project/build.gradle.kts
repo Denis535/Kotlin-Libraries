@@ -30,7 +30,7 @@ signing {
 publishing {
     this.publications.withType<MavenPublication>().configureEach {
         this.pom {
-            this.name = rootProject.name
+            this.name = project.name
             this.description = project.description
             this.url = project.property("url").toString()
             this.licenses {
