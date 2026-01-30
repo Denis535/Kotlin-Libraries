@@ -20,7 +20,7 @@ kotlin {
                 this.baseName = "Example"
                 this.entryPoint = "com.denis535.example.Main"
                 this.linkerOpts(
-                    "-Llibs/SDL/x86_64-linux-gnu/lib",
+                    "-Llibs/x86_64-linux-gnu/SDL/lib",
                     "-lSDL3",
 //                    "-Wl,--verbose",
                     "-Wl,--allow-shlib-undefined",

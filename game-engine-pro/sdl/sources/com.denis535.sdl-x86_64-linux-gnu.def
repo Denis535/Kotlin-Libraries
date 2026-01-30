@@ -1,4 +1,0 @@
-package = com.denis535.sdl
-
-compilerOpts = -I../libs/SDL/x86_64-linux-gnu/include
-headers = SDL3/SDL.h

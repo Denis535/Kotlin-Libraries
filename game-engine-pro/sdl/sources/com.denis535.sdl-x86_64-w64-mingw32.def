@@ -1,7 +1,0 @@
-package = com.denis535.sdl
-
-compilerOpts = -I../libs/SDL/x86_64-w64-mingw32/include
-headers = SDL3/SDL.h
-
-libraryPaths = ../libs/SDL/x86_64-w64-mingw32/lib
-staticLibraries = libSDL3.dll.a

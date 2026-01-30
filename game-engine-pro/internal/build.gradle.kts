@@ -3,14 +3,25 @@ plugins {
 }
 
 kotlin {
-    this.mingwX64()
-    this.linuxX64()
+    this.mingwX64 {
+        this.compilations["main"].cinterops {
+            val sdl by creating {
+                this.definitionFile = file("sources/com.denis535.sdl-x86_64-w64-mingw32.def")
+            }
+        }
+    }
+    this.linuxX64 {
+        this.compilations["main"].cinterops {
+            val sdl by creating {
+                this.definitionFile = file("sources/com.denis535.sdl-x86_64-linux-gnu.def")
+            }
+        }
+    }
     this.sourceSets {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
             this.dependencies {
-                this.implementation("io.github.denis535:sdl:3.4.0.7")
             }
         }
         val mingwX64Main by getting {}
