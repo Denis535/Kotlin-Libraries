@@ -49,7 +49,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "PATH", listOfNotNull(
-                "../libs/SDL/x86_64-w64-mingw32/lib", System.getenv("PATH")
+                "../libs/x86_64-w64-mingw32/SDL/lib", System.getenv("PATH")
             ).joinToString(";")
         )
         this.commandLine(executable.outputFile)
@@ -60,7 +60,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "LD_LIBRARY_PATH", listOfNotNull(
-                "../libs/SDL/x86_64-linux-gnu/lib", System.getenv("LD_LIBRARY_PATH")
+                "../libs/x86_64-linux-gnu/SDL/lib", System.getenv("LD_LIBRARY_PATH")
             ).joinToString(":")
         )
         this.commandLine(executable.outputFile)

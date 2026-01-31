@@ -11,7 +11,6 @@
             <option value="$PROJECT_DIR$/example" />
             <option value="$PROJECT_DIR$/internal" />
             <option value="$PROJECT_DIR$/main" />
-            <option value="$PROJECT_DIR$/sdl" />
           </set>
         </option>
       </GradleProjectSettings>
