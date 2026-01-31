@@ -139,12 +139,12 @@ public class Content : AutoCloseable {
 
 public abstract class Asset {}
 
-public abstract class ImageAsset : Asset {
+public abstract class TextureAsset : Asset {
     public constructor(data: ByteArray) {
     }
 }
 
-public abstract class TextureAsset : Asset {
+public abstract class ImageAsset : Asset {
     public constructor(data: ByteArray) {
     }
 }

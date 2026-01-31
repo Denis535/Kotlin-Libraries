@@ -49,6 +49,6 @@ cmake -S . -B "$BUILD_DIR" \
   -DZLIB_INCLUDE_DIR=/workspace/dist/x86_64-linux-gnu/zlib/include \
   -DZLIB_LIBRARY=/workspace/dist/x86_64-linux-gnu/zlib/lib/libz.so
 
-cmake --build "$BUILD_DIR" -- -j$(nproc)
-cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+cmake --build $BUILD_DIR -- -j$(nproc)
+cmake --install $BUILD_DIR --prefix $INSTALL_DIR
 '
