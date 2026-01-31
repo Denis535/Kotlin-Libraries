@@ -1,21 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-docker build -t linux-x64 -f linux-x64.dockerfile .
-
-docker run \
-  --rm \
-  --mount type=bind,source="$PWD/workspace",target="/workspace" \
-  -w "/workspace/libs/SDL" \
-  dockcross/windows-shared-x64 \
-  bash -euxc '
+WINDOWS_SCRIPT=$(cat <<'EOF'
 BUILD_DIR=../../build/x86_64-w64-mingw32/SDL
 INSTALL_DIR=../../dist/x86_64-w64-mingw32/SDL
 
 export DEBIAN_FRONTEND=noninteractive
-export CC=x86_64-w64-mingw32-gcc
-export CXX=x86_64-w64-mingw32-g++
-export RC=x86_64-w64-mingw32-windres
 
 cmake -S . -B "$BUILD_DIR" \
 -DCMAKE_BUILD_TYPE=Release \
@@ -37,16 +27,12 @@ cmake -S . -B "$BUILD_DIR" \
 -DSDL_SENSOR=ON \
 -DSDL_HAPTIC=ON
 
-cmake --build $BUILD_DIR -- -j$(nproc)
-cmake --install $BUILD_DIR --prefix $INSTALL_DIR
-'
+cmake --build "$BUILD_DIR" -- -j$(nproc)
+cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+EOF
+)
 
-docker run \
-  --rm \
-  --mount type=bind,source="$PWD/workspace",target="/workspace" \
-  -w "/workspace/libs/SDL" \
-  linux-x64 \
-  bash -euxc '
+LINUX_SCRIPT=$(cat <<'EOF'
 BUILD_DIR=../../build/x86_64-linux-gnu/SDL
 INSTALL_DIR=../../dist/x86_64-linux-gnu/SDL
 
@@ -76,6 +62,23 @@ cmake -S . -B "$BUILD_DIR" \
 -DSDL_SENSOR=ON \
 -DSDL_HAPTIC=ON
 
-cmake --build $BUILD_DIR -- -j$(nproc)
-cmake --install $BUILD_DIR --prefix $INSTALL_DIR
-'
+cmake --build "$BUILD_DIR" -- -j$(nproc)
+cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+EOF
+)
+
+docker build -t linux-x64 -f linux-x64.dockerfile .
+
+docker run \
+  --rm \
+  --mount type=bind,source="$PWD/workspace",target="/workspace" \
+  -w "/workspace/libs/SDL" \
+  dockcross/windows-shared-x64 \
+  bash -euxc "$WINDOWS_SCRIPT"
+
+docker run \
+  --rm \
+  --mount type=bind,source="$PWD/workspace",target="/workspace" \
+  -w "/workspace/libs/SDL" \
+  linux-x64 \
+  bash -euxc "$LINUX_SCRIPT"

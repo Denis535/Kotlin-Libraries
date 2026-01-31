@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-docker run \
-  --rm \
-  --mount type=bind,source="$PWD/workspace",target="/workspace" \
-  -w "/workspace/libs/KTX-Software" \
-  dockcross/windows-shared-x64 \
-  bash -euxc '
+WINDOWS_SCRIPT=$(cat <<'EOF'
 BUILD_DIR=../../build/x86_64-w64-mingw32/libktx
 INSTALL_DIR=../../dist/x86_64-w64-mingw32/libktx
 
@@ -18,16 +13,12 @@ cmake -S . -B "$BUILD_DIR" \
 -DKTX_FEATURE_TOOLS=OFF \
 -DKTX_FEATURE_TESTS=OFF
 
-cmake --build $BUILD_DIR -- -j$(nproc)
-cmake --install $BUILD_DIR --prefix $INSTALL_DIR
-'
+cmake --build "$BUILD_DIR" -- -j$(nproc)
+cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+EOF
+)
 
-docker run \
-  --rm \
-  --mount type=bind,source="$PWD/workspace",target="/workspace" \
-  -w "/workspace/libs/KTX-Software" \
-  linux-x64 \
-  bash -euxc '
+LINUX_SCRIPT=$(cat <<'EOF'
 BUILD_DIR=../../build/x86_64-linux-gnu/libktx
 INSTALL_DIR=../../dist/x86_64-linux-gnu/libktx
 
@@ -39,6 +30,21 @@ cmake -S . -B "$BUILD_DIR" \
 -DKTX_FEATURE_TOOLS=OFF \
 -DKTX_FEATURE_TESTS=OFF
 
-cmake --build $BUILD_DIR -- -j$(nproc)
-cmake --install $BUILD_DIR --prefix $INSTALL_DIR
-'
+cmake --build "$BUILD_DIR" -- -j$(nproc)
+cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+EOF
+)
+
+docker run \
+  --rm \
+  --mount type=bind,source="$PWD/workspace",target="/workspace" \
+  -w "/workspace/libs/KTX-Software" \
+  dockcross/windows-shared-x64 \
+  bash -euxc "$WINDOWS_SCRIPT"
+
+docker run \
+  --rm \
+  --mount type=bind,source="$PWD/workspace",target="/workspace" \
+  -w "/workspace/libs/KTX-Software" \
+  dockcross/linux-x64 \
+  bash -euxc "$LINUX_SCRIPT"
