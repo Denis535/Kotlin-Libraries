@@ -9,6 +9,9 @@ public class Content : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     private val NativeStorage: CPointer<SDL_Storage>
 
+//    @OptIn(ExperimentalForeignApi::class)
+//    private val NativeAsyncIOQueue: CPointer<SDL_AsyncIOQueue>
+
     @OptIn(ExperimentalForeignApi::class)
     public val IsReady: Boolean
         get() = SDL_StorageReady(this.NativeStorage).SDL_CheckError()
@@ -21,12 +24,37 @@ public class Content : AutoCloseable {
         } finally {
             SDL_DestroyProperties(properties).SDL_CheckError()
         }
+//        this.NativeAsyncIOQueue = SDL_CreateAsyncIOQueue().SDL_CheckError()!!
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
+//        SDL_DestroyAsyncIOQueue(this.NativeAsyncIOQueue).SDL_CheckError()
         SDL_CloseStorage(this.NativeStorage).SDL_CheckError()
     }
+
+//    @OptIn(ExperimentalForeignApi::class)
+//    internal fun ProcessFrame() {
+//        memScoped {
+//            val outcome = this.alloc<SDL_AsyncIOOutcome>()
+//            while (SDL_GetAsyncIOResult(this@Content.NativeAsyncIOQueue, outcome.ptr).SDL_CheckError()) {
+//                if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE) {
+//                    val callbackStableRef = outcome.userdata!!.asStableRef<(ByteArray) -> Unit>()
+//                    try {
+//                        val data = outcome.buffer!!.readBytes(outcome.bytes_transferred.toInt())
+//                        callbackStableRef.get().invoke(data)
+//                    } finally {
+//                        callbackStableRef.dispose()
+//                    }
+//                } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE) {
+//                    SDL_CheckError()
+//                } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED) {
+//
+//                }
+//                SDL_free(outcome.buffer).SDL_CheckError()
+//            }
+//        }
+//    }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun IsFile(path: String): Boolean {
@@ -90,9 +118,22 @@ public class Content : AutoCloseable {
         error("Couldn't load file: $path")
     }
 
+//    @OptIn(ExperimentalForeignApi::class)
+//    public fun LoadAsync(path: String, callback: (ByteArray) -> Unit) {
+//        val callbackStableRef = StableRef.create(callback).asCPointer().reinterpret<COpaquePointerVar>()
+//        if (SDL_LoadFileAsync(path, this.NativeAsyncIOQueue, callbackStableRef).SDL_CheckError()) {
+//            return
+//        }
+//        error("Couldn't load file: $path")
+//    }
+
     public fun LoadText(path: String): String {
         return this.Load(path).decodeToString()
     }
+
+//    public fun LoadTextAsync(path: String, callback: (String) -> Unit) {
+//        return this.LoadAsync(path) { callback.invoke(it.decodeToString()) }
+//    }
 
 }
 
