@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
+set -e
 
 docker build -t linux-x64 -f linux-x64.dockerfile .
 
 docker run \
   --rm \
   --mount type=bind,source="$PWD/workspace",target="/workspace" \
-  -w "/workspace/SDL" \
+  -w "/workspace/libs/SDL" \
   dockcross/windows-shared-x64 \
   bash -euxc '
-BUILD_DIR=../build/x86_64-w64-mingw32
-INSTALL_DIR=../dist/x86_64-w64-mingw32/SDL
+BUILD_DIR=../../build/x86_64-w64-mingw32/SDL
+INSTALL_DIR=../../dist/x86_64-w64-mingw32/SDL
 
 export DEBIAN_FRONTEND=noninteractive
 export CC=x86_64-w64-mingw32-gcc
@@ -43,11 +44,11 @@ cmake --install $BUILD_DIR --prefix $INSTALL_DIR
 docker run \
   --rm \
   --mount type=bind,source="$PWD/workspace",target="/workspace" \
-  -w "/workspace/SDL" \
+  -w "/workspace/libs/SDL" \
   linux-x64 \
   bash -euxc '
-BUILD_DIR=../build/x86_64-linux-gnu/SDL
-INSTALL_DIR=../dist/x86_64-linux-gnu/SDL
+BUILD_DIR=../../build/x86_64-linux-gnu/SDL
+INSTALL_DIR=../../dist/x86_64-linux-gnu/SDL
 
 export DEBIAN_FRONTEND=noninteractive
 
