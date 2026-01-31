@@ -1,4 +1,4 @@
-package com.denis535.sdl
+package com.denis535.internal.sdl
 
 import kotlinx.cinterop.*
 

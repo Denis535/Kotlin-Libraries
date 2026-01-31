@@ -5,15 +5,25 @@ plugins {
 }
 
 kotlin {
-    this.mingwX64()
-    this.linuxX64()
+    this.mingwX64 {
+        this.compilations["main"].cinterops {
+            val sdl by creating {
+                this.definitionFile = file("x86_64-w64-mingw32/com.denis535.internal.sdl.def")
+            }
+        }
+    }
+    this.linuxX64 {
+        this.compilations["main"].cinterops {
+            val sdl by creating {
+                this.definitionFile = file("x86_64-linux-gnu/com.denis535.internal.sdl.def")
+            }
+        }
+    }
     this.sourceSets {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
-            this.dependencies {
-                this.implementation(this.project(":game-engine-pro-internal"))
-            }
+            this.dependencies {}
         }
         val mingwX64Main by getting {}
         val linuxX64Main by getting {}

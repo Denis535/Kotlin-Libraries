@@ -20,7 +20,5 @@ rootProject.name = "game-engine-pro"
 
 include(":example")
 include(":game-engine-pro")
-include(":game-engine-pro-internal")
 
 project(":game-engine-pro").projectDir = File("main")
-project(":game-engine-pro-internal").projectDir = File("internal")

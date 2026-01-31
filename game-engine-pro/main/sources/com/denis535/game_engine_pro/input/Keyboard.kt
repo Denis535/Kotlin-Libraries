@@ -1,6 +1,6 @@
 package com.denis535.game_engine_pro.input
 
-import com.denis535.sdl.*
+import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
 
 public class Keyboard : AutoCloseable {
