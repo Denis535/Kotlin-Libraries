@@ -33,4 +33,9 @@ public object Utils {
         SDL_Delay(durationMs).SDL_CheckError()
     }
 
+    @OptIn(ExperimentalForeignApi::class)
+    public fun CheckMainThread() {
+        check(SDL_IsMainThread().SDL_CheckError())
+    }
+
 }

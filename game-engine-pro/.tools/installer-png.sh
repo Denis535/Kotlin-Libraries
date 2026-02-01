@@ -2,8 +2,8 @@
 set -e
 
 WINDOWS_SCRIPT=$(cat <<'EOF'
-BUILD_DIR=../../build/x86_64-w64-mingw32/libpng
-INSTALL_DIR=../../dist/x86_64-w64-mingw32/libpng
+BUILD_DIR=../../build/x86_64-w64-mingw32/png
+INSTALL_DIR=../../dist/x86_64-w64-mingw32/png
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -22,8 +22,8 @@ EOF
 )
 
 LINUX_SCRIPT=$(cat <<'EOF'
-BUILD_DIR=../../build/x86_64-linux-gnu/libpng
-INSTALL_DIR=../../dist/x86_64-linux-gnu/libpng
+BUILD_DIR=../../build/x86_64-linux-gnu/png
+INSTALL_DIR=../../dist/x86_64-linux-gnu/png
 
 export DEBIAN_FRONTEND=noninteractive
 

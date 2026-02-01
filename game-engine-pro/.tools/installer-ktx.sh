@@ -2,8 +2,8 @@
 set -e
 
 WINDOWS_SCRIPT=$(cat <<'EOF'
-BUILD_DIR=../../build/x86_64-w64-mingw32/libktx
-INSTALL_DIR=../../dist/x86_64-w64-mingw32/libktx
+BUILD_DIR=../../build/x86_64-w64-mingw32/ktx
+INSTALL_DIR=../../dist/x86_64-w64-mingw32/ktx
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -19,8 +19,8 @@ EOF
 )
 
 LINUX_SCRIPT=$(cat <<'EOF'
-BUILD_DIR=../../build/x86_64-linux-gnu/libktx
-INSTALL_DIR=../../dist/x86_64-linux-gnu/libktx
+BUILD_DIR=../../build/x86_64-linux-gnu/ktx
+INSTALL_DIR=../../dist/x86_64-linux-gnu/ktx
 
 export DEBIAN_FRONTEND=noninteractive
 

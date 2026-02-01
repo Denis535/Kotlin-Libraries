@@ -38,20 +38,20 @@ public class Content : AutoCloseable {
 //        memScoped {
 //            val outcome = this.alloc<SDL_AsyncIOOutcome>()
 //            while (SDL_GetAsyncIOResult(this@Content.NativeAsyncIOQueue, outcome.ptr).SDL_CheckError()) {
-//                if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE) {
-//                    val callbackStableRef = outcome.userdata!!.asStableRef<(ByteArray) -> Unit>()
-//                    try {
+//                val callbackStableRef = outcome.userdata!!.asStableRef<(ByteArray) -> Unit>()
+//                try {
+//                    if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE) {
 //                        val data = outcome.buffer!!.readBytes(outcome.bytes_transferred.toInt())
 //                        callbackStableRef.get().invoke(data)
-//                    } finally {
-//                        callbackStableRef.dispose()
-//                    }
-//                } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE) {
-//                    SDL_CheckError()
-//                } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED) {
+//                    } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE) {
+//                        SDL.CheckError()
+//                    } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED) {
 //
+//                    }
+//                } finally {
+//                    SDL_free(outcome.buffer).SDL_CheckError()
+//                    callbackStableRef.dispose()
 //                }
-//                SDL_free(outcome.buffer).SDL_CheckError()
 //            }
 //        }
 //    }
@@ -135,36 +135,4 @@ public class Content : AutoCloseable {
 //        return this.LoadAsync(path) { callback.invoke(it.decodeToString()) }
 //    }
 
-}
-
-public abstract class Asset {}
-
-public abstract class TextureAsset : Asset {
-    public constructor(data: ByteArray) {
-    }
-}
-
-public abstract class ImageAsset : Asset {
-    public constructor(data: ByteArray) {
-    }
-}
-
-public abstract class SoundAsset : Asset {
-    public constructor(data: ByteArray) {
-    }
-}
-
-public abstract class MusicAsset : Asset {
-    public constructor(data: ByteArray) {
-    }
-}
-
-public abstract class FontAsset : Asset {
-    public constructor(data: ByteArray) {
-    }
-}
-
-public abstract class ModelAsset : Asset {
-    public constructor(data: ByteArray) {
-    }
 }
