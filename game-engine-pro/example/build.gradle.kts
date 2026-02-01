@@ -10,6 +10,7 @@ kotlin {
                 this.entryPoint = "com.denis535.example.Main"
                 this.linkerOpts(
                     "-Wl,-subsystem,windows",
+//                    "-Wl,--verbose",
                 )
             }
         }

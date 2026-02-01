@@ -69,7 +69,7 @@ dockcross/linux-x64 bash -euxc "source /workspace/installer-cgltf.sh && install_
 # sdl
 docker run \
 --rm --mount type=bind,source="$PWD/workspace",target="/workspace" \
-dockcross/windows-static-x64 bash -euxc "source /workspace/installer-sdl.sh && install_windows"
+dockcross/windows-shared-x64 bash -euxc "source /workspace/installer-sdl.sh && install_windows"
 
 docker run \
 --rm --mount type=bind,source="$PWD/workspace",target="/workspace" \

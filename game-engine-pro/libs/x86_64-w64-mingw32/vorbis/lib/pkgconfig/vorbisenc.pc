@@ -1,0 +1,14 @@
+# libvorbisenc pkg-config source file
+
+prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.static
+exec_prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.static/bin
+libdir=/usr/src/mxe/usr/x86_64-w64-mingw32.static/lib
+includedir=/usr/src/mxe/usr/x86_64-w64-mingw32.static/include
+
+Name: vorbisenc
+Description: vorbisenc is a library that provides a convenient API for setting up an encoding environment using libvorbis
+Version: 1.3.7
+Requires.private: vorbis
+Conflicts:
+Libs: -L${libdir} -lvorbisenc
+Cflags: -I${includedir}

@@ -1,0 +1,12 @@
+prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.static
+exec_prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.static
+libdir=/usr/src/mxe/usr/x86_64-w64-mingw32.static/lib
+includedir=/usr/src/mxe/usr/x86_64-w64-mingw32.static/include/libpng16
+
+Name: libpng
+Description: Loads and saves PNG files
+Version: 1.6.54
+Requires.private: zlib
+Libs: -L${libdir} -lpng16
+Libs.private: -lz -lm
+Cflags: -I${includedir}
