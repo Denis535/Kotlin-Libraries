@@ -9,7 +9,7 @@ install_windows() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_SHARED_LIBS=OFF \
         -DOGG_INCLUDE_DIR=/workspace/dist/x86_64-w64-mingw32/ogg/include \
         -DOGG_LIBRARY=/workspace/dist/x86_64-w64-mingw32/ogg/lib/libogg.dll.a
 
@@ -24,7 +24,7 @@ install_linux() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_SHARED_LIBS=OFF \
         -DOGG_INCLUDE_DIR=/workspace/dist/x86_64-linux-gnu/ogg/include \
         -DOGG_LIBRARY=/workspace/dist/x86_64-linux-gnu/ogg/lib/libogg.so
 

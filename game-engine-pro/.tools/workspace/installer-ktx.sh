@@ -9,7 +9,7 @@ install_windows() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_SHARED_LIBS=OFF \
         -DKTX_FEATURE_TOOLS=OFF \
         -DKTX_FEATURE_TESTS=OFF
 
@@ -24,7 +24,7 @@ install_linux() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_SHARED_LIBS=OFF \
         -DKTX_FEATURE_TOOLS=OFF \
         -DKTX_FEATURE_TESTS=OFF
 

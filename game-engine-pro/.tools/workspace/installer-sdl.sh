@@ -9,11 +9,11 @@ install_windows() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DSDL_STATIC=OFF \
-        -DSDL_SHARED=ON \
+        -DSDL_STATIC=ON \
+        -DSDL_SHARED=OFF \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL_TEST_LIBRARY=OFF \
         -DSDL_TESTS=OFF \
+        -DSDL_TEST_LIBRARY=OFF \
         -DSDL_INSTALL_TESTS=OFF \
         -DSDL_VIDEO=ON \
         -DSDL_VIDEO_WINDOWS=ON \
@@ -38,15 +38,15 @@ install_linux() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_FLAGS="-U__GLIBC_USE_ISOC23 -D_GNU_SOURCE" \
+        -DCMAKE_TOOLCHAIN_FILE="" \
         -DCMAKE_C_COMPILER=/usr/bin/gcc \
         -DCMAKE_CXX_COMPILER=/usr/bin/g++ \
-        -DCMAKE_TOOLCHAIN_FILE="" \
-        -DSDL_STATIC=OFF \
-        -DSDL_SHARED=ON \
+        -DCMAKE_C_FLAGS="-U__GLIBC_USE_ISOC23 -D_GNU_SOURCE" \
+        -DSDL_STATIC=ON \
+        -DSDL_SHARED=OFF \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL_TEST_LIBRARY=OFF \
         -DSDL_TESTS=OFF \
+        -DSDL_TEST_LIBRARY=OFF \
         -DSDL_INSTALL_TESTS=OFF \
         -DSDL_VIDEO=ON \
         -DSDL_VIDEO_WINDOWS=OFF \

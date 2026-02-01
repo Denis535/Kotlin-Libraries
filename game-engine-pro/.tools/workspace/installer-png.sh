@@ -9,8 +9,9 @@ install_windows() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DPNG_STATIC=OFF \
-        -DPNG_SHARED=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DPNG_STATIC=ON \
+        -DPNG_SHARED=OFF \
         -DPNG_TESTS=OFF \
         -DPNG_DEBUG=OFF \
         -DZLIB_INCLUDE_DIR=/workspace/dist/x86_64-w64-mingw32/zlib/include \
@@ -27,8 +28,9 @@ install_linux() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DPNG_STATIC=OFF \
-        -DPNG_SHARED=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DPNG_STATIC=ON \
+        -DPNG_SHARED=OFF \
         -DPNG_TESTS=OFF \
         -DPNG_DEBUG=OFF \
         -DZLIB_INCLUDE_DIR=/workspace/dist/x86_64-linux-gnu/zlib/include \

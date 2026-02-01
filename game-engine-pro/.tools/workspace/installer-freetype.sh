@@ -9,7 +9,7 @@ install_windows() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_SHARED_LIBS=OFF \
         -DFT_REQUIRE_ZLIB=ON \
         -DFT_REQUIRE_PNG=OFF \
         -DFT_DISABLE_BZIP2=ON \
@@ -29,7 +29,7 @@ install_linux() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_SHARED_LIBS=OFF \
         -DFT_REQUIRE_ZLIB=ON \
         -DFT_REQUIRE_PNG=OFF \
         -DFT_DISABLE_BZIP2=ON \
