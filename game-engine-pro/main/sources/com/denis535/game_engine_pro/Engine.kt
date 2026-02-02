@@ -94,16 +94,22 @@ public abstract class Engine : AutoCloseable {
         this.IsClosed = true
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     public fun Run(fixedTimeStep: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
         check(!this.IsRunning)
         this.IsRunning = true
+        this.ProcessLoop(fixedTimeStep)
+    }
+
+    private fun ProcessLoop(fixedTimeStep: Float = 1.0f / 20.0f) {
+        check(!this.IsClosed)
+        this.OnStart()
         this.OnStartCallback?.invoke()
         while (this.IsRunning) {
             this.ProcessFrame(fixedTimeStep)
         }
         this.OnStopCallback?.invoke()
+        this.OnStop()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -144,6 +150,14 @@ public abstract class Engine : AutoCloseable {
         Frame.Number++
         Frame.Time += deltaTime
         Frame.TimeStep = deltaTime
+    }
+
+    protected open fun OnStart() {
+        check(!this.IsClosed)
+    }
+
+    protected open fun OnStop() {
+        check(!this.IsClosed)
     }
 
     protected open fun OnFrameBegin() {
