@@ -1,33 +1,25 @@
 //package com.denis535.game_engine_pro.utils
 //
-//public abstract class Asset {}
+//public abstract class Asset()
 //
-//public abstract class ImageAsset : Asset {
-//    public constructor(data: ByteArray) {
-//    }
-//}
+//public class TextAsset(
+//    public val Text: String,
+//) : Asset()
 //
-//public abstract class TextureAsset : Asset {
-//    public constructor(data: ByteArray) {
-//    }
-//}
+//public class ImageAsset(
+//    public val Width: UInt,
+//    public val Height: UInt,
+//) : Asset()
 //
-//public abstract class SoundAsset : Asset {
-//    public constructor(data: ByteArray) {
-//    }
-//}
+//public class TextureAsset(
+//    public val Width: UInt,
+//    public val Height: UInt,
+//) : Asset()
 //
-//public abstract class MusicAsset : Asset {
-//    public constructor(data: ByteArray) {
-//    }
-//}
+//public class SoundAsset : Asset()
 //
-//public abstract class FontAsset : Asset {
-//    public constructor(data: ByteArray) {
-//    }
-//}
+//public class MusicAsset : Asset()
 //
-//public abstract class ModelAsset : Asset {
-//    public constructor(data: ByteArray) {
-//    }
-//}
+//public class FontAsset : Asset()
+//
+//public class ModelAsset : Asset()

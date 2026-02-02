@@ -2,7 +2,7 @@
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
-install_windows() {
+install_ogg_windows() {
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/ogg
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/ogg
     cd /workspace/libs/libogg
@@ -15,7 +15,7 @@ install_windows() {
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
 }
 
-install_linux() {
+install_ogg_linux() {
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/ogg
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/ogg
     cd /workspace/libs/libogg

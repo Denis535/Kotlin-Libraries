@@ -2,7 +2,7 @@
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
-install_windows() {
+install_vorbis_windows() {
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/vorbis
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/vorbis
     cd /workspace/libs/libvorbis
@@ -17,7 +17,7 @@ install_windows() {
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
 }
 
-install_linux() {
+install_vorbis_linux() {
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/vorbis
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/vorbis
     cd /workspace/libs/libvorbis

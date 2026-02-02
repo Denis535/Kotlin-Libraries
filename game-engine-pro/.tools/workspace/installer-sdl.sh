@@ -2,13 +2,14 @@
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
-install_windows() {
+install_sdl_windows() {
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/SDL
     cd /workspace/libs/SDL
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=ON \
         -DSDL_STATIC=ON \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
@@ -31,13 +32,14 @@ install_windows() {
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
 }
 
-install_linux() {
+install_sdl_linux() {
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL
     cd /workspace/libs/SDL
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=ON \
         -DCMAKE_TOOLCHAIN_FILE="" \
         -DCMAKE_C_COMPILER=/usr/bin/gcc \
         -DCMAKE_CXX_COMPILER=/usr/bin/g++ \

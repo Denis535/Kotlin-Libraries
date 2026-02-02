@@ -34,7 +34,7 @@ public class Content : AutoCloseable {
     }
 
 //    @OptIn(ExperimentalForeignApi::class)
-//    internal fun ProcessFrame() {
+//    internal fun Process() {
 //        memScoped {
 //            val outcome = this.alloc<SDL_AsyncIOOutcome>()
 //            while (SDL_GetAsyncIOResult(this@Content.NativeAsyncIOQueue, outcome.ptr).SDL_CheckError()) {
@@ -125,14 +125,6 @@ public class Content : AutoCloseable {
 //            return
 //        }
 //        error("Couldn't load file: $path")
-//    }
-
-    public fun LoadText(path: String): String {
-        return this.Load(path).decodeToString()
-    }
-
-//    public fun LoadTextAsync(path: String, callback: (String) -> Unit) {
-//        return this.LoadAsync(path) { callback.invoke(it.decodeToString()) }
 //    }
 
 }

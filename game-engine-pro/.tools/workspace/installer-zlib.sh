@@ -2,7 +2,7 @@
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
-install_windows() {
+install_zlib_windows() {
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/zlib
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/zlib
     cd /workspace/libs/zlib
@@ -16,7 +16,7 @@ install_windows() {
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
 }
 
-install_linux() {
+install_zlib_linux() {
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/zlib
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/zlib
     cd /workspace/libs/zlib
