@@ -111,12 +111,33 @@ public abstract class Engine : AutoCloseable {
         check(!this.IsClosed)
         val startTime = SDL_GetTicks().SDL_CheckError()
         run {
-            this.ProcessEvents()
-            this.ProcessFixedFrame(fixedTimeStep)
+            this.OnFrameBegin()
+            memScoped {
+                val event = this.alloc<SDL_Event>()
+                while (SDL_PollEvent(event.ptr).SDL_CheckError()) {
+                    this@Engine.OnEvent(event.ptr)
+                }
+            }
+            run {
+                this.OnFixedFrameBegin()
+                if (FixedFrame.Number == 0U) {
+                    this.OnFixedUpdateCallback?.invoke()
+                    FixedFrame.Number++
+                    FixedFrame.TimeStep = fixedTimeStep
+                } else {
+                    while (FixedFrame.Time <= Frame.Time) {
+                        this.OnFixedUpdateCallback?.invoke()
+                        FixedFrame.Number++
+                        FixedFrame.TimeStep = fixedTimeStep
+                    }
+                }
+                this.OnFixedFrameEnd()
+            }
             this.OnUpdateCallback?.invoke()
             if (this is ClientEngine) {
                 this.OnDrawCallback?.invoke()
             }
+            this.OnFrameEnd()
         }
         val endTime = SDL_GetTicks().SDL_CheckError()
         val deltaTime = (endTime - startTime).toFloat() / 1000f
@@ -125,19 +146,12 @@ public abstract class Engine : AutoCloseable {
         Frame.TimeStep = deltaTime
     }
 
-    @OptIn(ExperimentalForeignApi::class)
-    private fun ProcessEvents() {
+    protected open fun OnFrameBegin() {
         check(!this.IsClosed)
-        memScoped {
-            val event = this.alloc<SDL_Event>()
-            while (SDL_PollEvent(event.ptr).SDL_CheckError()) {
-                this@Engine.ProcessEvent(event.ptr)
-            }
-        }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal open fun ProcessEvent(event: CPointer<SDL_Event>) {
+    internal open fun OnEvent(event: CPointer<SDL_Event>) {
         check(!this.IsClosed)
         when (event.pointed.type) {
             SDL_EVENT_QUIT -> {
@@ -146,20 +160,16 @@ public abstract class Engine : AutoCloseable {
         }
     }
 
-    @OptIn(ExperimentalForeignApi::class)
-    private fun ProcessFixedFrame(fixedTimeStep: Float) {
+    protected open fun OnFixedFrameBegin() {
         check(!this.IsClosed)
-        if (FixedFrame.Number == 0U) {
-            this.OnFixedUpdateCallback?.invoke()
-            FixedFrame.Number++
-            FixedFrame.TimeStep = fixedTimeStep
-        } else {
-            while (FixedFrame.Time <= Frame.Time) {
-                this.OnFixedUpdateCallback?.invoke()
-                FixedFrame.Number++
-                FixedFrame.TimeStep = fixedTimeStep
-            }
-        }
+    }
+
+    protected open fun OnFixedFrameEnd() {
+        check(!this.IsClosed)
+    }
+
+    protected open fun OnFrameEnd() {
+        check(!this.IsClosed)
     }
 
     @OptIn(ExperimentalForeignApi::class)

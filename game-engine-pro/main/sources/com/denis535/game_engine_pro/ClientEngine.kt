@@ -249,8 +249,8 @@ public open class ClientEngine : Engine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessEvent(event: CPointer<SDL_Event>) {
-        super.ProcessEvent(event)
+    internal override fun OnEvent(event: CPointer<SDL_Event>) {
+        super.OnEvent(event)
         when (event.pointed.type) {
             SDL_EVENT_WINDOW_SHOWN -> {
             }

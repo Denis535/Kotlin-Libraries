@@ -23,7 +23,8 @@ kotlin {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
-            this.dependencies {}
+            this.dependencies {
+            }
         }
         val mingwX64Main by getting {}
         val linuxX64Main by getting {}
