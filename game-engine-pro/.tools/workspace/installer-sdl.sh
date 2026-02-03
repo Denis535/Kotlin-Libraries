@@ -65,3 +65,97 @@ install_sdl_linux() {
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
 }
+
+#install_sdl_image_windows() {
+#    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_image
+#    INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_image
+#    cd /workspace/libs/SDL_image
+#
+#    cmake -S . -B "$BUILD_DIR" \
+#        -DCMAKE_BUILD_TYPE=Release \
+#        -DCMAKE_PREFIX_PATH="/workspace/dist/x86_64-w64-mingw32/SDL" \
+#        -DBUILD_SHARED_LIBS=ON \
+#        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
+#        -DSDL_STATIC=ON \
+#        -DSDL_SHARED=ON \
+#        -DSDL_ENABLE_PCH=OFF \
+#        -DSDL_TESTS=OFF \
+#        -DSDL_TEST_LIBRARY=OFF \
+#        -DSDL_INSTALL_TESTS=OFF \
+#        -DSDLIMAGE_VENDORED=ON \
+#        -DSDLIMAGE_TESTS=OFF \
+#        -DSDLIMAGE_SAMPLES=OFF
+#
+#    cmake --build "$BUILD_DIR" -- -j$(nproc)
+#    cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+#}
+#
+#install_sdl_image_linux() {
+#    BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_image
+#    INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL_image
+#    cd /workspace/libs/SDL_image
+#
+#    cmake -S . -B "$BUILD_DIR" \
+#        -DCMAKE_BUILD_TYPE=Release \
+#        -DCMAKE_PREFIX_PATH="/workspace/dist/x86_64-linux-gnu/SDL" \
+#        -DBUILD_SHARED_LIBS=ON \
+#        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
+#        -DSDL_STATIC=ON \
+#        -DSDL_SHARED=ON \
+#        -DSDL_ENABLE_PCH=OFF \
+#        -DSDL_TESTS=OFF \
+#        -DSDL_TEST_LIBRARY=OFF \
+#        -DSDL_INSTALL_TESTS=OFF \
+#        -DSDLIMAGE_VENDORED=ON \
+#        -DSDLIMAGE_TESTS=OFF \
+#        -DSDLIMAGE_SAMPLES=OFF
+#
+#    cmake --build "$BUILD_DIR" -- -j$(nproc)
+#    cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+#}
+
+#install_sdl_ttf_windows() {
+#    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_ttf
+#    INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_ttf
+#    cd /workspace/libs/SDL_ttf
+#
+#    cmake -S . -B "$BUILD_DIR" \
+#        -DCMAKE_BUILD_TYPE=Release \
+#        -DBUILD_SHARED_LIBS=ON \
+#        -DSDL_STATIC=ON \
+#        -DSDL_SHARED=ON \
+#        -DSDL_ENABLE_PCH=OFF \
+#        -DSDL_TESTS=OFF \
+#        -DSDL_TEST_LIBRARY=OFF \
+#        -DSDL_INSTALL_TESTS=OFF \
+#        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
+#        -DSDLTTF_VENDORED=OFF \
+#        -DFREETYPE_INCLUDE_DIRS="/workspace/dist/x86_64-w64-mingw32/freetype/include" \
+#        -DFREETYPE_LIBRARIES="/workspace/dist/x86_64-w64-mingw32/freetype/lib/libfreetype.a"
+#
+#    cmake --build "$BUILD_DIR" -- -j$(nproc)
+#    cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+#}
+#
+#install_sdl_ttf_linux() {
+#    BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_ttf
+#    INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL_ttf
+#    cd /workspace/libs/SDL_ttf
+#
+#    cmake -S . -B "$BUILD_DIR" \
+#        -DCMAKE_BUILD_TYPE=Release \
+#        -DBUILD_SHARED_LIBS=ON \
+#        -DSDL_STATIC=ON \
+#        -DSDL_SHARED=ON \
+#        -DSDL_ENABLE_PCH=OFF \
+#        -DSDL_TESTS=OFF \
+#        -DSDL_TEST_LIBRARY=OFF \
+#        -DSDL_INSTALL_TESTS=OFF
+#        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
+#        -DSDLTTF_VENDORED=OFF \
+#        -DFREETYPE_INCLUDE_DIRS="/workspace/dist/x86_64-linux-gnu/freetype/include"
+#        -DFREETYPE_LIBRARIES="/workspace/dist/x86_64-linux-gnu/freetype/lib/libfreetype.a"
+#
+#    cmake --build "$BUILD_DIR" -- -j$(nproc)
+#    cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
+#}
