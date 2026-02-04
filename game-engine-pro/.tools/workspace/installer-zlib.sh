@@ -8,9 +8,8 @@ install_zlib_windows() {
     cd /workspace/libs/zlib
 
     cmake -S . -B "$BUILD_DIR" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=OFF \
-        -DZLIB_BUILD_EXAMPLES=OFF
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_SHARED_LIBS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -22,9 +21,8 @@ install_zlib_linux() {
     cd /workspace/libs/zlib
 
     cmake -S . -B "$BUILD_DIR" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=OFF \
-        -DZLIB_BUILD_EXAMPLES=OFF
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_SHARED_LIBS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"

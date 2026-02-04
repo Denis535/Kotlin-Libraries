@@ -9,9 +9,7 @@ install_miniaudio_windows() {
 
     cmake -S . -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
-      -DMINIAUDIO_BUILD_TESTS=OFF \
-      -DMINIAUDIO_BUILD_TOOLS=OFF \
-      -DMINIAUDIO_BUILD_EXAMPLES=OFF
+      -DBUILD_SHARED_LIBS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -24,9 +22,7 @@ install_miniaudio_linux() {
 
     cmake -S . -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
-      -DMINIAUDIO_BUILD_TESTS=OFF \
-      -DMINIAUDIO_BUILD_TOOLS=OFF \
-      -DMINIAUDIO_BUILD_EXAMPLES=OFF
+      -DBUILD_SHARED_LIBS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
