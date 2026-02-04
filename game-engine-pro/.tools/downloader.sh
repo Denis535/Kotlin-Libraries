@@ -59,38 +59,41 @@ download_sdl_mixer() {
 }
 
 download_zlib() {
-  URL="https://github.com/madler/zlib/archive/refs/tags/v1.3.1.2.tar.gz"
+  REPO="https://github.com/madler/zlib.git"
+  TAG="v1.3.1.2"
 
   mkdir -p "workspace/libs"
   rm -rf "workspace/libs/zlib"
-  curl -fL "${URL}" -o "workspace/libs/zlib.tar.gz"
-  tar -xzf "workspace/libs/zlib.tar.gz" -C "workspace/libs"
-  mv "workspace/libs/zlib-1.3.1.2" "workspace/libs/zlib"
-  rm "workspace/libs/zlib.tar.gz"
+
+  git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "workspace/libs/zlib"
+  git -C "workspace/libs/zlib" -c advice.detachedHead=false checkout "$TAG"
 }
 
 download_freetype() {
-  URL="https://github.com/freetype/freetype/archive/refs/tags/VER-2-14-1.tar.gz"
+    REPO="https://github.com/freetype/freetype.git"
+    TAG="VER-2-14-1"
 
-  mkdir -p "workspace/libs"
-  rm -rf "workspace/libs/freetype"
-  curl -fL "${URL}" -o "workspace/libs/freetype.tar.gz"
-  tar -xzf "workspace/libs/freetype.tar.gz" -C "workspace/libs"
-  mv "workspace/libs/freetype-VER-2-14-1" "workspace/libs/freetype"
-  rm "workspace/libs/freetype.tar.gz"
+    mkdir -p "workspace/libs"
+    rm -rf "workspace/libs/freetype"
+
+    git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "workspace/libs/freetype"
+    git -C "workspace/libs/freetype" -c advice.detachedHead=false checkout "$TAG"
 }
 
 download_bgfx() {
     mkdir -p "workspace/libs"
 
     rm -rf "workspace/libs/bx"
-    git clone --depth 1 https://github.com/bkaradzic/bx.git "workspace/libs/bx"
+    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bx.git "workspace/libs/bx"
+    git -C "workspace/libs/bx" -c advice.detachedHead=false checkout master
 
     rm -rf "workspace/libs/bimg"
-    git clone --depth 1 https://github.com/bkaradzic/bimg.git "workspace/libs/bimg"
+    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bimg.git "workspace/libs/bimg"
+    git -C "workspace/libs/bimg" -c advice.detachedHead=false checkout master
 
     rm -rf "workspace/libs/bgfx"
-    git clone --depth 1 https://github.com/bkaradzic/bgfx.git "workspace/libs/bgfx"
+    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bgfx.git "workspace/libs/bgfx"
+    git -C "workspace/libs/bgfx" -c advice.detachedHead=false checkout master
 }
 
 download_miniaudio() {
@@ -99,7 +102,9 @@ download_miniaudio() {
 
     mkdir -p "workspace/libs"
     rm -rf "workspace/libs/miniaudio"
+
     git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "workspace/libs/miniaudio"
+    git -C "workspace/libs/miniaudio" -c advice.detachedHead=false checkout "$TAG"
 }
 
 download_sdl

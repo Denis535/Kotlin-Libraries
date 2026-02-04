@@ -9,6 +9,7 @@ install_zlib_windows() {
 
     cmake -S . -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
       -DBUILD_SHARED_LIBS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
@@ -22,6 +23,7 @@ install_zlib_linux() {
 
     cmake -S . -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
       -DBUILD_SHARED_LIBS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
