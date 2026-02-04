@@ -9,6 +9,7 @@ download_sdl() {
   URL="https://github.com/libsdl-org/SDL/archive/refs/tags/release-${VERSION}.tar.gz"
 
   mkdir -p "workspace/libs"
+  rm -rf "workspace/libs/SDL"
   curl -fL "${URL}" -o "workspace/libs/${FULLNAME}.tar.gz"
   tar -xzf "workspace/libs/${FULLNAME}.tar.gz" -C "workspace/libs"
   mv "workspace/libs/${NAME}-release-${VERSION}" "workspace/libs/${NAME}"
@@ -22,6 +23,7 @@ download_sdl_image() {
   URL="https://github.com/libsdl-org/SDL_image/archive/refs/tags/release-${VERSION}.tar.gz"
 
   mkdir -p "workspace/libs"
+  rm -rf "workspace/libs/SDL_image"
   curl -fL "${URL}" -o "workspace/libs/${FULLNAME}.tar.gz"
   tar -xzf "workspace/libs/${FULLNAME}.tar.gz" -C "workspace/libs"
   mv "workspace/libs/${NAME}-release-${VERSION}" "workspace/libs/${NAME}"
@@ -35,6 +37,7 @@ download_sdl_ttf() {
   URL="https://github.com/libsdl-org/SDL_ttf/archive/refs/tags/release-${VERSION}.tar.gz"
 
   mkdir -p "workspace/libs"
+  rm -rf "workspace/libs/SDL_ttf"
   curl -fL "${URL}" -o "workspace/libs/${FULLNAME}.tar.gz"
   tar -xzf "workspace/libs/${FULLNAME}.tar.gz" -C "workspace/libs"
   mv "workspace/libs/${NAME}-release-${VERSION}" "workspace/libs/${NAME}"
@@ -48,6 +51,7 @@ download_sdl_mixer() {
   URL="https://github.com/libsdl-org/SDL_mixer/archive/refs/tags/release-${VERSION}.tar.gz"
 
   mkdir -p "workspace/libs"
+  rm -rf "workspace/libs/SDL_mixer"
   curl -fL "${URL}" -o "workspace/libs/${FULLNAME}.tar.gz"
   tar -xzf "workspace/libs/${FULLNAME}.tar.gz" -C "workspace/libs"
   mv "workspace/libs/${NAME}-release-${VERSION}" "workspace/libs/${NAME}"
@@ -58,6 +62,7 @@ download_zlib() {
   URL="https://github.com/madler/zlib/archive/refs/tags/v1.3.1.2.tar.gz"
 
   mkdir -p "workspace/libs"
+  rm -rf "workspace/libs/zlib"
   curl -fL "${URL}" -o "workspace/libs/zlib.tar.gz"
   tar -xzf "workspace/libs/zlib.tar.gz" -C "workspace/libs"
   mv "workspace/libs/zlib-1.3.1.2" "workspace/libs/zlib"
@@ -68,40 +73,33 @@ download_freetype() {
   URL="https://github.com/freetype/freetype/archive/refs/tags/VER-2-14-1.tar.gz"
 
   mkdir -p "workspace/libs"
+  rm -rf "workspace/libs/freetype"
   curl -fL "${URL}" -o "workspace/libs/freetype.tar.gz"
   tar -xzf "workspace/libs/freetype.tar.gz" -C "workspace/libs"
   mv "workspace/libs/freetype-VER-2-14-1" "workspace/libs/freetype"
   rm "workspace/libs/freetype.tar.gz"
 }
 
-download_ktx() {
-  URL="https://github.com/KhronosGroup/KTX-Software/archive/refs/tags/v4.4.2.tar.gz"
+download_bgfx() {
+    mkdir -p "workspace/libs"
 
-  mkdir -p "workspace/libs"
-  curl -fL "${URL}" -o "workspace/libs/KTX-Software.tar.gz"
-  tar -xzf "workspace/libs/KTX-Software.tar.gz" -C "workspace/libs"
-  mv "workspace/libs/KTX-Software-4.4.2" "workspace/libs/KTX-Software"
-  rm "workspace/libs/KTX-Software.tar.gz"
-}
+    rm -rf "workspace/libs/bx"
+    git clone --depth 1 https://github.com/bkaradzic/bx.git "workspace/libs/bx"
 
-download_cgltf() {
-  URL="https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.15.tar.gz"
+    rm -rf "workspace/libs/bimg"
+    git clone --depth 1 https://github.com/bkaradzic/bimg.git "workspace/libs/bimg"
 
-  mkdir -p "workspace/libs"
-  curl -fL "${URL}" -o "workspace/libs/cgltf.tar.gz"
-  tar -xzf "workspace/libs/cgltf.tar.gz" -C "workspace/libs"
-  mv "workspace/libs/cgltf-1.15" "workspace/libs/cgltf"
-  rm "workspace/libs/cgltf.tar.gz"
+    rm -rf "workspace/libs/bgfx"
+    git clone --depth 1 https://github.com/bkaradzic/bgfx.git "workspace/libs/bgfx"
 }
 
 download_miniaudio() {
-  URL="https://github.com/mackron/miniaudio/archive/refs/tags/0.11.24.tar.gz"
+    REPO="https://github.com/mackron/miniaudio.git"
+    TAG="0.11.24"
 
-  mkdir -p "workspace/libs"
-  curl -fL "${URL}" -o "workspace/libs/miniaudio.tar.gz"
-  tar -xzf "workspace/libs/miniaudio.tar.gz" -C "workspace/libs"
-  mv "workspace/libs/miniaudio-0.11.24" "workspace/libs/miniaudio"
-  rm "workspace/libs/miniaudio.tar.gz"
+    mkdir -p "workspace/libs"
+    rm -rf "workspace/libs/miniaudio"
+    git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "workspace/libs/miniaudio"
 }
 
 download_sdl
@@ -111,6 +109,5 @@ download_sdl_mixer
 
 download_zlib
 download_freetype
-download_ktx
-download_cgltf
+download_bgfx
 download_miniaudio
