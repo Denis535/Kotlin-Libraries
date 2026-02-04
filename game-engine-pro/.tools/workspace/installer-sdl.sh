@@ -9,24 +9,16 @@ install_sdl_windows() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
         -DSDL_STATIC=ON \
-        -DSDL_SHARED=ON \
+        -DSDL_SHARED=OFF \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL_TESTS=OFF \
-        -DSDL_TEST_LIBRARY=OFF \
-        -DSDL_INSTALL_TESTS=OFF \
         -DSDL_VIDEO=ON \
-        -DSDL_VIDEO_WINDOWS=ON \
-        -DSDL_VIDEO_X11=OFF \
-        -DSDL_VIDEO_WAYLAND=OFF \
-        -DSDL_RENDER_OPENGL=ON \
-        -DSDL_RENDER_VULKAN=ON \
         -DSDL_AUDIO=ON \
-        -DSDL_AUDIO_WASAPI=ON \
         -DSDL_JOYSTICK=ON \
         -DSDL_SENSOR=ON \
-        -DSDL_HAPTIC=ON
+        -DSDL_HAPTIC=ON \
+        -DSDL_OPENGL=ON \
+        -DSDL_VULKAN=ON
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -39,28 +31,20 @@ install_sdl_linux() {
 
     cmake -S . -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
-        -DCMAKE_TOOLCHAIN_FILE="" \
-        -DCMAKE_C_COMPILER=/usr/bin/gcc \
-        -DCMAKE_CXX_COMPILER=/usr/bin/g++ \
-        -DCMAKE_C_FLAGS="-U__GLIBC_USE_ISOC23 -D_GNU_SOURCE" \
         -DSDL_STATIC=ON \
-        -DSDL_SHARED=ON \
+        -DSDL_SHARED=OFF \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL_TESTS=OFF \
-        -DSDL_TEST_LIBRARY=OFF \
-        -DSDL_INSTALL_TESTS=OFF \
         -DSDL_VIDEO=ON \
-        -DSDL_VIDEO_WINDOWS=OFF \
-        -DSDL_VIDEO_X11=ON \
-        -DSDL_VIDEO_WAYLAND=ON \
-        -DSDL_RENDER_OPENGL=ON \
-        -DSDL_RENDER_VULKAN=ON \
         -DSDL_AUDIO=ON \
-        -DSDL_AUDIO_JACK=ON \
         -DSDL_JOYSTICK=ON \
         -DSDL_SENSOR=ON \
-        -DSDL_HAPTIC=ON
+        -DSDL_HAPTIC=ON \
+        -DSDL_X11=ON \
+        -DSDL_X11_SHARED=OFF \
+        -DSDL_WAYLAND=OFF \
+        -DSDL_OPENGL=ON \
+        -DSDL_VULKAN=ON \
+        -DSDL_POSIX_SPAWN=OFF # отключаем BSD-функции
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -73,11 +57,10 @@ install_sdl_linux() {
 #
 #    cmake -S . -B "$BUILD_DIR" \
 #        -DCMAKE_BUILD_TYPE=Release \
-#        -DCMAKE_PREFIX_PATH="/workspace/dist/x86_64-w64-mingw32/SDL" \
-#        -DBUILD_SHARED_LIBS=ON \
+#        -DBUILD_SHARED_LIBS=OFF \
 #        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
 #        -DSDL_STATIC=ON \
-#        -DSDL_SHARED=ON \
+#        -DSDL_SHARED=OFF \
 #        -DSDL_ENABLE_PCH=OFF \
 #        -DSDL_TESTS=OFF \
 #        -DSDL_TEST_LIBRARY=OFF \
@@ -97,11 +80,11 @@ install_sdl_linux() {
 #
 #    cmake -S . -B "$BUILD_DIR" \
 #        -DCMAKE_BUILD_TYPE=Release \
-#        -DCMAKE_PREFIX_PATH="/workspace/dist/x86_64-linux-gnu/SDL" \
-#        -DBUILD_SHARED_LIBS=ON \
+#        -DCMAKE_C_FLAGS="-U__GLIBC_USE_ISOC23 -D_GNU_SOURCE" \
+#        -DBUILD_SHARED_LIBS=OFF \
 #        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
 #        -DSDL_STATIC=ON \
-#        -DSDL_SHARED=ON \
+#        -DSDL_SHARED=OFF \
 #        -DSDL_ENABLE_PCH=OFF \
 #        -DSDL_TESTS=OFF \
 #        -DSDL_TEST_LIBRARY=OFF \
@@ -121,9 +104,9 @@ install_sdl_linux() {
 #
 #    cmake -S . -B "$BUILD_DIR" \
 #        -DCMAKE_BUILD_TYPE=Release \
-#        -DBUILD_SHARED_LIBS=ON \
+#        -DBUILD_SHARED_LIBS=OFF \
 #        -DSDL_STATIC=ON \
-#        -DSDL_SHARED=ON \
+#        -DSDL_SHARED=OFF \
 #        -DSDL_ENABLE_PCH=OFF \
 #        -DSDL_TESTS=OFF \
 #        -DSDL_TEST_LIBRARY=OFF \
@@ -144,9 +127,10 @@ install_sdl_linux() {
 #
 #    cmake -S . -B "$BUILD_DIR" \
 #        -DCMAKE_BUILD_TYPE=Release \
-#        -DBUILD_SHARED_LIBS=ON \
+#        -DCMAKE_C_FLAGS="-U__GLIBC_USE_ISOC23 -D_GNU_SOURCE" \
+#        -DBUILD_SHARED_LIBS=OFF \
 #        -DSDL_STATIC=ON \
-#        -DSDL_SHARED=ON \
+#        -DSDL_SHARED=OFF \
 #        -DSDL_ENABLE_PCH=OFF \
 #        -DSDL_TESTS=OFF \
 #        -DSDL_TEST_LIBRARY=OFF \
