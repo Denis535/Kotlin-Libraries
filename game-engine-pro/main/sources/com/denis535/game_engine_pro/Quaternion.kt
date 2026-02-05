@@ -254,7 +254,7 @@ public data class Quaternion(
             dot = -dot
         }
         val theta = Math.Acos(dot)
-        return theta * Math.RAD_TO_DEG * 2f
+        return theta * 2f * Math.RAD_TO_DEG
     }
 
     public operator fun unaryMinus(): Quaternion = Quaternion(-this.X, -this.Y, -this.Z, this.W)
