@@ -120,7 +120,7 @@ public data class Quaternion(
             // X - right
             // Z - forward
             // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
-            return this.AngleZ(angleZ) * this.AngleX(angleX) * this.AngleY(angleY) // YXZ
+            return this.AngleZ(angleZ).Mul(this.AngleX(angleX)).Mul(this.AngleY(angleY)) // YXZ
         }
 
         public fun Slerp(v0: Quaternion, v1: Quaternion, t: Float): Quaternion {
