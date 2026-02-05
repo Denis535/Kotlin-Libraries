@@ -244,6 +244,15 @@ public data class Quaternion(
             return Vector3(m02, m12, m22)
         }
 
+    public fun Mul(quaternion: Quaternion): Quaternion {
+        return Quaternion(
+            this.W * quaternion.X + this.X * quaternion.W + this.Y * quaternion.Z - this.Z * quaternion.Y,
+            this.W * quaternion.Y + this.Y * quaternion.W + this.Z * quaternion.X - this.X * quaternion.Z,
+            this.W * quaternion.Z + this.Z * quaternion.W + this.X * quaternion.Y - this.Y * quaternion.X,
+            this.W * quaternion.W - this.X * quaternion.X - this.Y * quaternion.Y - this.Z * quaternion.Z,
+        )
+    }
+
     public fun Dot(quaternion: Quaternion): Float {
         return this.X * quaternion.X + this.Y * quaternion.Y + this.Z * quaternion.Z + this.W * quaternion.W
     }
@@ -255,17 +264,6 @@ public data class Quaternion(
         }
         val theta = Math.Acos(dot)
         return theta * 2f * Math.RAD_TO_DEG
-    }
-
-    public operator fun unaryMinus(): Quaternion = Quaternion(-this.X, -this.Y, -this.Z, this.W)
-
-    public operator fun times(quaternion: Quaternion): Quaternion {
-        return Quaternion(
-            this.W * quaternion.X + this.X * quaternion.W + this.Y * quaternion.Z - this.Z * quaternion.Y,
-            this.W * quaternion.Y + this.Y * quaternion.W + this.Z * quaternion.X - this.X * quaternion.Z,
-            this.W * quaternion.Z + this.Z * quaternion.W + this.X * quaternion.Y - this.Y * quaternion.X,
-            this.W * quaternion.W - this.X * quaternion.X - this.Y * quaternion.Y - this.Z * quaternion.Z,
-        )
     }
 
 }
