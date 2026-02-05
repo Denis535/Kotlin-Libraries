@@ -72,8 +72,8 @@ public data class Vector3I(
             return Vector3(this.X / length, this.Y / length, this.Z / length)
         }
 
-    public fun Dot(vector: Vector3I): Float {
-        return this.X.toFloat() * vector.X + this.Y * vector.Y + this.Z * vector.Z
+    public fun Dot(vector: Vector3I): Int {
+        return this.X * vector.X + this.Y * vector.Y + this.Z * vector.Z
     }
 
     public fun Cross(vector: Vector3I): Vector3I {
