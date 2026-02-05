@@ -7,7 +7,7 @@ install_png_windows() {
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/png
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/png
 
-    cmake -S "$PROJ_DIR"  -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_SHARED_LIBS=OFF \
       -DZLIB_INCLUDE_DIR=/workspace/dist/x86_64-w64-mingw32/zlib/include \
@@ -22,7 +22,7 @@ install_png_linux() {
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/png
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/png
 
-    cmake -S "$PROJ_DIR"  -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_SHARED_LIBS=OFF \
       -DZLIB_INCLUDE_DIR=/workspace/dist/x86_64-linux-gnu/zlib/include \
