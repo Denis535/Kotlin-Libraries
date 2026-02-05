@@ -21,6 +21,8 @@ kotlin {
                 this.baseName = "Example"
                 this.entryPoint = "com.denis535.example.Main"
                 this.linkerOpts(
+                    "-Llibs/x86_64-linux-gnu/SDL/lib",
+                    "-lSDL3",
 //                    "-Wl,--verbose",
                     "-Wl,-rpath,\$ORIGIN",
                     "-Wl,--allow-shlib-undefined",
@@ -46,12 +48,22 @@ if (OperationSystem.lowercase().contains("windows")) {
     tasks.register<Exec>("run") {
         val executable = kotlin.mingwX64().binaries.getExecutable("DEBUG")
         this.dependsOn(executable.linkTaskProvider)
+        this.environment(
+            "PATH", listOfNotNull(
+                "../libs/x86_64-w64-mingw32/SDL/lib", System.getenv("PATH")
+            ).joinToString(";")
+        )
         this.commandLine(executable.outputFile)
     }
 } else if (OperationSystem.lowercase().contains("linux")) {
     tasks.register<Exec>("run") {
         val executable = kotlin.linuxX64().binaries.getExecutable("DEBUG")
         this.dependsOn(executable.linkTaskProvider)
+        this.environment(
+            "LD_LIBRARY_PATH", listOfNotNull(
+                "../libs/x86_64-linux-gnu/SDL/lib", System.getenv("LD_LIBRARY_PATH")
+            ).joinToString(":")
+        )
         this.commandLine(executable.outputFile)
     }
 }

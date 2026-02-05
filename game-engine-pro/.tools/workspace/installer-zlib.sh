@@ -3,13 +3,12 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_zlib_windows() {
+    PROJ_DIR=/workspace/libs/zlib
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/zlib
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/zlib
-    cd /workspace/libs/zlib
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR"  -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
       -DBUILD_SHARED_LIBS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
@@ -17,13 +16,12 @@ install_zlib_windows() {
 }
 
 install_zlib_linux() {
+    PROJ_DIR=/workspace/libs/zlib
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/zlib
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/zlib
-    cd /workspace/libs/zlib
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR"  -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
       -DBUILD_SHARED_LIBS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)

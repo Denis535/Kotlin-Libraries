@@ -3,15 +3,15 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_sdl_windows() {
+    PROJ_DIR=/workspace/libs/SDL
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/SDL
-    cd /workspace/libs/SDL
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL_VIDEO=ON \
         -DSDL_AUDIO=ON \
@@ -26,15 +26,15 @@ install_sdl_windows() {
 }
 
 install_sdl_linux() {
+    PROJ_DIR=/workspace/libs/SDL
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL
-    cd /workspace/libs/SDL
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL_VIDEO=ON \
         -DSDL_AUDIO=ON \
@@ -53,15 +53,15 @@ install_sdl_linux() {
 }
 
 install_sdl_image_windows() {
+    PROJ_DIR=/workspace/libs/SDL_image
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_image
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_image
-    cd /workspace/libs/SDL_image
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
         -DSDLIMAGE_VENDORED=ON
@@ -71,15 +71,15 @@ install_sdl_image_windows() {
 }
 
 install_sdl_image_linux() {
+    PROJ_DIR=/workspace/libs/SDL_image
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_image
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL_image
-    cd /workspace/libs/SDL_image
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
         -DSDLIMAGE_VENDORED=ON
@@ -89,15 +89,15 @@ install_sdl_image_linux() {
 }
 
 install_sdl_ttf_windows() {
+    PROJ_DIR=/workspace/libs/SDL_ttf
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_ttf
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_ttf
-    cd /workspace/libs/SDL_ttf
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
         -DSDLIMAGE_VENDORED=ON
@@ -107,15 +107,15 @@ install_sdl_ttf_windows() {
 }
 
 install_sdl_ttf_linux() {
+    PROJ_DIR=/workspace/libs/SDL_ttf
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_ttf
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL_ttf
-    cd /workspace/libs/SDL_ttf
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
         -DSDLIMAGE_VENDORED=ON
@@ -125,15 +125,15 @@ install_sdl_ttf_linux() {
 }
 
 install_sdl_mixer_windows() {
+    PROJ_DIR=/workspace/libs/SDL_mixer
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_mixer
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_mixer
-    cd /workspace/libs/SDL_mixer
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
         -DSDLIMAGE_VENDORED=ON
@@ -143,15 +143,15 @@ install_sdl_mixer_windows() {
 }
 
 install_sdl_mixer_linux() {
+    PROJ_DIR=/workspace/libs/SDL_mixer
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_mixer
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL_mixer
-    cd /workspace/libs/SDL_mixer
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
         -DSDLIMAGE_VENDORED=ON

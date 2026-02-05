@@ -3,13 +3,12 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_freetype_windows() {
+    PROJ_DIR=/workspace/libs/freetype
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/freetype
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/freetype
-    cd /workspace/libs/freetype
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
       -DBUILD_SHARED_LIBS=OFF \
       -DFT_REQUIRE_ZLIB=ON \
       -DFT_REQUIRE_PNG=OFF \
@@ -21,13 +20,12 @@ install_freetype_windows() {
 }
 
 install_freetype_linux() {
+    PROJ_DIR=/workspace/libs/freetype
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/freetype
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/freetype
-    cd /workspace/libs/freetype
 
-    cmake -S . -B "$BUILD_DIR" \
+    cmake -S "$PROJ_DIR" -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
       -DBUILD_SHARED_LIBS=OFF \
       -DFT_REQUIRE_ZLIB=ON \
       -DFT_REQUIRE_PNG=OFF \
