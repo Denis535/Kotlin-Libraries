@@ -8,6 +8,7 @@ docker run \
 dockcross/windows-static-x64 bash -euxc "
 source /workspace/installer-zlib.sh
 source /workspace/installer-png.sh
+source /workspace/installer-ktx.sh
 source /workspace/installer-ogg.sh
 source /workspace/installer-vorbis.sh
 source /workspace/installer-opus.sh
@@ -16,6 +17,7 @@ source /workspace/installer-bgfx.sh
 source /workspace/installer-miniaudio.sh
 install_zlib_windows
 install_png_windows
+install_ktx_windows
 install_ogg_windows
 install_vorbis_windows
 install_opus_windows
@@ -29,6 +31,7 @@ docker run \
 linux-x64 bash -euxc "
 source /workspace/installer-zlib.sh
 source /workspace/installer-png.sh
+source /workspace/installer-ktx.sh
 source /workspace/installer-ogg.sh
 source /workspace/installer-vorbis.sh
 source /workspace/installer-opus.sh
@@ -37,6 +40,7 @@ source /workspace/installer-bgfx.sh
 source /workspace/installer-miniaudio.sh
 install_zlib_linux
 install_png_linux
+install_ktx_linux
 install_ogg_linux
 install_vorbis_linux
 install_opus_linux
