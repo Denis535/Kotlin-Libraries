@@ -18,10 +18,10 @@ download_png() {
   TAG="v1.6.4"
 
   mkdir -p "workspace/libs"
-  rm -rf "workspace/libs/libpng"
+  rm -rf "workspace/libs/png"
 
-  git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "workspace/libs/libpng"
-  git -C "workspace/libs/libpng" -c advice.detachedHead=false checkout "$TAG"
+  git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "workspace/libs/png"
+  git -C "workspace/libs/png" -c advice.detachedHead=false checkout "$TAG"
 }
 
 download_ktx() {
@@ -173,6 +173,6 @@ download_bgfx
 download_miniaudio
 
 download_sdl
-download_sdl_image
-download_sdl_ttf
-download_sdl_mixer
+#download_sdl_image
+#download_sdl_ttf
+#download_sdl_mixer

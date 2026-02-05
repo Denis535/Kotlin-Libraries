@@ -11,9 +11,11 @@ install_freetype_windows() {
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_SHARED_LIBS=OFF \
       -DFT_REQUIRE_ZLIB=ON \
-      -DFT_REQUIRE_PNG=OFF \
+      -DFT_REQUIRE_PNG=ON \
       -DZLIB_INCLUDE_DIR=/workspace/dist/x86_64-w64-mingw32/zlib/include \
-      -DZLIB_LIBRARY=/workspace/dist/x86_64-w64-mingw32/zlib/lib/libz.dll.a
+      -DZLIB_LIBRARY=/workspace/dist/x86_64-w64-mingw32/zlib/lib/libz.dll.a \
+      -DPNG_PNG_INCLUDE_DIR=/workspace/dist/x86_64-w64-mingw32/png/include \
+      -DPNG_LIBRARY=/workspace/dist/x86_64-w64-mingw32/png/lib/libpng.dll.a
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -28,9 +30,11 @@ install_freetype_linux() {
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_SHARED_LIBS=OFF \
       -DFT_REQUIRE_ZLIB=ON \
-      -DFT_REQUIRE_PNG=OFF \
+      -DFT_REQUIRE_PNG=ON \
       -DZLIB_INCLUDE_DIR=/workspace/dist/x86_64-linux-gnu/zlib/include \
-      -DZLIB_LIBRARY=/workspace/dist/x86_64-linux-gnu/zlib/lib/libz.so
+      -DZLIB_LIBRARY=/workspace/dist/x86_64-linux-gnu/zlib/lib/libz.so \
+      -DPNG_PNG_INCLUDE_DIR=/workspace/dist/x86_64-linux-gnu/png/include \
+      -DPNG_LIBRARY=/workspace/dist/x86_64-linux-gnu/png/lib/libpng.so
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
