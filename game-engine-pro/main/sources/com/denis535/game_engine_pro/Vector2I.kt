@@ -65,8 +65,8 @@ public data class Vector2I(
             return Vector2(this.X / length, this.Y / length)
         }
 
-    public fun Dot(vector: Vector2I): Float {
-        return this.X.toFloat() * vector.X + this.Y * vector.Y
+    public fun Dot(vector: Vector2I): Int {
+        return this.X * vector.X + this.Y * vector.Y
     }
 
     public operator fun unaryMinus(): Vector2I = Vector2I(-this.X, -this.Y)
