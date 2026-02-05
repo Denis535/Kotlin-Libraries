@@ -199,14 +199,18 @@ public data class Matrix4x4(
     }
 
     public fun MultiplyPoint(point: Vector3): Vector3 {
-        val x = this.m00 * point.X + this.m01 * point.Y + this.m02 * point.Z + this.m03
-        val y = this.m10 * point.X + this.m11 * point.Y + this.m12 * point.Z + this.m13
-        val z = this.m20 * point.X + this.m21 * point.Y + this.m22 * point.Z + this.m23
-        val w = this.m30 * point.X + this.m31 * point.Y + this.m32 * point.Z + this.m33
+        return this.MultiplyPoint(point.X, point.Y, point.Z)
+    }
+
+    public fun MultiplyPoint(x: Float, y: Float, z: Float): Vector3 {
+        val rx = this.m00 * x + this.m01 * y + this.m02 * z + this.m03
+        val ry = this.m10 * x + this.m11 * y + this.m12 * z + this.m13
+        val rz = this.m20 * x + this.m21 * y + this.m22 * z + this.m23
+        val rw = this.m30 * x + this.m31 * y + this.m32 * z + this.m33
         return Vector3(
-            x / w,
-            y / w,
-            z / w,
+            rx / rw,
+            ry / rw,
+            rz / rw,
         )
     }
 
