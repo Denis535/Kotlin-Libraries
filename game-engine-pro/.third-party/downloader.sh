@@ -46,17 +46,6 @@ download_ogg() {
   git -C "workspace/libs/ogg" -c advice.detachedHead=false checkout "$TAG"
 }
 
-download_vorbis() {
-  REPO="https://github.com/xiph/vorbis.git"
-  TAG="v1.3.7"
-
-  mkdir -p "workspace/libs"
-  rm -rf "workspace/libs/vorbis"
-
-  git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "workspace/libs/vorbis"
-  git -C "workspace/libs/vorbis" -c advice.detachedHead=false checkout "$TAG"
-}
-
 download_opus() {
   REPO="https://github.com/xiph/opus.git"
   TAG="v1.6.1"
@@ -176,7 +165,6 @@ download_zlib
 download_png
 download_ktx
 download_ogg
-download_vorbis
 download_opus
 download_freetype
 download_sokol
