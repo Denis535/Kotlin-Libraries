@@ -62,18 +62,18 @@ public data class Quaternion(
         }
 
         public fun Direction(axisZ: Vector3, axisY: Vector3 = Vector3.AxisY): Quaternion {
-            // Y - top
             // X - right
+            // Y - top
             // Z - forward
-            val axisX = axisY.Cross(axisZ)
-            val axisY = axisZ.Cross(axisX)
+            val axisX = axisY.Cross(axisZ).Normalized
+            val axisY = axisZ.Cross(axisX).Normalized
             return this.Axes(axisX, axisY, axisZ)
         }
 
         public fun AngleX(angleX: Float): Quaternion {
             // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L352
-            val sinX = Math.Sin(angleX * Math.DEG_TO_RAD / 2f)
-            val cosX = Math.Cos(angleX * Math.DEG_TO_RAD / 2f)
+            val sinX = Math.Sin(angleX / 2f * Math.DEG_TO_RAD)
+            val cosX = Math.Cos(angleX / 2f * Math.DEG_TO_RAD)
             return Quaternion(
                 sinX,
                 0f,
@@ -83,8 +83,8 @@ public data class Quaternion(
         }
 
         public fun AngleY(angleY: Float): Quaternion {
-            val sinY = Math.Sin(angleY * Math.DEG_TO_RAD / 2f)
-            val cosY = Math.Cos(angleY * Math.DEG_TO_RAD / 2f)
+            val sinY = Math.Sin(angleY / 2f * Math.DEG_TO_RAD)
+            val cosY = Math.Cos(angleY / 2f * Math.DEG_TO_RAD)
             return Quaternion(
                 0f,
                 sinY,
@@ -94,8 +94,8 @@ public data class Quaternion(
         }
 
         public fun AngleZ(angleZ: Float): Quaternion {
-            val sinZ = Math.Sin(angleZ * Math.DEG_TO_RAD / 2f)
-            val cosZ = Math.Cos(angleZ * Math.DEG_TO_RAD / 2f)
+            val sinZ = Math.Sin(angleZ / 2f * Math.DEG_TO_RAD)
+            val cosZ = Math.Cos(angleZ / 2f * Math.DEG_TO_RAD)
             return Quaternion(
                 0f,
                 0f,
@@ -105,8 +105,8 @@ public data class Quaternion(
         }
 
         public fun AngleAxis(angle: Float, axis: Vector3): Quaternion {
-            val sin = Math.Sin(angle * Math.DEG_TO_RAD / 2f)
-            val cos = Math.Cos(angle * Math.DEG_TO_RAD / 2f)
+            val sin = Math.Sin(angle / 2f * Math.DEG_TO_RAD)
+            val cos = Math.Cos(angle / 2f * Math.DEG_TO_RAD)
             return Quaternion(
                 axis.X * sin,
                 axis.Y * sin,
@@ -186,13 +186,13 @@ public data class Quaternion(
 
     public val AxisX: Vector3
         get() {
-            val xx = this.X * this.X * 2f
+//            val xx = this.X * this.X * 2f
             val xy = this.X * this.Y * 2f
             val xz = this.X * this.Z * 2f
-            val xw = this.X * this.W * 2f
+//            val xw = this.X * this.W * 2f
 
             val yy = this.Y * this.Y * 2f
-            val yz = this.Y * this.Z * 2f
+//            val yz = this.Y * this.Z * 2f
             val yw = this.Y * this.W * 2f
 
             val zz = this.Z * this.Z * 2f
@@ -208,12 +208,12 @@ public data class Quaternion(
         get() {
             val xx = this.X * this.X * 2f
             val xy = this.X * this.Y * 2f
-            val xz = this.X * this.Z * 2f
+//            val xz = this.X * this.Z * 2f
             val xw = this.X * this.W * 2f
 
-            val yy = this.Y * this.Y * 2f
+//            val yy = this.Y * this.Y * 2f
             val yz = this.Y * this.Z * 2f
-            val yw = this.Y * this.W * 2f
+//            val yw = this.Y * this.W * 2f
 
             val zz = this.Z * this.Z * 2f
             val zw = this.Z * this.W * 2f
@@ -227,7 +227,7 @@ public data class Quaternion(
     public val AxisZ: Vector3
         get() {
             val xx = this.X * this.X * 2f
-            val xy = this.X * this.Y * 2f
+//            val xy = this.X * this.Y * 2f
             val xz = this.X * this.Z * 2f
             val xw = this.X * this.W * 2f
 
@@ -235,8 +235,8 @@ public data class Quaternion(
             val yz = this.Y * this.Z * 2f
             val yw = this.Y * this.W * 2f
 
-            val zz = this.Z * this.Z * 2f
-            val zw = this.Z * this.W * 2f
+//            val zz = this.Z * this.Z * 2f
+//            val zw = this.Z * this.W * 2f
 
             val m02 = xz + yw
             val m12 = yz - xw
