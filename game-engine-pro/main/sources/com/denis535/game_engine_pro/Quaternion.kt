@@ -116,11 +116,13 @@ public data class Quaternion(
         }
 
         public fun Angles(angleX: Float, angleY: Float, angleZ: Float): Quaternion {
+            // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
             // Y - up
             // X - right
             // Z - forward
-            // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
-            return this.AngleAxisZ(angleZ).Mul(this.AngleAxisX(angleX)).Mul(this.AngleAxisY(angleY)) // YXZ
+            return this.AngleAxisZ(angleZ) // rotate around forward (roll) axis
+                .Mul(this.AngleAxisX(angleX)) // rotate around right (pitch) axis
+                .Mul(this.AngleAxisY(angleY)) // rotate around up (yaw) axis
         }
 
         public fun Slerp(v0: Quaternion, v1: Quaternion, t: Float): Quaternion {
@@ -245,6 +247,7 @@ public data class Quaternion(
         }
 
     public fun Mul(quaternion: Quaternion): Quaternion {
+        // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L630
         return Quaternion(
             this.W * quaternion.X + this.X * quaternion.W + this.Y * quaternion.Z - this.Z * quaternion.Y,
             this.W * quaternion.Y + this.Y * quaternion.W + this.Z * quaternion.X - this.X * quaternion.Z,
