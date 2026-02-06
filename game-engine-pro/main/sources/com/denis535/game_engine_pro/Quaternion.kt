@@ -70,40 +70,6 @@ public data class Quaternion(
             return this.Axes(axisX, axisY, axisZ)
         }
 
-        public fun AngleX(angleX: Float): Quaternion {
-            // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L352
-            val sinX = Math.Sin(angleX / 2f * Math.DEG_TO_RAD)
-            val cosX = Math.Cos(angleX / 2f * Math.DEG_TO_RAD)
-            return Quaternion(
-                sinX,
-                0f,
-                0f,
-                cosX,
-            )
-        }
-
-        public fun AngleY(angleY: Float): Quaternion {
-            val sinY = Math.Sin(angleY / 2f * Math.DEG_TO_RAD)
-            val cosY = Math.Cos(angleY / 2f * Math.DEG_TO_RAD)
-            return Quaternion(
-                0f,
-                sinY,
-                0f,
-                cosY,
-            )
-        }
-
-        public fun AngleZ(angleZ: Float): Quaternion {
-            val sinZ = Math.Sin(angleZ / 2f * Math.DEG_TO_RAD)
-            val cosZ = Math.Cos(angleZ / 2f * Math.DEG_TO_RAD)
-            return Quaternion(
-                0f,
-                0f,
-                sinZ,
-                cosZ,
-            )
-        }
-
         public fun AngleAxis(angle: Float, axis: Vector3): Quaternion {
             val sin = Math.Sin(angle / 2f * Math.DEG_TO_RAD)
             val cos = Math.Cos(angle / 2f * Math.DEG_TO_RAD)
@@ -115,12 +81,46 @@ public data class Quaternion(
             )
         }
 
+        public fun AngleAxisX(angleX: Float): Quaternion {
+            // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L352
+            val sinX = Math.Sin(angleX / 2f * Math.DEG_TO_RAD)
+            val cosX = Math.Cos(angleX / 2f * Math.DEG_TO_RAD)
+            return Quaternion(
+                sinX,
+                0f,
+                0f,
+                cosX,
+            )
+        }
+
+        public fun AngleAxisY(angleY: Float): Quaternion {
+            val sinY = Math.Sin(angleY / 2f * Math.DEG_TO_RAD)
+            val cosY = Math.Cos(angleY / 2f * Math.DEG_TO_RAD)
+            return Quaternion(
+                0f,
+                sinY,
+                0f,
+                cosY,
+            )
+        }
+
+        public fun AngleAxisZ(angleZ: Float): Quaternion {
+            val sinZ = Math.Sin(angleZ / 2f * Math.DEG_TO_RAD)
+            val cosZ = Math.Cos(angleZ / 2f * Math.DEG_TO_RAD)
+            return Quaternion(
+                0f,
+                0f,
+                sinZ,
+                cosZ,
+            )
+        }
+
         public fun Angles(angleX: Float, angleY: Float, angleZ: Float): Quaternion {
             // Y - up
             // X - right
             // Z - forward
             // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
-            return this.AngleZ(angleZ).Mul(this.AngleX(angleX)).Mul(this.AngleY(angleY)) // YXZ
+            return this.AngleAxisZ(angleZ).Mul(this.AngleAxisX(angleX)).Mul(this.AngleAxisY(angleY)) // YXZ
         }
 
         public fun Slerp(v0: Quaternion, v1: Quaternion, t: Float): Quaternion {

@@ -13,6 +13,7 @@ source /workspace/installer-ogg.sh
 source /workspace/installer-vorbis.sh
 source /workspace/installer-opus.sh
 source /workspace/installer-freetype.sh
+
 install_zlib_windows
 install_png_windows
 install_ktx_windows
@@ -32,6 +33,7 @@ source /workspace/installer-ogg.sh
 source /workspace/installer-vorbis.sh
 source /workspace/installer-opus.sh
 source /workspace/installer-freetype.sh
+
 install_zlib_linux
 install_png_linux
 install_ktx_linux
@@ -47,12 +49,14 @@ dockcross/windows-shared-x64 bash -euxc "
 source /workspace/installer-sdl.sh
 source /workspace/installer-sokol.sh
 source /workspace/installer-miniaudio.sh
-#install_sokol_windows
-#install_miniaudio_windows
+
 install_sdl_windows
 #install_sdl_image_windows
 #install_sdl_ttf_windows
 #install_sdl_mixer_windows
+
+#install_sokol_windows
+#install_miniaudio_windows
 "
 
 docker run \
@@ -61,10 +65,12 @@ linux-x64 bash -euxc "
 source /workspace/installer-sdl.sh
 source /workspace/installer-sokol.sh
 source /workspace/installer-miniaudio.sh
-#install_sokol_linux
-#install_miniaudio_linux
+
 install_sdl_linux
 #install_sdl_image_linux
 #install_sdl_ttf_linux
 #install_sdl_mixer_linux
+
+#install_sokol_linux
+#install_miniaudio_linux
 "

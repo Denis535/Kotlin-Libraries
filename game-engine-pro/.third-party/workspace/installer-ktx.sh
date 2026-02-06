@@ -9,7 +9,8 @@ install_ktx_windows() {
 
     cmake -S "$PROJ_DIR"  -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_SHARED_LIBS=OFF
+      -DBUILD_SHARED_LIBS=OFF \
+      -DKTX_FEATURE_TOOLS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -22,7 +23,8 @@ install_ktx_linux() {
 
     cmake -S "$PROJ_DIR"  -B "$BUILD_DIR" \
       -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_SHARED_LIBS=OFF
+      -DBUILD_SHARED_LIBS=OFF \
+      -DKTX_FEATURE_TOOLS=OFF
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
