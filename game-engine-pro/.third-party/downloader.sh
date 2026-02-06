@@ -79,20 +79,30 @@ download_freetype() {
     git -C "workspace/libs/freetype" -c advice.detachedHead=false checkout "$TAG"
 }
 
-download_bgfx() {
+#download_bgfx() {
+#    mkdir -p "workspace/libs"
+#
+#    rm -rf "workspace/libs/bx"
+#    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bx.git "workspace/libs/bx"
+#    git -C "workspace/libs/bx" -c advice.detachedHead=false checkout master
+#
+#    rm -rf "workspace/libs/bimg"
+#    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bimg.git "workspace/libs/bimg"
+#    git -C "workspace/libs/bimg" -c advice.detachedHead=false checkout master
+#
+#    rm -rf "workspace/libs/bgfx"
+#    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bgfx.git "workspace/libs/bgfx"
+#    git -C "workspace/libs/bgfx" -c advice.detachedHead=false checkout master
+#}
+
+download_sokol() {
+    REPO="https://github.com/floooh/sokol.git"
+
     mkdir -p "workspace/libs"
+    rm -rf "workspace/libs/sokol"
 
-    rm -rf "workspace/libs/bx"
-    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bx.git "workspace/libs/bx"
-    git -C "workspace/libs/bx" -c advice.detachedHead=false checkout master
-
-    rm -rf "workspace/libs/bimg"
-    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bimg.git "workspace/libs/bimg"
-    git -C "workspace/libs/bimg" -c advice.detachedHead=false checkout master
-
-    rm -rf "workspace/libs/bgfx"
-    git -c advice.detachedHead=false clone --depth 1 https://github.com/bkaradzic/bgfx.git "workspace/libs/bgfx"
-    git -C "workspace/libs/bgfx" -c advice.detachedHead=false checkout master
+    git -c advice.detachedHead=false clone --depth 1 "$REPO" "workspace/libs/sokol"
+    git -C "workspace/libs/sokol" -c advice.detachedHead=false checkout master
 }
 
 download_miniaudio() {
@@ -169,7 +179,7 @@ download_ogg
 download_vorbis
 download_opus
 download_freetype
-download_bgfx
+download_sokol
 download_miniaudio
 
 download_sdl

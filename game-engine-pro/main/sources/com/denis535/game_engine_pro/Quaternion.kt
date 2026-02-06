@@ -61,12 +61,12 @@ public data class Quaternion(
             }
         }
 
-        public fun Direction(axisZ: Vector3, axisY: Vector3 = Vector3.AxisY): Quaternion {
+        public fun AxesYZ(axisY: Vector3, axisZ: Vector3): Quaternion {
             // X - right
             // Y - top
             // Z - forward
             val axisX = axisY.Cross(axisZ).Normalized
-            val axisY = axisZ.Cross(axisX).Normalized
+            val axisY = axisZ.Cross(axisX)
             return this.Axes(axisX, axisY, axisZ)
         }
 
