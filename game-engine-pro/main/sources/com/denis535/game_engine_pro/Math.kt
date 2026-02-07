@@ -8,7 +8,7 @@ public object Math {
     public const val DEG_TO_RAD: Float = (kotlin.math.PI / 180.0).toFloat()
     public const val RAD_TO_DEG: Float = (180.0 / kotlin.math.PI).toFloat()
 
-    public fun Truncate(value: Float): Float {
+    public fun Trunc(value: Float): Float {
         return truncate(value)
     }
 
@@ -22,6 +22,10 @@ public object Math {
 
     public fun Round(value: Float): Float {
         return round(value)
+    }
+
+    public fun Frac(value: Float): Float {
+        return value - floor(value)
     }
 
     public fun Sign(value: Float): Float {

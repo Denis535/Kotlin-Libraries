@@ -61,9 +61,9 @@ public data class Vector3I(
             return Math.Sqrt(this.X.toFloat() * this.X + this.Y * this.Y + this.Z * this.Z)
         }
 
-    public val LengthSquared: Float
+    public val LengthSquared: Int
         get() {
-            return this.X.toFloat() * this.X + this.Y * this.Y + this.Z * this.Z
+            return this.X * this.X + this.Y * this.Y + this.Z * this.Z
         }
 
     public val Normalized: Vector3
@@ -86,10 +86,14 @@ public data class Vector3I(
 
     public operator fun unaryMinus(): Vector3I = Vector3I(-this.X, -this.Y, -this.Z)
 
+    public operator fun plus(vector: Vector3): Vector3 = Vector3(this.X + vector.X, this.Y + vector.Y, this.Z + vector.Z)
     public operator fun plus(vector: Vector3I): Vector3I = Vector3I(this.X + vector.X, this.Y + vector.Y, this.Z + vector.Z)
+    public operator fun minus(vector: Vector3): Vector3 = Vector3(this.X - vector.X, this.Y - vector.Y, this.Z - vector.Z)
     public operator fun minus(vector: Vector3I): Vector3I = Vector3I(this.X - vector.X, this.Y - vector.Y, this.Z - vector.Z)
 
     public operator fun times(scalar: Float): Vector3 = Vector3(this.X * scalar, this.Y * scalar, this.Z * scalar)
+    public operator fun times(scalar: Int): Vector3I = Vector3I(this.X * scalar, this.Y * scalar, this.Z * scalar)
     public operator fun div(scalar: Float): Vector3 = Vector3(this.X / scalar, this.Y / scalar, this.Z / scalar)
+    public operator fun div(scalar: Int): Vector3I = Vector3I(this.X / scalar, this.Y / scalar, this.Z / scalar)
 
 }

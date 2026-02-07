@@ -54,9 +54,9 @@ public data class Vector2I(
             return Math.Sqrt(this.X.toFloat() * this.X + this.Y * this.Y)
         }
 
-    public val LengthSquared: Float
+    public val LengthSquared: Int
         get() {
-            return this.X.toFloat() * this.X + this.Y * this.Y
+            return this.X * this.X + this.Y * this.Y
         }
 
     public val Normalized: Vector2
@@ -71,10 +71,14 @@ public data class Vector2I(
 
     public operator fun unaryMinus(): Vector2I = Vector2I(-this.X, -this.Y)
 
+    public operator fun plus(vector: Vector2): Vector2 = Vector2(this.X + vector.X, this.Y + vector.Y)
     public operator fun plus(vector: Vector2I): Vector2I = Vector2I(this.X + vector.X, this.Y + vector.Y)
+    public operator fun minus(vector: Vector2): Vector2 = Vector2(this.X - vector.X, this.Y - vector.Y)
     public operator fun minus(vector: Vector2I): Vector2I = Vector2I(this.X - vector.X, this.Y - vector.Y)
 
     public operator fun times(scalar: Float): Vector2 = Vector2(this.X * scalar, this.Y * scalar)
+    public operator fun times(scalar: Int): Vector2I = Vector2I(this.X * scalar, this.Y * scalar)
     public operator fun div(scalar: Float): Vector2 = Vector2(this.X / scalar, this.Y / scalar)
+    public operator fun div(scalar: Int): Vector2I = Vector2I(this.X / scalar, this.Y / scalar)
 
 }
