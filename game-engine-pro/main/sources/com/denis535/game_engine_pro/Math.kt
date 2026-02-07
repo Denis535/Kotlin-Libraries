@@ -8,8 +8,10 @@ public object Math {
     public const val DEG_TO_RAD: Float = this.PI / 180f
     public const val RAD_TO_DEG: Float = 180f / this.PI
 
-    public fun Sign(value: Float): Float {
-        return sign(value)
+    public fun Sign(value: Float): Int {
+        if (value < 0f) return -1
+        if (value > 0f) return 1
+        return 0f
     }
 
     public fun Sign(value: Int): Int {
