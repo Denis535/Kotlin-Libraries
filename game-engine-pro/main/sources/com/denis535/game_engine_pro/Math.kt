@@ -24,9 +24,9 @@ public object Math {
         return round(value)
     }
 
-    public fun Sign(value: Float): Int {
-        if (value < 0f) return -1
-        if (value > 0f) return 1
+    public fun Sign(value: Float): Float {
+        if (value < 0f) return -1f
+        if (value > 0f) return 1f
         return 0f
     }
 
