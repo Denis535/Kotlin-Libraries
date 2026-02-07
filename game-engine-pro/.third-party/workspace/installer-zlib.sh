@@ -3,7 +3,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_zlib_windows() {
-    PROJ_DIR=/workspace/libs/zlib
+    PROJ_DIR=/workspace/projects/zlib
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/zlib
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/zlib
 
@@ -16,7 +16,7 @@ install_zlib_windows() {
 }
 
 install_zlib_linux() {
-    PROJ_DIR=/workspace/libs/zlib
+    PROJ_DIR=/workspace/projects/zlib
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/zlib
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/zlib
 

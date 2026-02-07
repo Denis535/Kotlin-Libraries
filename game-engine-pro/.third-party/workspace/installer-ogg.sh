@@ -3,7 +3,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_ogg_windows() {
-    PROJ_DIR=/workspace/libs/ogg
+    PROJ_DIR=/workspace/projects/ogg
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/ogg
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/ogg
 
@@ -16,7 +16,7 @@ install_ogg_windows() {
 }
 
 install_ogg_linux() {
-    PROJ_DIR=/workspace/libs/ogg
+    PROJ_DIR=/workspace/projects/ogg
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/ogg
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/ogg
 

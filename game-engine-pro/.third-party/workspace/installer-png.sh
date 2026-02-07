@@ -3,7 +3,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_png_windows() {
-    PROJ_DIR=/workspace/libs/png
+    PROJ_DIR=/workspace/projects/png
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/png
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/png
 
@@ -18,7 +18,7 @@ install_png_windows() {
 }
 
 install_png_linux() {
-    PROJ_DIR=/workspace/libs/png
+    PROJ_DIR=/workspace/projects/png
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/png
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/png
 

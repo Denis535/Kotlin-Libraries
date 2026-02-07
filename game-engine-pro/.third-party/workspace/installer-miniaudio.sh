@@ -3,7 +3,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_miniaudio_windows() {
-    PROJ_DIR=/workspace/libs/miniaudio
+    PROJ_DIR=/workspace/projects/miniaudio
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/miniaudio
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/miniaudio
 
@@ -16,7 +16,7 @@ install_miniaudio_windows() {
 }
 
 install_miniaudio_linux() {
-    PROJ_DIR=/workspace/libs/miniaudio
+    PROJ_DIR=/workspace/projects/miniaudio
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/miniaudio
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/miniaudio
 

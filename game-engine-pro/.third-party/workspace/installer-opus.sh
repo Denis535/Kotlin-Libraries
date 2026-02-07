@@ -3,7 +3,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_opus_windows() {
-    PROJ_DIR=/workspace/libs/opus
+    PROJ_DIR=/workspace/projects/opus
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/opus
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/opus
 
@@ -16,7 +16,7 @@ install_opus_windows() {
 }
 
 install_opus_linux() {
-    PROJ_DIR=/workspace/libs/opus
+    PROJ_DIR=/workspace/projects/opus
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/opus
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/opus
 

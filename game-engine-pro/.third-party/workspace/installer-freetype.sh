@@ -3,7 +3,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_freetype_windows() {
-    PROJ_DIR=/workspace/libs/freetype
+    PROJ_DIR=/workspace/projects/freetype
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/freetype
     INSTALL_DIR=/workspace/dist/x86_64-w64-mingw32/freetype
 
@@ -22,7 +22,7 @@ install_freetype_windows() {
 }
 
 install_freetype_linux() {
-    PROJ_DIR=/workspace/libs/freetype
+    PROJ_DIR=/workspace/projects/freetype
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/freetype
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/freetype
 
