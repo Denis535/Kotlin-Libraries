@@ -8,6 +8,22 @@ public object Math {
     public const val DEG_TO_RAD: Float = this.PI / 180f
     public const val RAD_TO_DEG: Float = 180f / this.PI
 
+    public fun Truncate(value: Float): Float {
+        return truncate(value)
+    }
+
+    public fun Floor(value: Float): Float {
+        return floor(value)
+    }
+
+    public fun Ceil(value: Float): Float {
+        return ceil(value)
+    }
+
+    public fun Round(value: Float): Float {
+        return round(value)
+    }
+
     public fun Sign(value: Float): Int {
         if (value < 0f) return -1
         if (value > 0f) return 1
@@ -26,22 +42,6 @@ public object Math {
 
     public fun Abs(value: Int): Int {
         return abs(value)
-    }
-
-    public fun Truncate(value: Float): Float {
-        return truncate(value)
-    }
-
-    public fun Floor(value: Float): Float {
-        return floor(value)
-    }
-
-    public fun Ceil(value: Float): Float {
-        return ceil(value)
-    }
-
-    public fun Round(value: Float): Float {
-        return round(value)
     }
 
     public fun Sin(value: Float): Float {
