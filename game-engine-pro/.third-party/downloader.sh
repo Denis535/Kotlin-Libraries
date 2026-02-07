@@ -38,6 +38,18 @@ download_ktx() {
   git -C "$DIR" -c advice.detachedHead=false checkout "$TAG"
 }
 
+download_freetype() {
+  DIR="workspace/projects/freetype"
+  REPO="https://github.com/freetype/freetype.git"
+  TAG="VER-2-14-1"
+
+  rm -rf "$DIR"
+  mkdir -p "$DIR"
+
+  git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "$DIR"
+  git -C "$DIR" -c advice.detachedHead=false checkout "$TAG"
+}
+
 download_ogg() {
   DIR="workspace/projects/ogg"
   REPO="https://github.com/xiph/ogg.git"
@@ -54,18 +66,6 @@ download_opus() {
   DIR="workspace/projects/opus"
   REPO="https://github.com/xiph/opus.git"
   TAG="v1.6.1"
-
-  rm -rf "$DIR"
-  mkdir -p "$DIR"
-
-  git -c advice.detachedHead=false clone --branch "$TAG" --depth 1 "$REPO" "$DIR"
-  git -C "$DIR" -c advice.detachedHead=false checkout "$TAG"
-}
-
-download_freetype() {
-  DIR="workspace/projects/freetype"
-  REPO="https://github.com/freetype/freetype.git"
-  TAG="VER-2-14-1"
 
   rm -rf "$DIR"
   mkdir -p "$DIR"
@@ -168,9 +168,10 @@ download_sdl_mixer() {
 download_zlib
 download_png
 download_ktx
+download_freetype
 download_ogg
 download_opus
-download_freetype
+
 download_sokol
 download_miniaudio
 

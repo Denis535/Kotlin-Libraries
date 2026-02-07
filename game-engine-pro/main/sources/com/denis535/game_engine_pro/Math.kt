@@ -28,6 +28,10 @@ public object Math {
         return value - floor(value)
     }
 
+    public fun FracFriendly(value: Float): Float {
+        return abs(value - truncate(value))
+    }
+
     public fun Sign(value: Float): Float {
         if (value < 0f) return -1f
         if (value > 0f) return 1f
