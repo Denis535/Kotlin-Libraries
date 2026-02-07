@@ -63,7 +63,8 @@ install_sdl_image_windows() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDLIMAGE_VENDORED=ON
+        -DSDLIMAGE_VENDORED=ON \
+        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3"
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -80,7 +81,8 @@ install_sdl_image_linux() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDLIMAGE_VENDORED=ON
+        -DSDLIMAGE_VENDORED=ON \
+        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3"
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -97,7 +99,8 @@ install_sdl_ttf_windows() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDLTTF_VENDORED=ON
+        -DSDLTTF_VENDORED=ON \
+        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3"
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -114,7 +117,8 @@ install_sdl_ttf_linux() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDLTTF_VENDORED=ON
+        -DSDLTTF_VENDORED=ON \
+       -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3"
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
