@@ -14,14 +14,6 @@ public data class Vector3I(
         public val AxisY: Vector3I = Vector3I(0, 1, 0)
         public val AxisZ: Vector3I = Vector3I(0, 0, 1)
 
-        public fun Lerp(v0: Vector3I, v1: Vector3I, t: Float): Vector3 {
-            return Vector3(
-                v0.X + (v1.X - v0.X) * t,
-                v0.Y + (v1.Y - v0.Y) * t,
-                v0.Z + (v1.Z - v0.Z) * t,
-            )
-        }
-
         public fun Min(v0: Vector3I, v1: Vector3I): Vector3I {
             return Vector3I(
                 Math.Min(v0.X, v1.X),
@@ -35,6 +27,14 @@ public data class Vector3I(
                 Math.Max(v0.X, v1.X),
                 Math.Max(v0.Y, v1.Y),
                 Math.Max(v0.Z, v1.Z),
+            )
+        }
+
+        public fun Lerp(v0: Vector3I, v1: Vector3I, t: Float): Vector3 {
+            return Vector3(
+                v0.X + (v1.X - v0.X) * t,
+                v0.Y + (v1.Y - v0.Y) * t,
+                v0.Z + (v1.Z - v0.Z) * t,
             )
         }
 

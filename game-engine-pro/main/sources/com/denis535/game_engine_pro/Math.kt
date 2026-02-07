@@ -5,8 +5,8 @@ import kotlin.math.*
 public object Math {
 
     public const val PI: Float = kotlin.math.PI.toFloat()
-    public const val DEG_TO_RAD: Float = this.PI / 180f
-    public const val RAD_TO_DEG: Float = 180f / this.PI
+    public const val DEG_TO_RAD: Float = (kotlin.math.PI / 180.0).toFloat()
+    public const val RAD_TO_DEG: Float = (180.0 / kotlin.math.PI).toFloat()
 
     public fun Truncate(value: Float): Float {
         return truncate(value)
@@ -44,34 +44,6 @@ public object Math {
         return abs(value)
     }
 
-    public fun Sin(value: Float): Float {
-        return sin(value)
-    }
-
-    public fun Cos(value: Float): Float {
-        return cos(value)
-    }
-
-    public fun Tan(value: Float): Float {
-        return tan(value)
-    }
-
-    public fun Asin(value: Float): Float {
-        return asin(value)
-    }
-
-    public fun Acos(value: Float): Float {
-        return acos(value)
-    }
-
-    public fun Atan(value: Float): Float {
-        return atan(value)
-    }
-
-    public fun Atan2(y: Float, x: Float): Float {
-        return atan2(y, x)
-    }
-
     public fun Pow(value: Float, factor: Float): Float {
         return value.pow(factor)
     }
@@ -80,12 +52,32 @@ public object Math {
         return sqrt(value)
     }
 
-    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
-        return v0 + (v1 - v0) * t
+    public fun Cos(value: Float): Float {
+        return cos(value)
     }
 
-    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
-        return (value - v0) / (v1 - v0)
+    public fun Sin(value: Float): Float {
+        return sin(value)
+    }
+
+    public fun Tan(value: Float): Float {
+        return tan(value)
+    }
+
+    public fun Acos(value: Float): Float {
+        return acos(value)
+    }
+
+    public fun Asin(value: Float): Float {
+        return asin(value)
+    }
+
+    public fun Atan(value: Float): Float {
+        return atan(value)
+    }
+
+    public fun Atan2(y: Float, x: Float): Float {
+        return atan2(y, x)
     }
 
     public fun Min(v0: Float, v1: Float): Float {
@@ -198,6 +190,14 @@ public object Math {
 
     public fun Max(v0: Int, v1: Int, v2: Int, v3: Int, v4: Int, v5: Int, v6: Int, v7: Int): Int {
         return this.Max(this.Max(v0, v1, v2, v3, v4, v5, v6), v7)
+    }
+
+    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
+        return v0 + (v1 - v0) * t
+    }
+
+    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
+        return (value - v0) / (v1 - v0)
     }
 
     public fun Clamp(value: Float, min: Float, max: Float): Float {

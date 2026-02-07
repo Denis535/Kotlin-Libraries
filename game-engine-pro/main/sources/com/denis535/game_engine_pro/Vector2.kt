@@ -12,13 +12,6 @@ public data class Vector2(
         public val AxisX: Vector2 = Vector2(1f, 0f)
         public val AxisY: Vector2 = Vector2(0f, 1f)
 
-        public fun Lerp(v0: Vector2, v1: Vector2, t: Float): Vector2 {
-            return Vector2(
-                v0.X + (v1.X - v0.X) * t,
-                v0.Y + (v1.Y - v0.Y) * t,
-            )
-        }
-
         public fun Min(v0: Vector2, v1: Vector2): Vector2 {
             return Vector2(
                 Math.Min(v0.X, v1.X),
@@ -30,6 +23,13 @@ public data class Vector2(
             return Vector2(
                 Math.Max(v0.X, v1.X),
                 Math.Max(v0.Y, v1.Y),
+            )
+        }
+
+        public fun Lerp(v0: Vector2, v1: Vector2, t: Float): Vector2 {
+            return Vector2(
+                v0.X + (v1.X - v0.X) * t,
+                v0.Y + (v1.Y - v0.Y) * t,
             )
         }
 
