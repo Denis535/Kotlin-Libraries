@@ -1,0 +1,16 @@
+# Opus codec reference implementation pkg-config file
+
+prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.static
+exec_prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.static
+libdir=/usr/src/mxe/usr/x86_64-w64-mingw32.static/lib
+includedir=/usr/src/mxe/usr/x86_64-w64-mingw32.static/include
+
+Name: Opus
+Description: Opus IETF audio codec ( build)
+URL: https://opus-codec.org/
+Version: 1.6.1
+Requires:
+Conflicts:
+Libs: -L/usr/src/mxe/usr/x86_64-w64-mingw32.static/lib -lopus
+Libs.private: -lm
+Cflags: -I/usr/src/mxe/usr/x86_64-w64-mingw32.static/include/opus
