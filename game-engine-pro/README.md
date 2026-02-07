@@ -11,6 +11,7 @@ The basis for further game engine development.
 - Math
 - Vector2, Vector2I
 - Vector3, Vector3I
+- Vector4, Vector4I
 - Quaternion
 - Matrix4x4
 
