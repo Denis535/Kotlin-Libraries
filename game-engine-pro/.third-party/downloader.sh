@@ -100,8 +100,7 @@ download_miniaudio() {
 download_sdl() {
   DIR="workspace/projects/SDL"
   REPO="https://github.com/libsdl-org/SDL.git"
-  VERSION="3.4.0"
-  TAG="release-${VERSION}"
+  TAG="release-3.4.0"
 
   rm -rf "$DIR"
   mkdir -p "$DIR"
@@ -117,8 +116,7 @@ download_sdl() {
 download_sdl_image() {
   DIR="workspace/projects/SDL_image"
   REPO="https://github.com/libsdl-org/SDL_image.git"
-  VERSION="3.4.0"
-  TAG="release-${VERSION}"
+  TAG="release-3.4.0"
 
   rm -rf "$DIR"
   mkdir -p "$DIR"
@@ -134,8 +132,7 @@ download_sdl_image() {
 download_sdl_ttf() {
   DIR="workspace/projects/SDL_ttf"
   REPO="https://github.com/libsdl-org/SDL_ttf.git"
-  VERSION="3.2.2"
-  TAG="release-${VERSION}"
+  TAG="release-3.2.2"
 
   rm -rf "$DIR"
   mkdir -p "$DIR"
@@ -151,8 +148,7 @@ download_sdl_ttf() {
 download_sdl_mixer() {
   DIR="workspace/projects/SDL_mixer"
   REPO="https://github.com/libsdl-org/SDL_mixer.git"
-  VERSION="2.8.1"
-  TAG="release-${VERSION}"
+  TAG="prerelease-3.1.2"
 
   rm -rf "$DIR"
   mkdir -p "$DIR"

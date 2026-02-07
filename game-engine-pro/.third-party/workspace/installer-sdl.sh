@@ -63,7 +63,6 @@ install_sdl_image_windows() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
         -DSDLIMAGE_VENDORED=ON
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
@@ -81,7 +80,6 @@ install_sdl_image_linux() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
         -DSDLIMAGE_VENDORED=ON
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
@@ -99,8 +97,7 @@ install_sdl_ttf_windows() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
-        -DSDLIMAGE_VENDORED=ON
+        -DSDLTTF_VENDORED=ON
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -117,8 +114,7 @@ install_sdl_ttf_linux() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
-        -DSDLIMAGE_VENDORED=ON
+        -DSDLTTF_VENDORED=ON
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -135,8 +131,8 @@ install_sdl_mixer_windows() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3" \
-        -DSDLIMAGE_VENDORED=ON
+        -DSDLMIXER_VENDORED=ON \
+        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3"
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"
@@ -153,8 +149,8 @@ install_sdl_mixer_linux() {
         -DSDL_STATIC=OFF \
         -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
-        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3" \
-        -DSDLIMAGE_VENDORED=ON
+        -DSDLMIXER_VENDORED=ON \
+        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3"
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
     cmake --install "$BUILD_DIR" --prefix "$INSTALL_DIR"

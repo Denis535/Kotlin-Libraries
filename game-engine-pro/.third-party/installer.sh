@@ -58,8 +58,8 @@ source /workspace/installer-sdl.sh
 
 install_sdl_windows
 install_sdl_image_windows
-#install_sdl_ttf_windows
-#install_sdl_mixer_windows
+install_sdl_ttf_windows
+install_sdl_mixer_windows
 "
 
 docker run \
@@ -69,6 +69,6 @@ source /workspace/installer-sdl.sh
 
 install_sdl_linux
 install_sdl_image_linux
-#install_sdl_ttf_linux
-#install_sdl_mixer_linux
+install_sdl_ttf_linux
+install_sdl_mixer_linux
 "
