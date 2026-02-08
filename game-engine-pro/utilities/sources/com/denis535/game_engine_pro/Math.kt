@@ -200,14 +200,6 @@ public object Math {
         return this.Max(this.Max(v0, v1, v2, v3, v4, v5, v6), v7)
     }
 
-    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
-        return v0 + (v1 - v0) * t
-    }
-
-    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
-        return (value - v0) / (v1 - v0)
-    }
-
     public fun Clamp(value: Float, min: Float, max: Float): Float {
         if (value < min) return min
         if (value > max) return max
@@ -230,6 +222,14 @@ public object Math {
         if (value < 0) return 0
         if (value > 1) return 1
         return value
+    }
+
+    public fun Lerp(v0: Float, v1: Float, t: Float): Float {
+        return v0 + (v1 - v0) * t
+    }
+
+    public fun InverseLerp(v0: Float, v1: Float, value: Float): Float {
+        return (value - v0) / (v1 - v0)
     }
 
     public fun Repeat(value: Float, length: Float): Float {

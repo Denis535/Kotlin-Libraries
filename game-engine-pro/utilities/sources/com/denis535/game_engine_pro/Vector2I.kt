@@ -26,13 +26,6 @@ public data class Vector2I(
             )
         }
 
-        public fun Lerp(v0: Vector2I, v1: Vector2I, t: Float): Vector2 {
-            return Vector2(
-                v0.X + (v1.X - v0.X) * t,
-                v0.Y + (v1.Y - v0.Y) * t,
-            )
-        }
-
         public fun Clamp(value: Vector2I, min: Vector2I, max: Vector2I): Vector2I {
             return Vector2I(
                 Math.Clamp(value.X, min.X, max.X),
@@ -44,6 +37,13 @@ public data class Vector2I(
             return Vector2I(
                 Math.Clamp01(value.X),
                 Math.Clamp01(value.Y),
+            )
+        }
+
+        public fun Lerp(v0: Vector2I, v1: Vector2I, t: Float): Vector2 {
+            return Vector2(
+                v0.X + (v1.X - v0.X) * t,
+                v0.Y + (v1.Y - v0.Y) * t,
             )
         }
 

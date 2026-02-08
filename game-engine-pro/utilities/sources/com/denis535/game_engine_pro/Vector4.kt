@@ -34,15 +34,6 @@ public data class Vector4(
             )
         }
 
-        public fun Lerp(v0: Vector4, v1: Vector4, t: Float): Vector4 {
-            return Vector4(
-                v0.X + (v1.X - v0.X) * t,
-                v0.Y + (v1.Y - v0.Y) * t,
-                v0.Z + (v1.Z - v0.Z) * t,
-                v0.W + (v1.W - v0.W) * t,
-            )
-        }
-
         public fun Clamp(value: Vector4, min: Vector4, max: Vector4): Vector4 {
             return Vector4(
                 Math.Clamp(value.X, min.X, max.X),
@@ -58,6 +49,15 @@ public data class Vector4(
                 Math.Clamp01(value.Y),
                 Math.Clamp01(value.Z),
                 Math.Clamp01(value.W),
+            )
+        }
+
+        public fun Lerp(v0: Vector4, v1: Vector4, t: Float): Vector4 {
+            return Vector4(
+                v0.X + (v1.X - v0.X) * t,
+                v0.Y + (v1.Y - v0.Y) * t,
+                v0.Z + (v1.Z - v0.Z) * t,
+                v0.W + (v1.W - v0.W) * t,
             )
         }
 
