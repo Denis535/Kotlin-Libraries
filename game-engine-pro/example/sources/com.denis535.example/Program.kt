@@ -3,17 +3,15 @@ package com.denis535.example
 import com.denis535.game_engine_pro.*
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
-import com.denis535.game_engine_pro.io.*
+import com.denis535.game_engine_pro.storage.*
 
 public fun Main(args: Array<String>) {
     ClientEngine2(Manifest("Example", "com.denis535", "example", null, "Denis535")).apply {
         this.Window = Window2(WindowDescription.Window("Example", IsResizable = true))
         this.Window!!.Show()
         this.Window!!.Raise()
-        this.OnStartCallback = {
-        }
-        this.OnStopCallback = {
-        }
+        this.OnStartCallback = {}
+        this.OnStopCallback = {}
         this.OnDrawCallback = {
             Utils.Delay(10U)
         }
