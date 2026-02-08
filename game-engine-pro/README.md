@@ -1,14 +1,14 @@
 # Overview
 
-The basis for further game engine development.
+The platform for the game engine.
 
 # Reference
 
 ###### com.denis535.game_engine_pro
 
 - Engine, ClientEngine, ServerEngine
-- Utils
 - Transform, TransformImpl, StaticTransformImpl
+- Utils
 - Math
 - Vector2, Vector2I
 - Vector3, Vector3I
