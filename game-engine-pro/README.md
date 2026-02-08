@@ -10,7 +10,7 @@ The platform for the game engine.
 - Content
 - Utils
 - Math
-- Transform, TransformImpl, StaticTransformImpl
+- Transform
 - Vector2, Vector2I
 - Vector3, Vector3I
 - Vector4, Vector4I

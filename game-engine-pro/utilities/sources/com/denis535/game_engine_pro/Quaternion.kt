@@ -11,63 +11,54 @@ public data class Quaternion(
         public val Identity: Quaternion = Quaternion(0f, 0f, 0f, 1f)
 
         public fun Axes(axisX: Vector3, axisY: Vector3, axisZ: Vector3): Quaternion {
-            val m00 = axisX.X
-            val m10 = axisX.Y
-            val m20 = axisX.Z
+            val axisX_X = axisX.X
+            val axisX_Y = axisX.Y
+            val axisX_Z = axisX.Z
 
-            val m01 = axisY.X
-            val m11 = axisY.Y
-            val m21 = axisY.Z
+            val axisY_X = axisY.X
+            val axisY_Y = axisY.Y
+            val axisY_Z = axisY.Z
 
-            val m02 = axisZ.X
-            val m12 = axisZ.Y
-            val m22 = axisZ.Z
+            val axisZ_X = axisZ.X
+            val axisZ_Y = axisZ.Y
+            val axisZ_Z = axisZ.Z
 
-            if (m00 + m11 + m22 > 0f) {
-                val s = Math.Sqrt(m00 + m11 + m22 + 1f) * 2f
+            if (axisX_X + axisY_Y + axisZ_Z > 0f) {
+                val s = Math.Sqrt(axisX_X + axisY_Y + axisZ_Z + 1f) * 2f
                 return Quaternion(
-                    (m21 - m12) / s,
-                    (m02 - m20) / s,
-                    (m10 - m01) / s,
+                    (axisY_Z - axisZ_Y) / s,
+                    (axisZ_X - axisX_Z) / s,
+                    (axisX_Y - axisY_X) / s,
                     0.25f * s,
                 )
             }
-            if (m00 > m11 && m00 > m22) {
-                val s = Math.Sqrt(1f + m00 - m11 - m22) * 2f
+            if (axisX_X > axisY_Y && axisX_X > axisZ_Z) {
+                val s = Math.Sqrt(1f + axisX_X - axisY_Y - axisZ_Z) * 2f
                 return Quaternion(
                     0.25f * s,
-                    (m01 + m10) / s,
-                    (m02 + m20) / s,
-                    (m21 - m12) / s,
+                    (axisY_X + axisX_Y) / s,
+                    (axisZ_X + axisX_Z) / s,
+                    (axisY_Z - axisZ_Y) / s,
                 )
             }
-            if (m11 > m22) {
-                val s = Math.Sqrt(1f + m11 - m00 - m22) * 2f
+            if (axisY_Y > axisZ_Z) {
+                val s = Math.Sqrt(1f + axisY_Y - axisX_X - axisZ_Z) * 2f
                 return Quaternion(
-                    (m01 + m10) / s,
+                    (axisY_X + axisX_Y) / s,
                     0.25f * s,
-                    (m12 + m21) / s,
-                    (m02 - m20) / s,
+                    (axisZ_Y + axisY_Z) / s,
+                    (axisZ_X - axisX_Z) / s,
                 )
             }
             run {
-                val s = Math.Sqrt(1f + m22 - m00 - m11) * 2f
+                val s = Math.Sqrt(1f + axisZ_Z - axisX_X - axisY_Y) * 2f
                 return Quaternion(
-                    (m02 + m20) / s,
-                    (m12 + m21) / s,
+                    (axisZ_X + axisX_Z) / s,
+                    (axisZ_Y + axisY_Z) / s,
                     0.25f * s,
-                    (m10 - m01) / s,
+                    (axisX_Y - axisY_X) / s,
                 )
             }
-        }
-
-        public fun AxesYZ(axisY: Vector3, axisZ: Vector3): Quaternion {
-            // X - right
-            // Y - top
-            // Z - forward
-            val axisX = axisY.Cross(axisZ).Normalized
-            val axisY = axisZ.Cross(axisX)
-            return this.Axes(axisX, axisY, axisZ)
         }
 
         public fun AngleAxis(angle: Float, axis: Vector3): Quaternion {
@@ -123,6 +114,15 @@ public data class Quaternion(
             return this.AngleAxisZ(angleZ) // rotate around forward (roll) axis
                 .Mul(this.AngleAxisX(angleX)) // rotate around right (pitch) axis
                 .Mul(this.AngleAxisY(angleY)) // rotate around up (yaw) axis
+        }
+
+        public fun Direction(axisZ: Vector3, axisY: Vector3 = Vector3.AxisY): Quaternion {
+            // X - right
+            // Y - top
+            // Z - forward
+            val axisX = axisY.Cross(axisZ).Normalized
+            val axisY = axisZ.Cross(axisX)
+            return this.Axes(axisX, axisY, axisZ)
         }
 
         public fun Slerp(v0: Quaternion, v1: Quaternion, t: Float): Quaternion {
