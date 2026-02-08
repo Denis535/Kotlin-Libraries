@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro.io
+package com.denis535.game_engine_pro.storage
 
 import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
