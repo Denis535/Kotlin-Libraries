@@ -1,15 +1,7 @@
 package com.denis535.game_engine_pro
 
-import com.denis535.internal.sdl.SDL_CheckError
-import com.denis535.internal.sdl.SDL_Delay
-import com.denis535.internal.sdl.SDL_GetBasePath
-import com.denis535.internal.sdl.SDL_IsMainThread
-import com.denis535.internal.sdl.SDL_MESSAGEBOX_ERROR
-import com.denis535.internal.sdl.SDL_MESSAGEBOX_INFORMATION
-import com.denis535.internal.sdl.SDL_MESSAGEBOX_WARNING
-import com.denis535.internal.sdl.SDL_ShowSimpleMessageBox
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.toKString
+import com.denis535.internal.sdl.*
+import kotlinx.cinterop.*
 
 public object Utils {
 

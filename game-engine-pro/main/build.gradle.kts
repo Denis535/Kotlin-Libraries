@@ -23,7 +23,9 @@ kotlin {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
-            this.dependencies {}
+            this.dependencies {
+                this.api("io.github.denis535:game-engine-pro-utilities:1.0.0")
+            }
         }
         val mingwX64Main by getting {}
         val linuxX64Main by getting {}
