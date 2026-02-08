@@ -6,7 +6,8 @@ The basis for further game engine development.
 
 ###### com.denis535.game_engine_pro
 
-- Engine, ClientEngine, ServerEngines
+- Engine, ClientEngine, ServerEngine
+- Utils
 - Transform, TransformImpl, StaticTransformImpl
 - Math
 - Vector2, Vector2I
@@ -28,9 +29,8 @@ The basis for further game engine development.
 - Keyboard
 - Gamepad
 
-###### com.denis535.game_engine_pro.utils
+###### com.denis535.game_engine_pro.io
 
-- Utils
 - Content
 - Storage
 
