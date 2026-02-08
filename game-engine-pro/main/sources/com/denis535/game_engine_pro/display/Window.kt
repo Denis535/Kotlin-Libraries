@@ -115,7 +115,7 @@ public open class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val Resolution: Vector2I
+    public val SizePhysical: Vector2I
         get() {
             check(!this.IsClosed)
             memScoped {
