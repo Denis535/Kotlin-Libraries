@@ -87,6 +87,18 @@ public open class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public val SizePhysical: Vector2I
+        get() {
+            check(!this.IsClosed)
+            memScoped {
+                val width = this.alloc<IntVar>()
+                val height = this.alloc<IntVar>()
+                SDL_GetWindowSizeInPixels(this@Window.NativeWindow, width.ptr, height.ptr).SDL_CheckError()
+                return Vector2I(width.value, height.value)
+            }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public var IsResizable: Boolean
         get() {
             check(!this.IsClosed)
@@ -112,18 +124,6 @@ public open class Window : AutoCloseable {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_HIDDEN == 0UL && flags and SDL_WINDOW_MINIMIZED == 0UL
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val SizePhysical: Vector2I
-        get() {
-            check(!this.IsClosed)
-            memScoped {
-                val width = this.alloc<IntVar>()
-                val height = this.alloc<IntVar>()
-                SDL_GetWindowSizeInPixels(this@Window.NativeWindow, width.ptr, height.ptr).SDL_CheckError()
-                return Vector2I(width.value, height.value)
-            }
         }
 
     @OptIn(ExperimentalForeignApi::class)

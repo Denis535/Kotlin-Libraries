@@ -50,7 +50,7 @@ publishing {
     this.repositories {
         this.maven {
             this.name = "Local"
-            this.url = uri("dist")
+            this.url = uri("build/dist")
         }
     }
 }

@@ -89,6 +89,10 @@ public class Storage : AutoCloseable {
         error("Couldn't load file: $path")
     }
 
+    public fun LoadText(path: String): String {
+        return this.Load(path).decodeToString()
+    }
+
     @OptIn(ExperimentalForeignApi::class)
     public fun Save(path: String, data: ByteArray) {
         data.usePinned {
@@ -97,10 +101,6 @@ public class Storage : AutoCloseable {
             }
         }
         error("Couldn't save file: $path")
-    }
-
-    public fun LoadText(path: String): String {
-        return this.Load(path).decodeToString()
     }
 
     public fun SaveText(path: String, text: String) {
