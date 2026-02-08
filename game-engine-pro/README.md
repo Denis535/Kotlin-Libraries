@@ -7,6 +7,7 @@ The platform for the game engine.
 ###### com.denis535.game_engine_pro
 
 - Engine, ClientEngine, ServerEngine
+- Content
 - Utils
 - Math
 - Transform, TransformImpl, StaticTransformImpl
@@ -29,9 +30,8 @@ The platform for the game engine.
 - Keyboard
 - Gamepad
 
-###### com.denis535.game_engine_pro.io
+###### com.denis535.game_engine_pro.storage
 
-- Content
 - Storage
 
 # Links
