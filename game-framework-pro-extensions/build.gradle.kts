@@ -10,10 +10,6 @@ plugins {
 //    this.id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
-group = project.group
-version = project.version
-description = project.description
-
 kotlin {
     this.jvm {}
     this.jvmToolchain {
@@ -65,7 +61,7 @@ publishing {
     this.repositories {
         this.maven {
             this.name = "Local"
-            this.url = uri("distribution")
+            this.url = uri("build/dist")
         }
 //        this.maven {
 //            this.name = "ossrh-staging-api"
