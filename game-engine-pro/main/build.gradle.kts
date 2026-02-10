@@ -24,7 +24,7 @@ kotlin {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
             this.dependencies {
-                this.api("io.github.denis535:game-engine-pro-utilities:1.0.1")
+                this.api("io.github.denis535:game-engine-pro-utilities:1.0.2")
             }
         }
         val mingwX64Main by getting {}
