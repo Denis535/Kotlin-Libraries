@@ -11,52 +11,40 @@ public data class Quaternion(
         public val Identity: Quaternion = Quaternion(0f, 0f, 0f, 1f)
 
         public fun Axes(axisX: Vector3, axisY: Vector3, axisZ: Vector3): Quaternion {
-            val axisX_X = axisX.X
-            val axisX_Y = axisX.Y
-            val axisX_Z = axisX.Z
-
-            val axisY_X = axisY.X
-            val axisY_Y = axisY.Y
-            val axisY_Z = axisY.Z
-
-            val axisZ_X = axisZ.X
-            val axisZ_Y = axisZ.Y
-            val axisZ_Z = axisZ.Z
-
-            if (axisX_X + axisY_Y + axisZ_Z > 0f) {
-                val s = Math.Sqrt(axisX_X + axisY_Y + axisZ_Z + 1f) * 2f
+            if (axisX.X + axisY.Y + axisZ.Z > 0f) {
+                val s = Math.Sqrt(axisX.X + axisY.Y + axisZ.Z + 1f) * 2f
                 return Quaternion(
-                    (axisY_Z - axisZ_Y) / s,
-                    (axisZ_X - axisX_Z) / s,
-                    (axisX_Y - axisY_X) / s,
+                    (axisY.Z - axisZ.Y) / s,
+                    (axisZ.X - axisX.Z) / s,
+                    (axisX.Y - axisY.X) / s,
                     0.25f * s,
                 )
             }
-            if (axisX_X > axisY_Y && axisX_X > axisZ_Z) {
-                val s = Math.Sqrt(1f + axisX_X - axisY_Y - axisZ_Z) * 2f
+            if (axisX.X > axisY.Y && axisX.X > axisZ.Z) {
+                val s = Math.Sqrt(1f + axisX.X - axisY.Y - axisZ.Z) * 2f
                 return Quaternion(
                     0.25f * s,
-                    (axisY_X + axisX_Y) / s,
-                    (axisZ_X + axisX_Z) / s,
-                    (axisY_Z - axisZ_Y) / s,
+                    (axisY.X + axisX.Y) / s,
+                    (axisZ.X + axisX.Z) / s,
+                    (axisY.Z - axisZ.Y) / s,
                 )
             }
-            if (axisY_Y > axisZ_Z) {
-                val s = Math.Sqrt(1f + axisY_Y - axisX_X - axisZ_Z) * 2f
+            if (axisY.Y > axisZ.Z) {
+                val s = Math.Sqrt(1f + axisY.Y - axisX.X - axisZ.Z) * 2f
                 return Quaternion(
-                    (axisY_X + axisX_Y) / s,
+                    (axisY.X + axisX.Y) / s,
                     0.25f * s,
-                    (axisZ_Y + axisY_Z) / s,
-                    (axisZ_X - axisX_Z) / s,
+                    (axisZ.Y + axisY.Z) / s,
+                    (axisZ.X - axisX.Z) / s,
                 )
             }
             run {
-                val s = Math.Sqrt(1f + axisZ_Z - axisX_X - axisY_Y) * 2f
+                val s = Math.Sqrt(1f + axisZ.Z - axisX.X - axisY.Y) * 2f
                 return Quaternion(
-                    (axisZ_X + axisX_Z) / s,
-                    (axisZ_Y + axisY_Z) / s,
+                    (axisZ.X + axisX.Z) / s,
+                    (axisZ.Y + axisY.Z) / s,
                     0.25f * s,
-                    (axisX_Y - axisY_X) / s,
+                    (axisX.Y - axisY.X) / s,
                 )
             }
         }
@@ -108,8 +96,8 @@ public data class Quaternion(
 
         public fun Angles(angleX: Float, angleY: Float, angleZ: Float): Quaternion {
             // https://github.com/Unity-Technologies/Unity.Mathematics/blob/master/src/Unity.Mathematics/quaternion.cs#L155
-            // Y - up
             // X - right
+            // Y - up
             // Z - forward
             return this.AngleAxisZ(angleZ) // rotate around forward (roll) axis
                 .Mul(this.AngleAxisX(angleX)) // rotate around right (pitch) axis
