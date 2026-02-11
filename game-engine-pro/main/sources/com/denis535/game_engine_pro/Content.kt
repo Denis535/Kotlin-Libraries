@@ -4,7 +4,7 @@ import cnames.structs.*
 import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
 
-public class Content : AutoCloseable {
+public class Content : AssetLoader, AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     private val NativeStorage: CPointer<SDL_Storage>
@@ -99,7 +99,7 @@ public class Content : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Load(path: String): ByteArray {
+    public override fun Load(path: String): ByteArray {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Content.NativeStorage, path, length.ptr).SDL_CheckError()) {
@@ -120,7 +120,7 @@ public class Content : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun LoadAsync(path: String, callback: (LoadAsyncResult) -> Unit) {
+    public override fun LoadAsync(path: String, callback: (LoadAsyncResult) -> Unit) {
         val callbackStableRef = StableRef.create(callback).asCPointer()
         if (SDL_LoadFileAsync(path, this.NativeAsyncIOQueue, callbackStableRef).SDL_CheckError()) {
             return
