@@ -2,6 +2,10 @@ package com.denis535.game_engine_pro
 
 public abstract class Asset()
 
+public class BinaryAsset(
+    public val Data: ByteArray,
+) : Asset()
+
 public class TextAsset(
     public val Text: String,
 ) : Asset()
