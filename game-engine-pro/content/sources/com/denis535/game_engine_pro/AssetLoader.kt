@@ -4,14 +4,14 @@ import cnames.structs.*
 import kotlinx.cinterop.*
 
 public interface AssetLoader {
-    public fun<T> LoadInternal(path: String): AssetResult<T> where T : Asset
-    public fun<T> LoadAsyncInternal(path: String, callback: (AssetResult<T>) -> Unit) where T : Asset
+    public fun<T> LoadInternal(path: String, transformer: (ByteArray) -> T): T where T : Asset
+    public fun<T> LoadAsyncInternal(path: String, transformer: (ByteArray) -> T, callback: (AssetResult<T>) -> Unit) where T : Asset
 }
 
-public sealed class AssetResult<T> where T : Asset {
-    public class Completed(public val Asset: T) : AssetResult() 
-    public class Faulted(public val Error: String) : AssetResult()
-    public class Canceled : AssetResult()
+public sealed class AssetAsyncResult<T> where T : Asset {
+    public class Completed(public val Asset: T) : AssetAsyncResult() 
+    public class Faulted(public val Error: String) : AssetAsyncResult()
+    public class Canceled : AssetAsyncResult()
 }
 
 public fun AssetLoader.LoadBinary(path: String): BinaryAsset {
