@@ -24,7 +24,7 @@ kotlin {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
             this.dependencies {
-                this.api("io.github.denis535:game-engine-pro-content:1.0.1")
+                this.api("io.github.denis535:game-engine-pro-content:1.0.2")
                 this.api("io.github.denis535:game-engine-pro-utility:1.0.0")
             }
         }

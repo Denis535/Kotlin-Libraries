@@ -134,12 +134,12 @@ public class Content : AssetLoader, AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override fun <T : Asset> LoadAssetInternal(path: String, factory: (ByteArray) -> T): T {
+    public override fun <T : Asset> LoadAsset(path: String, factory: (ByteArray) -> T): T {
         return factory(this.LoadFile(path))
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override fun <T : Asset> LoadAssetAsyncInternal(path: String, callback: (LoadAssetAsyncResult<T>) -> Unit, factory: (ByteArray) -> T) {
+    public override fun <T : Asset> LoadAssetAsync(path: String, callback: (LoadAssetAsyncResult<T>) -> Unit, factory: (ByteArray) -> T) {
         this.LoadFileAsync(path) {
             when (it) {
                 is LoadFileAsyncResult.Completed -> {
