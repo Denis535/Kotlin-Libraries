@@ -141,7 +141,7 @@ public abstract class Engine : AutoCloseable {
             }
             this.OnUpdateCallback?.invoke()
             if (this is ClientEngine) {
-                this.OnDrawCallback?.invoke()
+                this.OnRenderCallback?.invoke()
             }
             this.OnFrameEnd()
         }

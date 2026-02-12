@@ -12,7 +12,7 @@ public fun Main(args: Array<String>) {
         this.Window!!.Raise()
         this.OnStartCallback = {}
         this.OnStopCallback = {}
-        this.OnDrawCallback = {
+        this.OnRenderCallback = {
             Utils.Delay(10U)
         }
         this.OnUpdateCallback = {

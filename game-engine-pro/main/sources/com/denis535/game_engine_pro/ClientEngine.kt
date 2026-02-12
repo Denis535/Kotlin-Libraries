@@ -52,7 +52,7 @@ public open class ClientEngine : Engine {
             return field
         }
 
-    public var OnDrawCallback: (() -> Unit)? = null
+    public var OnRenderCallback: (() -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
