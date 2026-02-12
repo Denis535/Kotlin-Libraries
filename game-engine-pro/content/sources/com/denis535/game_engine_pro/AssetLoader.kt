@@ -12,23 +12,23 @@ public interface AssetLoader {
 
     public fun <T : Asset> LoadAsyncInternal(
         path: String,
-        callback: (AssetAsyncResult<T>) -> Unit,
+        callback: (AssetResult<T>) -> Unit,
         transformer: (ByteArray) -> T
     )
 
 }
 
-public sealed class AssetAsyncResult<out T : Asset> {
+public sealed class AssetResult<out T : Asset> {
 
     public class Completed<out T : Asset>(
         public val Asset: T
-    ) : AssetAsyncResult<T>()
+    ) : AssetResult<T>()
 
     public class Faulted(
         public val Error: String
-    ) : AssetAsyncResult<Nothing>()
+    ) : AssetResult<Nothing>()
 
-    public object Canceled : AssetAsyncResult<Nothing>()
+    public object Canceled : AssetResult<Nothing>()
 }
 
 public fun AssetLoader.LoadBinary(path: String): BinaryAsset {
