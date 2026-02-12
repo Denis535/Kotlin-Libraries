@@ -1,8 +1,8 @@
 package com.denis535.game_engine_pro
 
 public interface AssetLoader {
-    public fun <T : Asset> LoadAssetInternal(path: String, transformer: (ByteArray) -> T): T
-    public fun <T : Asset> LoadAssetAsyncInternal(path: String, callback: (LoadAssetAsyncResult<T>) -> Unit, transformer: (ByteArray) -> T)
+    public fun <T : Asset> LoadAssetInternal(path: String, factory: (ByteArray) -> T): T
+    public fun <T : Asset> LoadAssetAsyncInternal(path: String, callback: (LoadAssetAsyncResult<T>) -> Unit, factory: (ByteArray) -> T)
 }
 
 public sealed class LoadAssetAsyncResult<out T : Asset> {
@@ -11,13 +11,13 @@ public sealed class LoadAssetAsyncResult<out T : Asset> {
     public object Canceled : LoadAssetAsyncResult<Nothing>()
 }
 
-public fun AssetLoader.LoadBinary(path: String): BinaryAsset {
+public fun AssetLoader.LoadBinaryAsset(path: String): BinaryAsset {
     return this.LoadAssetInternal(path) { data ->
         BinaryAsset(data)
     }
 }
 
-public fun AssetLoader.LoadText(path: String): TextAsset {
+public fun AssetLoader.LoadTextAsset(path: String): TextAsset {
     return this.LoadAssetInternal(path) { data ->
         TextAsset(data.decodeToString())
     }

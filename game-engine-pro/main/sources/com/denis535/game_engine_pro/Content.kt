@@ -5,6 +5,11 @@ import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
 
 public class Content : AssetLoader, AutoCloseable {
+    private sealed class LoadFileAsyncResult {
+        public class Completed(public val File: ByteArray) : LoadFileAsyncResult()
+        public class Faulted(public val Error: String) : LoadFileAsyncResult()
+        public object Canceled : LoadFileAsyncResult()
+    }
 
     @OptIn(ExperimentalForeignApi::class)
     private val NativeStorage: CPointer<SDL_Storage>
@@ -38,16 +43,16 @@ public class Content : AssetLoader, AutoCloseable {
         memScoped {
             val outcome = this.alloc<SDL_AsyncIOOutcome>()
             while (SDL_GetAsyncIOResult(this@Content.NativeAsyncIOQueue, outcome.ptr).SDL_CheckError()) {
-                val callbackStableRef = outcome.userdata!!.asStableRef<(LoadAsyncResult) -> Unit>()
+                val callbackStableRef = outcome.userdata!!.asStableRef<(LoadFileAsyncResult) -> Unit>()
                 try {
                     if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE) {
                         val data = outcome.buffer!!.readBytes(outcome.bytes_transferred.toInt())
-                        callbackStableRef.get().invoke(LoadAsyncResult.Completed(data))
+                        callbackStableRef.get().invoke(LoadFileAsyncResult.Completed(data))
                     } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE) {
                         val error = SDL.GetError() ?: "unknown error"
-                        callbackStableRef.get().invoke(LoadAsyncResult.Faulted(error))
+                        callbackStableRef.get().invoke(LoadFileAsyncResult.Faulted(error))
                     } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED) {
-                        callbackStableRef.get().invoke(LoadAsyncResult.Canceled())
+                        callbackStableRef.get().invoke(LoadFileAsyncResult.Canceled)
                     }
                 } finally {
                     SDL_free(outcome.buffer).SDL_CheckError()
@@ -99,7 +104,7 @@ public class Content : AssetLoader, AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override fun Load(path: String): ByteArray {
+    private fun LoadFile(path: String): ByteArray {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Content.NativeStorage, path, length.ptr).SDL_CheckError()) {
@@ -120,7 +125,7 @@ public class Content : AssetLoader, AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override fun LoadAsync(path: String, callback: (LoadAsyncResult) -> Unit) {
+    private fun LoadFileAsync(path: String, callback: (LoadFileAsyncResult) -> Unit) {
         val callbackStableRef = StableRef.create(callback).asCPointer()
         if (SDL_LoadFileAsync(path, this.NativeAsyncIOQueue, callbackStableRef).SDL_CheckError()) {
             return
@@ -128,10 +133,26 @@ public class Content : AssetLoader, AutoCloseable {
         error("Couldn't load file: $path")
     }
 
-}
+    @OptIn(ExperimentalForeignApi::class)
+    public override fun <T : Asset> LoadAssetInternal(path: String, factory: (ByteArray) -> T): T {
+        return factory(this.LoadFile(path))
+    }
 
-public sealed class LoadAsyncResult {
-    public class Completed(public val Data: ByteArray) : LoadAsyncResult()
-    public class Faulted(public val Error: String) : LoadAsyncResult()
-    public class Canceled : LoadAsyncResult()
+    @OptIn(ExperimentalForeignApi::class)
+    public override fun <T : Asset> LoadAssetAsyncInternal(path: String, callback: (LoadAssetAsyncResult<T>) -> Unit, factory: (ByteArray) -> T) {
+        this.LoadFileAsync(path) {
+            when (it) {
+                is LoadFileAsyncResult.Completed -> {
+                    callback.invoke(LoadAssetAsyncResult.Completed(factory(it.File)))
+                }
+                is LoadFileAsyncResult.Faulted -> {
+                    callback.invoke(LoadAssetAsyncResult.Faulted(it.Error))
+                }
+                is LoadFileAsyncResult.Canceled -> {
+                    callback.invoke(LoadAssetAsyncResult.Canceled)
+                }
+            }
+        }
+    }
+
 }

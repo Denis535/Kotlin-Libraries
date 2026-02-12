@@ -69,7 +69,7 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Load(path: String): ByteArray {
+    public fun LoadFile(path: String): ByteArray {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Storage.NativeStorage, path, length.ptr).SDL_CheckError()) {
@@ -89,12 +89,8 @@ public class Storage : AutoCloseable {
         error("Couldn't load file: $path")
     }
 
-    public fun LoadText(path: String): String {
-        return this.Load(path).decodeToString()
-    }
-
     @OptIn(ExperimentalForeignApi::class)
-    public fun Save(path: String, data: ByteArray) {
+    public fun SaveFile(path: String, data: ByteArray) {
         data.usePinned {
             if (SDL_WriteStorageFile(this@Storage.NativeStorage, path, it.addressOf(0), it.get().size.toULong()).SDL_CheckError()) {
                 return
@@ -103,8 +99,12 @@ public class Storage : AutoCloseable {
         error("Couldn't save file: $path")
     }
 
+    public fun LoadText(path: String): String {
+        return this.LoadFile(path).decodeToString()
+    }
+
     public fun SaveText(path: String, text: String) {
-        this.Save(path, text.encodeToByteArray())
+        this.SaveFile(path, text.encodeToByteArray())
     }
 
     @OptIn(ExperimentalForeignApi::class)
