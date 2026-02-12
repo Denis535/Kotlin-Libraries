@@ -12,8 +12,8 @@ public interface AssetLoader {
 
     public fun <T : Asset> LoadAsyncInternal(
         path: String,
-        transformer: (ByteArray) -> T,
-        callback: (AssetAsyncResult<T>) -> Unit
+        callback: (AssetAsyncResult<T>) -> Unit,
+        transformer: (ByteArray) -> T
     )
 
 }
@@ -43,24 +43,3 @@ public fun AssetLoader.LoadText(path: String): TextAsset {
     }
 }
 
-public fun AssetLoader.LoadBinaryAsync(
-    path: String,
-    callback: (AssetAsyncResult<BinaryAsset>) -> Unit
-) {
-    this.LoadAsyncInternal(
-        path,
-        { data -> BinaryAsset(data) },
-        callback
-    )
-}
-
-public fun AssetLoader.LoadTextAsync(
-    path: String,
-    callback: (AssetAsyncResult<TextAsset>) -> Unit
-) {
-    this.LoadAsyncInternal(
-        path,
-        { data -> TextAsset(data.decodeToString()) },
-        callback
-    )
-}
