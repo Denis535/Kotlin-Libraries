@@ -4,8 +4,8 @@ import cnames.structs.*
 import kotlinx.cinterop.*
 
 public interface AssetLoader {
-    public fun LoadInternal(path: String): AssetResult
-    public fun LoadAsyncInternal(path: String, callback: (AssetResult) -> Unit)
+    public fun<T> LoadInternal(path: String): AssetResult<T> where T : Asset
+    public fun<T> LoadAsyncInternal(path: String, callback: (AssetResult<T>) -> Unit) where T : Asset
 }
 
 public sealed class AssetResult<T> where T : Asset {
