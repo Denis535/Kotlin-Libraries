@@ -29,6 +29,7 @@ public sealed class AssetResult<out T : Asset> {
     ) : AssetResult<Nothing>()
 
     public object Canceled : AssetResult<Nothing>()
+
 }
 
 public fun AssetLoader.LoadBinary(path: String): BinaryAsset {
