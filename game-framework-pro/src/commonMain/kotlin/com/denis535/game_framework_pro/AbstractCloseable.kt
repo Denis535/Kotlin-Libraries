@@ -2,19 +2,17 @@ package com.denis535.game_framework_pro
 
 public abstract class AbstractCloseable : AutoCloseable {
     private enum class ELifecycle {
-        Alive, Closing, Closed,
+        Alive,
+        Closing,
+        Closed,
     }
 
     private var Lifecycle = ELifecycle.Alive
 
     public val IsClosing: Boolean
-        get() {
-            return this.Lifecycle == ELifecycle.Closing
-        }
+        get() = this.Lifecycle == ELifecycle.Closing
     public val IsClosed: Boolean
-        get() {
-            return this.Lifecycle == ELifecycle.Closed
-        }
+        get() = this.Lifecycle == ELifecycle.Closed
 
     public constructor()
 
@@ -28,7 +26,7 @@ public abstract class AbstractCloseable : AutoCloseable {
     }
 
     protected abstract fun OnClose()
-    internal abstract fun OnCloseInternal()
+    protected open fun OnCloseInternal() {}
 
 }
 

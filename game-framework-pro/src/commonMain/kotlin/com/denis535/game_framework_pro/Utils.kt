@@ -1,5 +1,8 @@
 package com.denis535.game_framework_pro
 
+import com.denis535.state_machine_pro.*
+import com.denis535.tree_machine_pro.*
+
 public typealias Proc = () -> Unit
 public typealias Proc1<T> = (T) -> Unit
 public typealias Proc2<T1, T2> = (T1, T2) -> Unit
@@ -53,3 +56,17 @@ public typealias Predicate13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, 
 public typealias Predicate14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> = (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14) -> Boolean
 public typealias Predicate15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> = (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15) -> Boolean
 public typealias Predicate16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> = (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16) -> Boolean
+
+public val AbstractState.PlayList: AbstractPlayList
+    get() = (this as AbstractPlayList.State2).PlayList
+
+public val AbstractNode.Widget: AbstractWidget
+    get() = (this as AbstractWidget.Node2).Widget
+
+public inline fun <reified T> AbstractState.PlayList(): T where  T : AbstractPlayList {
+    return this.PlayList as T
+}
+
+public inline fun <reified T> AbstractNode.Widget(): T where  T : AbstractWidget {
+    return this.Widget as T
+}

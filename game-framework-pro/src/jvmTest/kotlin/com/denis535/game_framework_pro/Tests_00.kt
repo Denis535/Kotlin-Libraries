@@ -1,7 +1,6 @@
 package com.denis535.game_framework_pro
 
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
 
 public class Tests_00 {
 
