@@ -24,6 +24,10 @@ public abstract class AbstractWidget {
     internal class Node2 : Node {
 
         public val Widget: AbstractWidget
+            get() {
+                check(!this.IsClosed)
+                return field
+            }
 
         public constructor(widget: AbstractWidget) {
             this.Widget = widget
