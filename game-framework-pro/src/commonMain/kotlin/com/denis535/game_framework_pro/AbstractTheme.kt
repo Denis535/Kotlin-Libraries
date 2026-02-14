@@ -24,6 +24,10 @@ public abstract class AbstractPlayList {
     internal class State2 : State {
 
         public val PlayList: AbstractPlayList
+            get() {
+                check(!this.IsClosed)
+                return field
+            }
 
         public constructor(playList: AbstractPlayList) {
             this.PlayList = playList
