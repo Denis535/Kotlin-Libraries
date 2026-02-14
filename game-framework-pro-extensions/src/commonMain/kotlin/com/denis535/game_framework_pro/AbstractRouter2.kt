@@ -26,4 +26,8 @@ public abstract class AbstractRouter2<TTheme, TScreen, TApplication> : AbstractR
         this.Application = this.Provider.RequireDependency(AbstractApplication::class)
     }
 
+    protected final override fun OnCloseInternal() {
+        super.OnCloseInternal()
+    }
+
 }

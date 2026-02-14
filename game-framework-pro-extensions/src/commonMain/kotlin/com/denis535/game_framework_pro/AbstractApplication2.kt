@@ -9,4 +9,8 @@ public abstract class AbstractApplication2 : AbstractApplication {
 
     public constructor()
 
+    protected final override fun OnCloseInternal() {
+        super.OnCloseInternal()
+    }
+
 }

@@ -1,9 +1,9 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.*
 
 plugins {
-    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC"
+    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0"
     this.id("org.jetbrains.dokka") version "2.1.0"
     this.id("signing")
     this.id("maven-publish")
@@ -26,14 +26,14 @@ kotlin {
     this.mingwX64()
     this.linuxX64()
     this.linuxArm64()
-    this.androidNativeArm32()
-    this.androidNativeArm64()
     this.androidNativeX86()
     this.androidNativeX64()
+    this.androidNativeArm32()
+    this.androidNativeArm64()
     this.sourceSets {
         val commonMain by getting {
             this.dependencies {
-                this.api("io.github.denis535:game-framework-pro:1.1.2")
+                this.api("io.github.denis535:game-framework-pro:1.2.1")
             }
         }
         val jvmTest by getting {

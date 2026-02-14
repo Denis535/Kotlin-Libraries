@@ -60,18 +60,9 @@ public abstract class AbstractWidget {
 
     }
 
-    public val IsClosing: Boolean
-        get() {
-            return this.Node.IsClosing
-        }
-    public val IsClosed: Boolean
-        get() {
-            return this.Node.IsClosed
-        }
-
     public val Node: AbstractNode
         get() {
-            check(!this.IsClosed)
+            check(!this.NodeMutable.IsClosed)
             return this.NodeMutable
         }
     protected val NodeMutable: Node
@@ -103,11 +94,11 @@ public abstract class AbstractViewableWidget : AbstractWidget {
 
     public var View: Any? = null
         get() {
-            check(!this.IsClosed)
+            check(!this.Node.IsClosed)
             return field
         }
         protected set(value) {
-            check(!this.IsClosed)
+            check(!this.Node.IsClosed)
             field = value
         }
 

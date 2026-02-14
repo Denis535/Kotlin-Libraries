@@ -3,7 +3,7 @@
 import org.jetbrains.kotlin.gradle.*
 
 plugins {
-    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC"
+    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0"
     this.id("org.jetbrains.dokka") version "2.1.0"
     this.id("signing")
     this.id("maven-publish")

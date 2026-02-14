@@ -22,6 +22,10 @@ public abstract class AbstractScreen2<TRouter, TApplication> : AbstractScreen wh
         this.Application = this.Provider.RequireDependency(AbstractApplication::class)
     }
 
+    protected final override fun OnCloseInternal() {
+        super.OnCloseInternal()
+    }
+
 }
 
 public abstract class AbstractWidget2 : AbstractWidget {
@@ -33,6 +37,10 @@ public abstract class AbstractWidget2 : AbstractWidget {
 
     public constructor()
 
+    protected final override fun OnCloseInternal() {
+        super.OnCloseInternal()
+    }
+
 }
 
 public abstract class AbstractViewableWidget2 : AbstractViewableWidget {
@@ -43,5 +51,9 @@ public abstract class AbstractViewableWidget2 : AbstractViewableWidget {
         }
 
     public constructor()
+
+    protected final override fun OnCloseInternal() {
+        super.OnCloseInternal()
+    }
 
 }

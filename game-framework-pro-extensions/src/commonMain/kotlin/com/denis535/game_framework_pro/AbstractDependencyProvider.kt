@@ -1,6 +1,6 @@
 package com.denis535.game_framework_pro
 
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 public interface AbstractDependencyProvider {
     public companion object {

@@ -1,7 +1,6 @@
 package com.denis535.game_framework_pro
 
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
 
 public class Tests_00 {
 
@@ -42,11 +41,6 @@ internal class Program : AbstractProgram2<Theme, Screen, Router, Application> {
     }
 
     protected override fun OnClose() {
-        this.Theme!!.close()
-        this.Screen!!.close()
-        this.Router!!.close()
-        this.Application!!.close()
-        super.OnClose()
     }
 
 }

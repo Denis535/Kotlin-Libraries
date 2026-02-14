@@ -44,18 +44,9 @@ public abstract class AbstractPlayList {
 
     }
 
-    public val IsClosing: Boolean
-        get() {
-            return this.State.IsClosing
-        }
-    public val IsClosed: Boolean
-        get() {
-            return this.State.IsClosed
-        }
-
     public val State: AbstractState
         get() {
-            check(!this.IsClosed)
+            check(!this.StateMutable.IsClosed)
             return this.StateMutable
         }
     protected val StateMutable: State

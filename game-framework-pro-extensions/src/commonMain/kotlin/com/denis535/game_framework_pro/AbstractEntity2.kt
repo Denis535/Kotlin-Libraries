@@ -9,4 +9,8 @@ public abstract class AbstractEntity2 : AbstractEntity {
 
     public constructor()
 
+    protected final override fun OnCloseInternal() {
+        super.OnCloseInternal()
+    }
+
 }

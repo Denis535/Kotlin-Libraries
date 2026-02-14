@@ -1,6 +1,6 @@
 package com.denis535.game_framework_pro
 
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> : AbstractProgram, AbstractDependencyProvider where TTheme : AbstractTheme, TScreen : AbstractScreen, TRouter : AbstractRouter, TApplication : AbstractApplication {
 
@@ -49,8 +49,13 @@ public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> :
         AbstractDependencyProvider.Instance = this
     }
 
-    protected override fun OnClose() {
+    protected final override fun OnCloseInternal() {
+        this.Theme!!.close()
+        this.Screen!!.close()
+        this.Router!!.close()
+        this.Application!!.close()
         AbstractDependencyProvider.Instance = null
+        super.OnCloseInternal()
     }
 
     public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {

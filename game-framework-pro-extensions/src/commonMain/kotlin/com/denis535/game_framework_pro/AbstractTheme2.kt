@@ -22,6 +22,10 @@ public abstract class AbstractTheme2<TRouter, TApplication> : AbstractTheme wher
         this.Application = this.Provider.RequireDependency(AbstractApplication::class)
     }
 
+    protected final override fun OnCloseInternal() {
+        super.OnCloseInternal()
+    }
+
 }
 
 public abstract class AbstractPlayList2 : AbstractPlayList {
@@ -32,5 +36,9 @@ public abstract class AbstractPlayList2 : AbstractPlayList {
         }
 
     public constructor()
+
+    protected final override fun OnCloseInternal() {
+        super.OnCloseInternal()
+    }
 
 }
