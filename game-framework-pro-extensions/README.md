@@ -1,12 +1,13 @@
 # Overview
 
-The framework that allows you to design high-quality architecture of your game project.
+The framework that allows you to design high-quality game architecture of your project.
 
 # Reference
 
 ###### com.denis535.game_framework_pro
 
-- AbstractProgram
+- Main
+    - AbstractProgram
 - UI
     - AbstractTheme
     - AbstractPlayList
@@ -23,7 +24,8 @@ The framework that allows you to design high-quality architecture of your game p
 
 ###### com.denis535.game_framework_pro
 
-- AbstractProgram2
+- Main
+    - AbstractProgram2
 - UI
     - AbstractTheme2
     - AbstractPlayList2
