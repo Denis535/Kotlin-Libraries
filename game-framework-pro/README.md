@@ -1,6 +1,6 @@
 # Overview
 
-The framework that allows you to design high-quality architecture of your game project.
+The framework that allows you to design high-quality game architecture of your project.
 
 # Reference
 
