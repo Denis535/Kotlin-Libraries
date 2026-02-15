@@ -1,6 +1,6 @@
 # Overview
 
-The framework that allows you to design high-quality game architecture of your project.
+The framework that helps you to design high-quality game architecture of your project.
 
 # Reference
 
@@ -42,9 +42,9 @@ The framework that allows you to design high-quality game architecture of your p
 
 # Links
 
-- https://medium.com/@Denis535/gameframework-pro-6d00c75ff491
-- https://medium.com/@Denis535/best-practices-for-software-architecture-design-bf21ba790b1a
 - https://github.com/Denis535/Kotlin-Libraries/tree/main/game-framework-pro
 - https://github.com/Denis535/Kotlin-Libraries/tree/main/game-framework-pro-extensions
 - https://central.sonatype.com/artifact/io.github.denis535/game-framework-pro
 - https://central.sonatype.com/artifact/io.github.denis535/game-framework-pro-extensions
+- https://medium.com/@Denis535/gameframework-pro-6d00c75ff491
+- https://medium.com/@Denis535/best-practices-for-software-architecture-design-bf21ba790b1a

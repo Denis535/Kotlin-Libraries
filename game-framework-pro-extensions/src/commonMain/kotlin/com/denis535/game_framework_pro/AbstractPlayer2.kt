@@ -2,9 +2,10 @@ package com.denis535.game_framework_pro
 
 public abstract class AbstractPlayer2 : AbstractPlayer {
 
-    protected val Provider: AbstractDependencyProvider
+    protected val Provider: DependencyProvider
         get() {
-            return AbstractDependencyProvider.Instance!!
+            check(!this.IsClosed)
+            return DependencyProvider.Instance!!
         }
 
     public constructor()

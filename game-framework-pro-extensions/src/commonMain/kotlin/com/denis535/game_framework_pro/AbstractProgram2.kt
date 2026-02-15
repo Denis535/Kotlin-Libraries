@@ -2,11 +2,12 @@ package com.denis535.game_framework_pro
 
 import kotlin.reflect.*
 
-public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> : AbstractProgram, AbstractDependencyProvider where TTheme : AbstractTheme, TScreen : AbstractScreen, TRouter : AbstractRouter, TApplication : AbstractApplication {
+public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> : AbstractProgram, DependencyProvider where TTheme : AbstractTheme, TScreen : AbstractScreen, TRouter : AbstractRouter, TApplication : AbstractApplication {
 
-    protected val Provider: AbstractDependencyProvider
+    protected val Provider: DependencyProvider
         get() {
-            return AbstractDependencyProvider.Instance!!
+            check(!this.IsClosed)
+            return DependencyProvider.Instance!!
         }
     protected var Theme: TTheme? = null
         get() {
@@ -46,7 +47,7 @@ public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> :
         }
 
     public constructor() {
-        AbstractDependencyProvider.Instance = this
+        DependencyProvider.Instance = this
     }
 
     protected final override fun OnCloseInternal() {
@@ -54,7 +55,7 @@ public abstract class AbstractProgram2<TTheme, TScreen, TRouter, TApplication> :
         this.Screen!!.close()
         this.Router!!.close()
         this.Application!!.close()
-        AbstractDependencyProvider.Instance = null
+        DependencyProvider.Instance = null
         super.OnCloseInternal()
     }
 

@@ -4,7 +4,6 @@ public abstract class AbstractRouter : AbstractCloseable {
 
     public constructor()
 
-    protected override fun OnCloseInternal() {
-    }
+    protected override fun OnCloseInternal() {}
 
 }

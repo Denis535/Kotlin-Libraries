@@ -2,9 +2,10 @@ package com.denis535.game_framework_pro
 
 public abstract class AbstractTheme2<TRouter, TApplication> : AbstractTheme where TRouter : AbstractRouter, TApplication : AbstractApplication {
 
-    protected val Provider: AbstractDependencyProvider
+    protected val Provider: DependencyProvider
         get() {
-            return AbstractDependencyProvider.Instance!!
+            check(!this.IsClosed)
+            return DependencyProvider.Instance!!
         }
     protected val Router: TRouter
         get() {
@@ -30,9 +31,10 @@ public abstract class AbstractTheme2<TRouter, TApplication> : AbstractTheme wher
 
 public abstract class AbstractPlayList2 : AbstractPlayList {
 
-    protected val Provider: AbstractDependencyProvider
+    protected val Provider: DependencyProvider
         get() {
-            return AbstractDependencyProvider.Instance!!
+            check(!this.State.IsClosed)
+            return DependencyProvider.Instance!!
         }
 
     public constructor()

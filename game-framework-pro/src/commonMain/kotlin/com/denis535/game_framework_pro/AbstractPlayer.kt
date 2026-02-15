@@ -4,7 +4,6 @@ public abstract class AbstractPlayer : AbstractCloseable {
 
     public constructor()
 
-    protected override fun OnCloseInternal() {
-    }
+    protected override fun OnCloseInternal() {}
 
 }

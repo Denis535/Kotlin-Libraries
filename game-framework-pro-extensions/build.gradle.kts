@@ -33,7 +33,7 @@ kotlin {
     this.sourceSets {
         val commonMain by getting {
             this.dependencies {
-                this.api("io.github.denis535:game-framework-pro:1.2.1")
+                this.api("io.github.denis535:game-framework-pro:1.2.2")
             }
         }
         val jvmTest by getting {
