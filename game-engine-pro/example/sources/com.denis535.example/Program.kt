@@ -6,10 +6,7 @@ import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.storage.*
 
 public fun Main(args: Array<String>) {
-    ClientEngine2(Manifest("Example", "com.denis535", "example", null, "Denis535")).apply {
-        this.Window = Window2(WindowDescription.Window("Example", IsResizable = true))
-        this.Window!!.Show()
-        this.Window!!.Raise()
+    ClientEngine2().apply {
         this.OnStartCallback = {}
         this.OnStopCallback = {}
         this.OnRenderCallback = {
@@ -45,9 +42,12 @@ private class ClientEngine2 : ClientEngine {
     public val Content: Content
     public val Storage: Storage
 
-    public constructor(manifest: Manifest) : super(manifest) {
+    public constructor() : super(Manifest("Example", "com.denis535", "example", null, "Denis535")) {
+        this.Window = Window2(WindowDescription.Window("Example", IsResizable = true))
         this.Content = Content(null)
-        this.Storage = Storage(manifest.Group, manifest.Name)
+        this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
+        this.Window!!.Show()
+        this.Window!!.Raise()
     }
 
     public override fun close() {

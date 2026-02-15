@@ -12,7 +12,7 @@ public open class ClientEngine : Engine {
             check(!this.IsClosed)
             return field
         }
-        set(value) {
+        protected set(value) {
             check(!this.IsClosed)
             if (field != null) {
                 require(value == null)
