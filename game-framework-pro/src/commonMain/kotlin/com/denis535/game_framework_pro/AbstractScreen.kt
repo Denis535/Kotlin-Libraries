@@ -65,15 +65,8 @@ public abstract class AbstractWidget {
     }
 
     public val Node: AbstractNode
-        get() {
-            check(!this.NodeMutable.IsClosed)
-            return this.NodeMutable
-        }
+        get() = this.NodeMutable
     protected val NodeMutable: Node
-        get() {
-            check(!field.IsClosed)
-            return field
-        }
 
     public constructor() {
         this.NodeMutable = Node2(this)

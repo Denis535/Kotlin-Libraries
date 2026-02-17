@@ -49,15 +49,8 @@ public abstract class AbstractPlayList {
     }
 
     public val State: AbstractState
-        get() {
-            check(!this.StateMutable.IsClosed)
-            return this.StateMutable
-        }
+        get() = this.StateMutable
     protected val StateMutable: State
-        get() {
-            check(!field.IsClosed)
-            return field
-        }
 
     public constructor() {
         this.StateMutable = State2(this)
