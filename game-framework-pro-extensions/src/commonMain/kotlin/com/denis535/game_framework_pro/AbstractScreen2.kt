@@ -33,7 +33,7 @@ public abstract class AbstractWidget2 : AbstractWidget {
 
     protected val Provider: DependencyProvider
         get() {
-            check(!this.Node.IsClosed)
+            check(!this.BaseObject.IsClosed)
             return DependencyProvider.Instance!!
         }
 
@@ -49,7 +49,7 @@ public abstract class AbstractViewableWidget2 : AbstractViewableWidget {
 
     protected val Provider: DependencyProvider
         get() {
-            check(!this.Node.IsClosed)
+            check(!this.BaseObject.IsClosed)
             return DependencyProvider.Instance!!
         }
 

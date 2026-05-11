@@ -33,7 +33,7 @@ public abstract class AbstractPlayList2 : AbstractPlayList {
 
     protected val Provider: DependencyProvider
         get() {
-            check(!this.State.IsClosed)
+            check(!this.BaseObject.IsClosed)
             return DependencyProvider.Instance!!
         }
 

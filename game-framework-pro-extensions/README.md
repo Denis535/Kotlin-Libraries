@@ -1,6 +1,6 @@
 # Overview
 
-The framework that helps you to design high-quality game architecture of your project.
+The framework that guides you to design a high-quality architecture for your game project.
 
 # Reference
 
@@ -20,7 +20,10 @@ The framework that helps you to design high-quality game architecture of your pr
 - Game
     - AbstractGame
     - AbstractPlayer
-    - AbstractEntity (Character, Thing, Vehicle, Environment)
+    - AbstractWorld
+    - AbstractEntity (Character, Thing, Vehicle, Static Environment)
+- Common
+    - Utils
 
 ###### com.denis535.game_framework_pro
 
@@ -38,7 +41,10 @@ The framework that helps you to design high-quality game architecture of your pr
 - Game
     - AbstractGame2
     - AbstractPlayer2
+    - AbstractWorld2
     - AbstractEntity2
+- Common
+    - DependencyProvider
 
 # Links
 
@@ -46,5 +52,4 @@ The framework that helps you to design high-quality game architecture of your pr
 - https://github.com/Denis535/Kotlin-Libraries/tree/main/game-framework-pro-extensions
 - https://central.sonatype.com/artifact/io.github.denis535/game-framework-pro
 - https://central.sonatype.com/artifact/io.github.denis535/game-framework-pro-extensions
-- https://medium.com/@Denis535/gameframework-pro-6d00c75ff491
 - https://medium.com/@Denis535/best-practices-for-software-architecture-design-bf21ba790b1a
