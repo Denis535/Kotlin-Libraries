@@ -21,55 +21,53 @@ public abstract class AbstractScreen : AbstractCloseable {
 }
 
 public abstract class AbstractWidget {
-    internal class Node2 : Node {
+    public class Node : com.denis535.tree_machine_pro.Node {
 
-        public val Widget: AbstractWidget
+        public val SubObject: AbstractWidget
             get() {
                 check(!this.IsClosed)
                 return field
             }
 
-        public constructor(widget: AbstractWidget) {
-            this.Widget = widget
+        public constructor(subObject: AbstractWidget) {
+            this.SubObject = subObject
         }
 
         protected override fun OnClose() {
-            this.Widget.OnClose()
-            this.Widget.OnCloseInternal()
+            this.SubObject.OnClose()
+            this.SubObject.OnCloseInternal()
         }
 
         protected override fun OnActivate(argument: Any?) {
             for (ancestor in this.Ancestors.map { it as Node }.toList().asReversed()) { // top-down
-                ancestor.Widget.OnBeforeDescendantActivate(this, argument)
+                ancestor.SubObject.OnBeforeDescendantActivate(this, argument)
             }
-            this.Widget.OnActivate(argument)
+            this.SubObject.OnActivate(argument)
             for (ancestor in this.Ancestors.map { it as Node }.toList()) { // down-top
-                ancestor.Widget.OnAfterDescendantActivate(this, argument)
+                ancestor.SubObject.OnAfterDescendantActivate(this, argument)
             }
         }
 
         protected override fun OnDeactivate(argument: Any?) {
             for (ancestor in this.Ancestors.map { it as Node }.toList().asReversed()) { // top-down
-                ancestor.Widget.OnBeforeDescendantDeactivate(this, argument)
+                ancestor.SubObject.OnBeforeDescendantDeactivate(this, argument)
             }
-            this.Widget.OnDeactivate(argument)
+            this.SubObject.OnDeactivate(argument)
             for (ancestor in this.Ancestors.map { it as Node }.toList()) { // down-top
-                ancestor.Widget.OnAfterDescendantDeactivate(this, argument)
+                ancestor.SubObject.OnAfterDescendantDeactivate(this, argument)
             }
         }
 
         protected override fun Sort(children: MutableList<AbstractNode>) {
-            this.Widget.Sort(children)
+            this.SubObject.Sort(children)
         }
 
     }
 
-    public val Node: AbstractNode
-        get() = this.NodeMutable
-    protected val NodeMutable: Node
+    public val BaseObject: Node
 
     public constructor() {
-        this.NodeMutable = Node2(this)
+        this.BaseObject = Node(this)
     }
 
     protected abstract fun OnClose()
@@ -91,11 +89,11 @@ public abstract class AbstractViewableWidget : AbstractWidget {
 
     public var View: Any? = null
         get() {
-            check(!this.Node.IsClosed)
+            check(!this.BaseObject.IsClosed)
             return field
         }
         protected set(value) {
-            check(!this.Node.IsClosed)
+            check(!this.BaseObject.IsClosed)
             field = value
         }
 

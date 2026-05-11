@@ -21,39 +21,37 @@ public abstract class AbstractTheme : AbstractCloseable {
 }
 
 public abstract class AbstractPlayList {
-    internal class State2 : State {
+    public class State : com.denis535.state_machine_pro.State {
 
-        public val PlayList: AbstractPlayList
+        public val SubObject: AbstractPlayList
             get() {
                 check(!this.IsClosed)
                 return field
             }
 
-        public constructor(playList: AbstractPlayList) {
-            this.PlayList = playList
+        public constructor(subObject: AbstractPlayList) {
+            this.SubObject = subObject
         }
 
         protected override fun OnClose() {
-            this.PlayList.OnClose()
-            this.PlayList.OnCloseInternal()
+            this.SubObject.OnClose()
+            this.SubObject.OnCloseInternal()
         }
 
         protected override fun OnActivate(argument: Any?) {
-            this.PlayList.OnActivate(argument)
+            this.SubObject.OnActivate(argument)
         }
 
         protected override fun OnDeactivate(argument: Any?) {
-            this.PlayList.OnDeactivate(argument)
+            this.SubObject.OnDeactivate(argument)
         }
 
     }
 
-    public val State: AbstractState
-        get() = this.StateMutable
-    protected val StateMutable: State
+    public val BaseObject: State
 
     public constructor() {
-        this.StateMutable = State2(this)
+        this.BaseObject = State(this)
     }
 
     protected abstract fun OnClose()
