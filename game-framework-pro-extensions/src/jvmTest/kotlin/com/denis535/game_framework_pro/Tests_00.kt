@@ -48,8 +48,8 @@ internal class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 internal class Theme : AbstractTheme2<Router, Application> {
 
     public constructor() {
-        this.Machine.SetRoot(MainPlayList().BaseObject, null, null)
-        this.Machine.SetRoot(GamePlayList().BaseObject, null, null)
+        this.Machine.SetRoot(MainPlayList().BaseObject, null)
+        this.Machine.SetRoot(GamePlayList().BaseObject, null)
     }
 
     protected override fun OnClose() {
@@ -91,7 +91,7 @@ internal class GamePlayList : AbstractPlayList2 {
 internal class Screen : AbstractScreen2<Router, Application> {
 
     public constructor() {
-        this.Machine.SetRoot(RootWidget().BaseObject, null, null)
+        this.Machine.SetRoot(RootWidget().BaseObject, null)
     }
 
     protected override fun OnClose() {
