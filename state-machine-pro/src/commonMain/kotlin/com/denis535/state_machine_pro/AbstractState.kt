@@ -1,19 +1,39 @@
 package com.denis535.state_machine_pro
 
-public abstract class AbstractState : AutoCloseable {
+public interface AbstractState : AutoCloseable {
+
+    public val IsClosing: Boolean
+    public val IsClosed: Boolean
+
+    public val Owner: Any?
+
+    public val Machine: StateMachine?
+
+    public val IsRoot: Boolean
+    public val Root: AbstractState
+
+    public val Parent: AbstractState?
+    public val Ancestors: Sequence<AbstractState>
+    public val AncestorsAndSelf: Sequence<AbstractState>
+
+    public val Activity: EActivity
+
+}
+
+public abstract class AbstractStateImpl : AbstractState {
 
     private var Lifecycle = ELifecycle.Alive
 
-    public val IsClosing: Boolean
+    public override val IsClosing: Boolean
         get() {
             return this.Lifecycle == ELifecycle.Closing
         }
-    public val IsClosed: Boolean
+    public override val IsClosed: Boolean
         get() {
             return this.Lifecycle == ELifecycle.Closed
         }
 
-    public var Owner: Any? = null
+    public override var Owner: Any? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -28,7 +48,7 @@ public abstract class AbstractState : AutoCloseable {
             field = value
         }
 
-    public val Machine: StateMachine?
+    public override val Machine: StateMachine?
         get() {
             check(!this.IsClosed)
             return when (val owner = this.Owner) {
@@ -38,42 +58,42 @@ public abstract class AbstractState : AutoCloseable {
             }
         }
 
-    public val IsRoot: Boolean
+    public override val IsRoot: Boolean
         get() {
             check(!this.IsClosed)
             return this.Parent == null
         }
-    public val Root: AbstractState
+    public override val Root: AbstractState
         get() {
             check(!this.IsClosed)
             return this.Parent?.Root ?: this
         }
 
-    public val Parent: AbstractState?
+    public override val Parent: AbstractState?
         get() {
             check(!this.IsClosed)
             return this.Owner as? AbstractState
         }
-    public val Ancestors: Sequence<AbstractState>
+    public override val Ancestors: Sequence<AbstractState>
         get() {
             check(!this.IsClosed)
             return sequence {
-                if (this@AbstractState.Parent != null) {
-                    this.yield(this@AbstractState.Parent!!)
-                    this.yieldAll(this@AbstractState.Parent!!.Ancestors)
+                if (this@AbstractStateImpl.Parent != null) {
+                    this.yield(this@AbstractStateImpl.Parent!!)
+                    this.yieldAll(this@AbstractStateImpl.Parent!!.Ancestors)
                 }
             }
         }
-    public val AncestorsAndSelf: Sequence<AbstractState>
+    public override val AncestorsAndSelf: Sequence<AbstractState>
         get() {
             check(!this.IsClosed)
             return sequence {
-                this.yield(this@AbstractState)
-                this.yieldAll(this@AbstractState.Ancestors)
+                this.yield(this@AbstractStateImpl)
+                this.yieldAll(this@AbstractStateImpl.Ancestors)
             }
         }
 
-    public var Activity: EActivity = EActivity.Inactive
+    public override var Activity: EActivity = EActivity.Inactive
         get() {
             check(!this.IsClosed)
             return field
@@ -144,7 +164,7 @@ public abstract class AbstractState : AutoCloseable {
         this.Activity = EActivity.Activating
         this.OnActivate(argument)
         for (child in this.Children.toList()) {
-            child.Activate(argument)
+            (child as AbstractStateImpl).Activate(argument)
         }
         this.Activity = EActivity.Active
     }
@@ -152,7 +172,7 @@ public abstract class AbstractState : AutoCloseable {
     internal fun Deactivate(argument: Any?) {
         this.Activity = EActivity.Deactivating
         for (child in this.Children.toList().asReversed()) {
-            child.Deactivate(argument)
+            (child as AbstractStateImpl).Deactivate(argument)
         }
         this.OnDeactivate(argument)
         this.Activity = EActivity.Inactive

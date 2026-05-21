@@ -1,6 +1,6 @@
 package com.denis535.state_machine_pro
 
-public open class ChildrenableState : AbstractState {
+public open class ChildrenableState : AbstractStateImpl {
 
     public final override val Children: List<AbstractState>
         get() {
@@ -20,7 +20,7 @@ public open class ChildrenableState : AbstractState {
         check(!this.Children.contains(child))
         this.ChildrenMutable.add(child)
         this.Sort(this.ChildrenMutable)
-        child.Attach(this, argument)
+        (child as AbstractStateImpl).Attach(this, argument)
     }
 
     public fun AddChildren(children: Array<AbstractState>, argument: Any?) {
@@ -33,7 +33,7 @@ public open class ChildrenableState : AbstractState {
     public fun RemoveChild(child: AbstractState, argument: Any?, callback: Proc2<AbstractState, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Children.contains(child))
-        child.Detach(this, argument)
+        (child as AbstractStateImpl).Detach(this, argument)
         this.ChildrenMutable.remove(child)
         if (callback != null) {
             callback.invoke(child, argument)

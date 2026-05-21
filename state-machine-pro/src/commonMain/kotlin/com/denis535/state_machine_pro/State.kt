@@ -1,6 +1,6 @@
 package com.denis535.state_machine_pro
 
-public open class State : AbstractState {
+public open class State : AbstractStateImpl {
 
     public final override val Children: List<AbstractState>
         get() {

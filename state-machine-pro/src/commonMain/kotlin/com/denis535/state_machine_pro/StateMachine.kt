@@ -52,13 +52,13 @@ public class StateMachine : AutoCloseable {
         check(!this.IsClosed)
         check(this.Root == null)
         this.Root = root
-        this.Root!!.Attach(this, argument)
+        (this.Root as AbstractStateImpl).Attach(this, argument)
     }
 
     private fun RemoveRoot(root: AbstractState, argument: Any?, callback: Proc2<AbstractState, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Root == root)
-        this.Root!!.Detach(this, argument)
+        (this.Root as AbstractStateImpl).Detach(this, argument)
         this.Root = null
         if (callback != null) {
             callback.invoke(root, argument)
