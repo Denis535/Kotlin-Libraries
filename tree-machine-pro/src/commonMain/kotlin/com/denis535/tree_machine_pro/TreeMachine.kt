@@ -52,13 +52,13 @@ public class TreeMachine : AutoCloseable {
         check(!this.IsClosed)
         check(this.Root == null)
         this.Root = root
-        this.Root!!.Attach(this, argument)
+        (this.Root as AbstractNodeImpl).Attach(this, argument)
     }
 
     private fun RemoveRoot(root: AbstractNode, argument: Any?, callback: Proc2<AbstractNode, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Root == root)
-        this.Root!!.Detach(this, argument)
+        (this.Root as AbstractNodeImpl).Detach(this, argument)
         this.Root = null
         if (callback != null) {
             callback.invoke(root, argument)

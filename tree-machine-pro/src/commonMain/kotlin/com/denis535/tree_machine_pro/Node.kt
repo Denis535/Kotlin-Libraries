@@ -1,6 +1,6 @@
 package com.denis535.tree_machine_pro
 
-public open class Node : AbstractNode {
+public open class Node : AbstractNodeImpl {
 
     public constructor()
 
@@ -9,7 +9,7 @@ public open class Node : AbstractNode {
         check(!this.Children.contains(child))
         this.ChildrenMutable.add(child)
         this.Sort(this.ChildrenMutable)
-        child.Attach(this, argument)
+        (child as AbstractNodeImpl).Attach(this, argument)
     }
 
     public fun AddChildren(children: Array<AbstractNode>, argument: Any?) {
@@ -22,7 +22,7 @@ public open class Node : AbstractNode {
     public fun RemoveChild(child: AbstractNode, argument: Any?, callback: Proc2<AbstractNode, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Children.contains(child))
-        child.Detach(this, argument)
+        (child as AbstractNodeImpl).Detach(this, argument)
         this.ChildrenMutable.remove(child)
         if (callback != null) {
             callback.invoke(child, argument)
@@ -44,9 +44,12 @@ public open class Node : AbstractNode {
     public fun RemoveSelf(argument: Any?, callback: Proc2<AbstractNode, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Owner != null)
-        when (val owner = this.Owner) {
-            is TreeMachine -> owner.SetRoot(null, argument, callback)
-            is Node -> owner.RemoveChild(this, argument, callback)
+        this.Owner.let { owner ->
+            if (owner is TreeMachine) {
+                owner.SetRoot(null, argument, callback)
+            } else {
+                (owner as Node).RemoveChild(this, argument, callback)
+            }
         }
     }
 

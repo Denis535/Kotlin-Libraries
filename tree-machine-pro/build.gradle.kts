@@ -3,7 +3,7 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC"
+    this.id("org.jetbrains.kotlin.multiplatform") version "2.4.0-RC"
     this.id("org.jetbrains.dokka") version "2.1.0"
     this.id("signing")
     this.id("maven-publish")
@@ -41,6 +41,7 @@ kotlin {
         val jvmTest by getting {
             this.dependencies {
                 this.implementation(this.kotlin("test"))
+                this.implementation("org.junit.jupiter:junit-jupiter:6.1.0")
             }
         }
     }

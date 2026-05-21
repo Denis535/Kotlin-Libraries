@@ -1,19 +1,43 @@
 package com.denis535.tree_machine_pro
 
-public abstract class AbstractNode : AutoCloseable {
+public interface AbstractNode : AutoCloseable {
+
+    public val IsClosing: Boolean
+    public val IsClosed: Boolean
+
+    public val Owner: Any?
+
+    public val Machine: TreeMachine?
+
+    public val IsRoot: Boolean
+    public val Root: AbstractNode
+
+    public val Parent: AbstractNode?
+    public val Ancestors: Sequence<AbstractNode>
+    public val AncestorsAndSelf: Sequence<AbstractNode>
+
+    public val Activity: EActivity
+
+    public val Children: List<AbstractNode>
+    public val Descendants: Sequence<AbstractNode>
+    public val DescendantsAndSelf: Sequence<AbstractNode>
+
+}
+
+public abstract class AbstractNodeImpl : AbstractNode {
 
     private var Lifecycle = ELifecycle.Alive
 
-    public val IsClosing: Boolean
+    public override val IsClosing: Boolean
         get() {
             return this.Lifecycle == ELifecycle.Closing
         }
-    public val IsClosed: Boolean
+    public override val IsClosed: Boolean
         get() {
             return this.Lifecycle == ELifecycle.Closed
         }
 
-    public var Owner: Any? = null
+    public override var Owner: Any? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -28,7 +52,7 @@ public abstract class AbstractNode : AutoCloseable {
             field = value
         }
 
-    public val Machine: TreeMachine?
+    public override val Machine: TreeMachine?
         get() {
             check(!this.IsClosed)
             return when (val owner = this.Owner) {
@@ -38,42 +62,42 @@ public abstract class AbstractNode : AutoCloseable {
             }
         }
 
-    public val IsRoot: Boolean
+    public override val IsRoot: Boolean
         get() {
             check(!this.IsClosed)
             return this.Parent == null
         }
-    public val Root: AbstractNode
+    public override val Root: AbstractNode
         get() {
             check(!this.IsClosed)
             return this.Parent?.Root ?: this
         }
 
-    public val Parent: AbstractNode?
+    public override val Parent: AbstractNode?
         get() {
             check(!this.IsClosed)
             return this.Owner as? AbstractNode
         }
-    public val Ancestors: Sequence<AbstractNode>
+    public override val Ancestors: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
             return sequence {
-                if (this@AbstractNode.Parent != null) {
-                    this.yield(this@AbstractNode.Parent!!)
-                    this.yieldAll(this@AbstractNode.Parent!!.Ancestors)
+                if (this@AbstractNodeImpl.Parent != null) {
+                    this.yield(this@AbstractNodeImpl.Parent!!)
+                    this.yieldAll(this@AbstractNodeImpl.Parent!!.Ancestors)
                 }
             }
         }
-    public val AncestorsAndSelf: Sequence<AbstractNode>
+    public override val AncestorsAndSelf: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
             return sequence {
-                this.yield(this@AbstractNode)
-                this.yieldAll(this@AbstractNode.Ancestors)
+                this.yield(this@AbstractNodeImpl)
+                this.yieldAll(this@AbstractNodeImpl.Ancestors)
             }
         }
 
-    public var Activity: EActivity = EActivity.Inactive
+    public override var Activity: EActivity = EActivity.Inactive
         get() {
             check(!this.IsClosed)
             return field
@@ -84,7 +108,7 @@ public abstract class AbstractNode : AutoCloseable {
             field = value
         }
 
-    public val Children: List<AbstractNode>
+    public override val Children: List<AbstractNode>
         get() {
             check(!this.IsClosed)
             return this.ChildrenMutable
@@ -94,22 +118,22 @@ public abstract class AbstractNode : AutoCloseable {
             check(!this.IsClosed)
             return field
         }
-    public val Descendants: Sequence<AbstractNode>
+    public override val Descendants: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
             return sequence {
-                for (child in this@AbstractNode.Children) {
+                for (child in this@AbstractNodeImpl.Children) {
                     this.yield(child)
                     this.yieldAll(child.Descendants)
                 }
             }
         }
-    public val DescendantsAndSelf: Sequence<AbstractNode>
+    public override val DescendantsAndSelf: Sequence<AbstractNode>
         get() {
             check(!this.IsClosed)
             return sequence {
-                this.yield(this@AbstractNode)
-                this.yieldAll(this@AbstractNode.Descendants)
+                this.yield(this@AbstractNodeImpl)
+                this.yieldAll(this@AbstractNodeImpl.Descendants)
             }
         }
 
@@ -127,7 +151,7 @@ public abstract class AbstractNode : AutoCloseable {
     protected open fun OnClose() {
     }
 
-    internal fun Attach(machine: TreeMachine, argument: Any?) {
+    public fun Attach(machine: TreeMachine, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = machine
@@ -137,7 +161,7 @@ public abstract class AbstractNode : AutoCloseable {
         }
     }
 
-    internal fun Attach(parent: AbstractNode, argument: Any?) {
+    public fun Attach(parent: AbstractNode, argument: Any?) {
         check(!this.IsClosed)
         check(this.Owner == null)
         this.Owner = parent
@@ -170,16 +194,16 @@ public abstract class AbstractNode : AutoCloseable {
     internal fun Activate(argument: Any?) {
         this.Activity = EActivity.Activating
         this.OnActivate(argument)
-        for (child in this.Children.toList()) {
-            child.Activate(argument)
+        for (child in this.ChildrenMutable.toList()) {
+            (child as AbstractNodeImpl).Activate(argument)
         }
         this.Activity = EActivity.Active
     }
 
     internal fun Deactivate(argument: Any?) {
         this.Activity = EActivity.Deactivating
-        for (child in this.Children.toList().asReversed()) {
-            child.Deactivate(argument)
+        for (child in this.ChildrenMutable.toList().asReversed()) {
+            (child as AbstractNodeImpl).Deactivate(argument)
         }
         this.OnDeactivate(argument)
         this.Activity = EActivity.Inactive
