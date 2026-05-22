@@ -4,7 +4,7 @@ import com.denis535.state_machine_pro.*
 
 public abstract class AbstractTheme : AbstractCloseable {
 
-    protected val Machine: StateMachine
+    protected val Machine: StateMachine<AbstractPlayList.State2>
         get() {
             check(!this.IsClosed)
             return field
@@ -21,37 +21,37 @@ public abstract class AbstractTheme : AbstractCloseable {
 }
 
 public abstract class AbstractPlayList {
-    public class State : com.denis535.state_machine_pro.State {
+    public class State2 : State<State2> {
 
-        public val SubObject: AbstractPlayList
+        public val PlayList: AbstractPlayList
             get() {
                 check(!this.IsClosed)
                 return field
             }
 
-        public constructor(subObject: AbstractPlayList) {
-            this.SubObject = subObject
+        public constructor(playList: AbstractPlayList) {
+            this.PlayList = playList
         }
 
         protected override fun OnClose() {
-            this.SubObject.OnClose()
-            this.SubObject.OnCloseInternal()
+            this.PlayList.OnClose()
+            this.PlayList.OnCloseInternal()
         }
 
         protected override fun OnActivate(argument: Any?) {
-            this.SubObject.OnActivate(argument)
+            this.PlayList.OnActivate(argument)
         }
 
         protected override fun OnDeactivate(argument: Any?) {
-            this.SubObject.OnDeactivate(argument)
+            this.PlayList.OnDeactivate(argument)
         }
 
     }
 
-    public val BaseObject: State
+    public val State: State2
 
     public constructor() {
-        this.BaseObject = State(this)
+        this.State = State2(this)
     }
 
     protected abstract fun OnClose()
