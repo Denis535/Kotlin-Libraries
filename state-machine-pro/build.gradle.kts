@@ -64,7 +64,7 @@ publishing {
     this.repositories {
         this.maven {
             this.name = "Local"
-            this.url = uri("distribution")
+            this.url = uri("build/dist")
         }
 //        this.maven {
 //            this.name = "ossrh-staging-api"
