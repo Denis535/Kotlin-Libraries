@@ -55,10 +55,8 @@ public abstract class AbstractNodeImpl : AbstractNode {
     public override val Machine: TreeMachine?
         get() {
             check(!this.IsClosed)
-            return when (val owner = this.Owner) {
-                is TreeMachine -> owner
-                is AbstractNode -> owner.Machine as TreeMachine
-                else -> null
+            this.Owner.let { owner ->
+                return (owner as? TreeMachine) ?: (owner as? AbstractNode)?.Machine
             }
         }
 
