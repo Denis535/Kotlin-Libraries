@@ -9,19 +9,19 @@ public class Tests_00 {
     fun Test_00() {
         StateMachine<AbstractState2>().use { machine ->
             // machine.SetRoot State
-            machine.SetRoot(State2(), null, null)
+            machine.SetRoot(State2(), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Machine, machine)
             assertEquals(machine.Root!!.Activity, Activity.Active)
 
             // machine.SetRoot ChildrenableState
-            machine.SetRoot(ChildrenableState2(), null, null)
+            machine.SetRoot(ChildrenableState2(), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Machine, machine)
             assertEquals(machine.Root!!.Activity, Activity.Active)
 
             // machine.SetRoot null
-            machine.SetRoot(null, null, null)
+            machine.SetRoot(null, null)
             assertEquals(machine.Root, null)
         }
     }
@@ -30,13 +30,13 @@ public class Tests_00 {
     fun Test_01() {
         StateMachine<AbstractState2>().use { machine ->
             // machine.SetRoot State
-            machine.SetRoot(State2(), null, null)
+            machine.SetRoot(State2(), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Machine, machine)
             assertEquals(machine.Root!!.Activity, Activity.Active)
 
             // machine.SetRoot ChildrenableState
-            machine.SetRoot(ChildrenableState2(), null, null)
+            machine.SetRoot(ChildrenableState2(), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Machine, machine)
             assertEquals(machine.Root!!.Activity, Activity.Active)
