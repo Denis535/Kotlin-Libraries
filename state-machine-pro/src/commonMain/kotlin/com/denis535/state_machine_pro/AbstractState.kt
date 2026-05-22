@@ -51,10 +51,8 @@ public abstract class AbstractStateImpl : AbstractState {
     public override val Machine: StateMachine?
         get() {
             check(!this.IsClosed)
-            return when (val owner = this.Owner) {
-                is StateMachine -> owner
-                is AbstractState -> owner.Machine as StateMachine
-                else -> null
+            this.Owner.let { owner ->
+                return (owner as? StateMachine) ?: (owner as? AbstractState)?.Machine
             }
         }
 

@@ -14,3 +14,4 @@ The library that allows you to easily implement a stateful object.
 
 - https://github.com/Denis535/Kotlin-Libraries/tree/main/state-machine-pro
 - https://central.sonatype.com/artifact/io.github.denis535/state-machine-pro
+- https://habr.com/ru/articles/1033776
