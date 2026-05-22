@@ -1,6 +1,6 @@
 package com.denis535.tree_machine_pro
 
-public class TreeMachine : AutoCloseable {
+public class TreeMachine<T> : AutoCloseable where  T : AbstractNode<T> {
 
     private var Lifecycle = ELifecycle.Alive
 
@@ -13,7 +13,7 @@ public class TreeMachine : AutoCloseable {
             return this.Lifecycle == ELifecycle.Closed
         }
 
-    public var Root: AbstractNode? = null
+    public var Root: T? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -38,7 +38,7 @@ public class TreeMachine : AutoCloseable {
         this.Lifecycle = ELifecycle.Closed
     }
 
-    public fun SetRoot(root: AbstractNode?, argument: Any?, callback: Proc2<AbstractNode, Any?>? = null) {
+    public fun SetRoot(root: T?, argument: Any?, callback: Proc2<T, Any?>? = null) {
         check(!this.IsClosed)
         if (this.Root != null) {
             this.RemoveRoot(this.Root!!, argument, callback)
@@ -48,17 +48,17 @@ public class TreeMachine : AutoCloseable {
         }
     }
 
-    private fun AddRoot(root: AbstractNode, argument: Any?) {
+    private fun AddRoot(root: T, argument: Any?) {
         check(!this.IsClosed)
         check(this.Root == null)
         this.Root = root
-        (this.Root as AbstractNodeImpl).Attach(this, argument)
+        (this.Root as AbstractNodeImpl<T>).Attach(this, argument)
     }
 
-    private fun RemoveRoot(root: AbstractNode, argument: Any?, callback: Proc2<AbstractNode, Any?>? = null) {
+    internal fun RemoveRoot(root: T, argument: Any?, callback: Proc2<T, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Root == root)
-        (this.Root as AbstractNodeImpl).Detach(this, argument)
+        (this.Root as AbstractNodeImpl<T>).Detach(this, argument)
         this.Root = null
         if (callback != null) {
             callback.invoke(root, argument)

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.*
 
 plugins {
     this.id("org.jetbrains.kotlin.multiplatform") version "2.4.0-RC"
@@ -64,7 +64,7 @@ publishing {
     this.repositories {
         this.maven {
             this.name = "Local"
-            this.url = uri("distribution")
+            this.url = uri("build/dist")
         }
 //        this.maven {
 //            this.name = "ossrh-staging-api"

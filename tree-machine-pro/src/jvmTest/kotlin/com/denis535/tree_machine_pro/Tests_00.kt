@@ -7,9 +7,9 @@ public class Tests_00 {
 
     @Test
     fun Test_00() {
-        TreeMachine().use { machine ->
+        TreeMachine<AbstractNode2>().use { machine ->
             // machine.SetRoot Node
-            machine.SetRoot(Node(), null, null)
+            machine.SetRoot(Node2(), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -24,7 +24,7 @@ public class Tests_00 {
             assertEquals(machine.Root!!.DescendantsAndSelf.count(), 1)
 
             // machine.Root.AddChildren Node, Node
-            (machine.Root as Node).AddChildren(arrayOf(Node(), Node()), null)
+            (machine.Root as Node2).AddChildren(arrayOf(Node2(), Node2()), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -52,7 +52,7 @@ public class Tests_00 {
             }
 
             // machine.Root.RemoveChildren true
-            (machine.Root as Node).RemoveChildren({ true }, null, null)
+            (machine.Root as Node2).RemoveChildren({ true }, null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -67,16 +67,16 @@ public class Tests_00 {
             assertEquals(machine.Root!!.DescendantsAndSelf.count(), 1)
 
             // machine.SetRoot null
-            machine.SetRoot(null, null, null)
+            machine.SetRoot(null, null)
             assertEquals(machine.Root, null)
         }
     }
 
     @Test
     fun Test_01() {
-        TreeMachine().use { machine ->
+        TreeMachine<AbstractNode2>().use { machine ->
             // machine.SetRoot Node
-            machine.SetRoot(Node(), null, null)
+            machine.SetRoot(Node2(), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -91,7 +91,7 @@ public class Tests_00 {
             assertEquals(machine.Root!!.DescendantsAndSelf.count(), 1)
 
             // machine.Root.AddChildren Node, Node
-            (machine.Root as Node).AddChildren(arrayOf(Node(), Node()), null)
+            (machine.Root as Node2).AddChildren(arrayOf(Node2(), Node2()), null)
             assertNotEquals(machine.Root, null)
             assertEquals(machine.Root!!.Owner, machine)
             assertEquals(machine.Root!!.Machine, machine)
@@ -130,4 +130,13 @@ public class Tests_00 {
         }
     }
 
+}
+
+internal interface AbstractNode2 : AbstractNode<AbstractNode2>
+
+internal class Node2 : Node<AbstractNode2>, AbstractNode2 {
+
+    public constructor()
+
+    public override fun OnClose() {}
 }
