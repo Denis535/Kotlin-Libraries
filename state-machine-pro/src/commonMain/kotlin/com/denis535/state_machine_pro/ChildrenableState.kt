@@ -1,13 +1,13 @@
 package com.denis535.state_machine_pro
 
-public open class ChildrenableState : AbstractStateImpl {
+public abstract class ChildrenableState<T> : AbstractStateImpl<T> where T : AbstractState<T> {
 
-    public final override val Children: List<AbstractState>
+    public final override val Children: List<T>
         get() {
             check(!this.IsClosed)
             return this.ChildrenMutable
         }
-    private val ChildrenMutable: MutableList<AbstractState> = mutableListOf()
+    private val ChildrenMutable: MutableList<T> = mutableListOf()
         get() {
             check(!this.IsClosed)
             return field
@@ -15,25 +15,25 @@ public open class ChildrenableState : AbstractStateImpl {
 
     public constructor()
 
-    public fun AddChild(child: AbstractState, argument: Any?) {
+    public fun AddChild(child: T, argument: Any?) {
         check(!this.IsClosed)
         check(!this.Children.contains(child))
         this.ChildrenMutable.add(child)
         this.Sort(this.ChildrenMutable)
-        (child as AbstractStateImpl).Attach(this, argument)
+        (child as AbstractStateImpl<T>).Attach(this as T, argument)
     }
 
-    public fun AddChildren(children: Array<AbstractState>, argument: Any?) {
+    public fun AddChildren(children: Array<T>, argument: Any?) {
         check(!this.IsClosed)
         for (child in children) {
             this.AddChild(child, argument)
         }
     }
 
-    public fun RemoveChild(child: AbstractState, argument: Any?, callback: Proc2<AbstractState, Any?>? = null) {
+    public fun RemoveChild(child: T, argument: Any?, callback: Proc2<T, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Children.contains(child))
-        (child as AbstractStateImpl).Detach(this, argument)
+        (child as AbstractStateImpl<T>).Detach(this as T, argument)
         this.ChildrenMutable.remove(child)
         if (callback != null) {
             callback.invoke(child, argument)
@@ -42,7 +42,7 @@ public open class ChildrenableState : AbstractStateImpl {
         }
     }
 
-    public fun RemoveChildren(predicate: Predicate1<AbstractState>, argument: Any?, callback: Proc2<AbstractState, Any?>? = null): Int {
+    public fun RemoveChildren(predicate: Predicate1<T>, argument: Any?, callback: Proc2<T, Any?>? = null): Int {
         check(!this.IsClosed)
         var count = 0
         for (child in this.Children.reversed().filter(predicate)) {
@@ -52,7 +52,7 @@ public open class ChildrenableState : AbstractStateImpl {
         return count
     }
 
-    protected open fun Sort(children: MutableList<AbstractState>) {
+    protected open fun Sort(children: MutableList<T>) {
     }
 
 }

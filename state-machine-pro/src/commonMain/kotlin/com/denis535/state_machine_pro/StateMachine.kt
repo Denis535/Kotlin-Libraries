@@ -1,6 +1,6 @@
 package com.denis535.state_machine_pro
 
-public class StateMachine : AutoCloseable {
+public class StateMachine<T> : AutoCloseable where T : AbstractState<T> {
 
     private var Lifecycle = ELifecycle.Alive
 
@@ -13,7 +13,7 @@ public class StateMachine : AutoCloseable {
             return this.Lifecycle == ELifecycle.Closed
         }
 
-    public var Root: AbstractState? = null
+    public var Root: T? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -38,7 +38,7 @@ public class StateMachine : AutoCloseable {
         this.Lifecycle = ELifecycle.Closed
     }
 
-    public fun SetRoot(root: AbstractState?, argument: Any?, callback: Proc2<AbstractState, Any?>? = null) {
+    public fun SetRoot(root: T?, argument: Any?, callback: Proc2<T, Any?>? = null) {
         check(!this.IsClosed)
         if (this.Root != null) {
             this.RemoveRoot(this.Root!!, argument, callback)
@@ -48,17 +48,17 @@ public class StateMachine : AutoCloseable {
         }
     }
 
-    private fun AddRoot(root: AbstractState, argument: Any?) {
+    private fun AddRoot(root: T, argument: Any?) {
         check(!this.IsClosed)
         check(this.Root == null)
         this.Root = root
-        (this.Root as AbstractStateImpl).Attach(this, argument)
+        (this.Root as AbstractStateImpl<T>).Attach(this, argument)
     }
 
-    private fun RemoveRoot(root: AbstractState, argument: Any?, callback: Proc2<AbstractState, Any?>? = null) {
+    private fun RemoveRoot(root: T, argument: Any?, callback: Proc2<T, Any?>? = null) {
         check(!this.IsClosed)
         check(this.Root == root)
-        (this.Root as AbstractStateImpl).Detach(this, argument)
+        (this.Root as AbstractStateImpl<T>).Detach(this, argument)
         this.Root = null
         if (callback != null) {
             callback.invoke(root, argument)
