@@ -48,8 +48,8 @@ internal class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 internal class Theme : AbstractTheme2<Router, Application> {
 
     public constructor() {
-        this.Machine.SetRoot(MainPlayList().BaseObject, null)
-        this.Machine.SetRoot(GamePlayList().BaseObject, null)
+        this.Machine.SetRoot(MainPlayList().State, null)
+        this.Machine.SetRoot(GamePlayList().State, null)
     }
 
     protected override fun OnClose() {
@@ -91,7 +91,7 @@ internal class GamePlayList : AbstractPlayList2 {
 internal class Screen : AbstractScreen2<Router, Application> {
 
     public constructor() {
-        this.Machine.SetRoot(RootWidget().BaseObject, null)
+        this.Machine.SetRoot(RootWidget().Node, null)
     }
 
     protected override fun OnClose() {
@@ -103,12 +103,12 @@ internal class Screen : AbstractScreen2<Router, Application> {
 internal class RootWidget : AbstractWidget2 {
 
     public constructor() {
-        this.BaseObject.AddChild(MainWidget().BaseObject, null)
-        this.BaseObject.AddChild(GameWidget().BaseObject, null)
+        this.Node.AddChild(MainWidget().Node, null)
+        this.Node.AddChild(GameWidget().Node, null)
     }
 
     protected override fun OnClose() {
-        this.BaseObject.Children.asReversed().CloseAll()
+        this.Node.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -129,7 +129,7 @@ internal class MainWidget : AbstractViewableWidget2 {
     }
 
     protected override fun OnClose() {
-        this.BaseObject.Children.asReversed().CloseAll()
+        this.Node.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -150,7 +150,7 @@ internal class GameWidget : AbstractViewableWidget2 {
     }
 
     protected override fun OnClose() {
-        this.BaseObject.Children.asReversed().CloseAll()
+        this.Node.Children.asReversed().CloseAll()
     }
 
     protected override fun OnActivate(argument: Any?) {

@@ -23,6 +23,7 @@ The framework that guides you to design a high-quality architecture for your gam
     - AbstractWorld
     - AbstractEntity (Character, Thing, Vehicle, Static Environment)
 - Common
+    - AbstractCloseable 
     - Utils
 
 ###### com.denis535.game_framework_pro
@@ -52,4 +53,4 @@ The framework that guides you to design a high-quality architecture for your gam
 - https://github.com/Denis535/Kotlin-Libraries/tree/main/game-framework-pro-extensions
 - https://central.sonatype.com/artifact/io.github.denis535/game-framework-pro
 - https://central.sonatype.com/artifact/io.github.denis535/game-framework-pro-extensions
-- https://medium.com/@Denis535/best-practices-for-software-architecture-design-bf21ba790b1a
+- https://habr.com/ru/articles/1033776

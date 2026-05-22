@@ -23,6 +23,7 @@ The framework that guides you to design a high-quality architecture for your gam
     - AbstractWorld
     - AbstractEntity (Character, Thing, Vehicle, Static Environment)
 - Common
+    - AbstractCloseable 
     - Utils
 
 # Links

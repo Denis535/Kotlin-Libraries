@@ -3,7 +3,7 @@
 import org.jetbrains.kotlin.gradle.*
 
 plugins {
-    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0"
+    this.id("org.jetbrains.kotlin.multiplatform") version "2.4.0-RC"
     this.id("org.jetbrains.dokka") version "2.1.0"
     this.id("signing")
     this.id("maven-publish")
@@ -33,7 +33,7 @@ kotlin {
     this.sourceSets {
         val commonMain by getting {
             this.dependencies {
-                this.api("io.github.denis535:game-framework-pro:1.3.0")
+                this.api("io.github.denis535:game-framework-pro:1.3.1")
             }
         }
         val jvmTest by getting {
