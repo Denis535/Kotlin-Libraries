@@ -24,16 +24,16 @@ public abstract class AbstractStateImpl<T> : AbstractState<T> where T : Abstract
 
     private var Lifecycle = ELifecycle.Alive
 
-    public override val IsClosing: Boolean
+    public final override val IsClosing: Boolean
         get() {
             return this.Lifecycle == ELifecycle.Closing
         }
-    public override val IsClosed: Boolean
+    public final override val IsClosed: Boolean
         get() {
             return this.Lifecycle == ELifecycle.Closed
         }
 
-    public override var Owner: Any? = null
+    public final override var Owner: Any? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -48,7 +48,7 @@ public abstract class AbstractStateImpl<T> : AbstractState<T> where T : Abstract
             field = value
         }
 
-    public override val Machine: StateMachine<T>?
+    public final override val Machine: StateMachine<T>?
         get() {
             check(!this.IsClosed)
             this.Owner.let { owner ->
@@ -56,23 +56,23 @@ public abstract class AbstractStateImpl<T> : AbstractState<T> where T : Abstract
             }
         }
 
-    public override val IsRoot: Boolean
+    public final override val IsRoot: Boolean
         get() {
             check(!this.IsClosed)
             return this.Parent == null
         }
-    public override val Root: T
+    public final override val Root: T
         get() {
             check(!this.IsClosed)
             return this.Parent?.Root ?: (this as T)
         }
 
-    public override val Parent: T?
+    public final override val Parent: T?
         get() {
             check(!this.IsClosed)
             return this.Owner as? T
         }
-    public override val Ancestors: Sequence<T>
+    public final override val Ancestors: Sequence<T>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -82,7 +82,7 @@ public abstract class AbstractStateImpl<T> : AbstractState<T> where T : Abstract
                 }
             }
         }
-    public override val AncestorsAndSelf: Sequence<T>
+    public final override val AncestorsAndSelf: Sequence<T>
         get() {
             check(!this.IsClosed)
             return sequence {
@@ -91,7 +91,7 @@ public abstract class AbstractStateImpl<T> : AbstractState<T> where T : Abstract
             }
         }
 
-    public override var Activity: EActivity = EActivity.Inactive
+    public final override var Activity: EActivity = EActivity.Inactive
         get() {
             check(!this.IsClosed)
             return field
@@ -115,8 +115,7 @@ public abstract class AbstractStateImpl<T> : AbstractState<T> where T : Abstract
         this.Lifecycle = ELifecycle.Closed
     }
 
-    protected open fun OnClose() {
-    }
+    protected abstract fun OnClose()
 
     internal fun Attach(machine: StateMachine<T>, argument: Any?) {
         check(!this.IsClosed)

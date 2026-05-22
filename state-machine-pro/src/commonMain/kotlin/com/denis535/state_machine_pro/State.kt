@@ -8,6 +8,6 @@ public abstract class State<T> : AbstractStateImpl<T> where T : AbstractState<T>
             return listOf()
         }
 
-    public constructor() : super()
+    public constructor()
 
 }

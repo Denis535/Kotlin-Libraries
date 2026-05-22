@@ -49,12 +49,18 @@ public class Tests_00 {
 
 }
 
-internal interface AbstractState2 : AbstractState<AbstractState2> {}
+internal interface AbstractState2 : AbstractState<AbstractState2>
 
 internal class State2 : State<AbstractState2>, AbstractState2 {
-    public constructor() : super()
+
+    public constructor()
+
+    public override fun OnClose() {}
 }
 
 internal class ChildrenableState2 : ChildrenableState<AbstractState2>, AbstractState2 {
-    public constructor() : super()
+
+    public constructor()
+
+    public override fun OnClose() {}
 }
