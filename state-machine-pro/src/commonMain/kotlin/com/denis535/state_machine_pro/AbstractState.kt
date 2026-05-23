@@ -104,7 +104,7 @@ public abstract class AbstractStateImpl<T> : AbstractState<T> where T : Abstract
             field = value
         }
 
-    public constructor()
+    internal constructor()
 
     public final override fun close() {
         check(!this.IsClosing)
