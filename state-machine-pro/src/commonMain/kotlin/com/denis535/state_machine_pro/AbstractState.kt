@@ -18,6 +18,8 @@ public interface AbstractState<T> : AutoCloseable where T : AbstractState<T> {
 
     public val Activity: EActivity
 
+    public val Children: List<T>
+
 }
 
 public abstract class AbstractStateImpl<T> : AbstractState<T> where T : AbstractState<T> {
@@ -101,8 +103,6 @@ public abstract class AbstractStateImpl<T> : AbstractState<T> where T : Abstract
             check(field != value)
             field = value
         }
-
-    public abstract val Children: List<T>
 
     public constructor()
 
