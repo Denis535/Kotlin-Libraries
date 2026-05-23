@@ -125,7 +125,7 @@ public abstract class AbstractNodeImpl<T> : AbstractNode<T> where  T : AbstractN
             }
         }
 
-    public constructor()
+    internal constructor()
 
     public final override fun close() {
         check(!this.IsClosing)
