@@ -18,6 +18,11 @@ public open class ClientEngine : Engine {
             return field
         }
 
+    public val Touchscreen: Touchscreen
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
     public val Mouse: Mouse
         get() {
             check(!this.IsClosed)
@@ -33,30 +38,25 @@ public open class ClientEngine : Engine {
             check(!this.IsClosed)
             return field
         }
-    public val Touchscreen: Touchscreen
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest, windowDescription: WindowDescription) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO or SDL_INIT_SENSOR or SDL_INIT_GAMEPAD).SDL_CheckError()
         this.Window = Window(windowDescription)
         this.Cursor = Cursor()
+        this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
         this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
-        this.Touchscreen = Touchscreen()
     }
 
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        this.Touchscreen.close()
         this.Gamepads.asReversed().forEach { it.close() }
         this.Keyboard.close()
         this.Mouse.close()
+        this.Touchscreen.close()
         this.Cursor.close()
         this.Window.close()
         super.close()
@@ -174,6 +174,74 @@ public open class ClientEngine : Engine {
                     if (text != null) {
                         val event = TextEvent(timestamp, windowID, text)
                         this.Window.OnTextCallback?.invoke(event)
+                    }
+                }
+            }
+
+            // Touchscreen
+            SDL_EVENT_FINGER_DOWN -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val nativeDeviceID = evt.touchID
+                val id = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+                val pressure = evt.pressure
+                if (windowID == this.Window.NativeWindowID) {
+                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                        val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Begin, Vector2(x, y), Vector2(0f, 0f), pressure)
+                        this.Touchscreen.OnTouchCallback?.invoke(event)
+                    }
+                }
+            }
+            SDL_EVENT_FINGER_MOTION -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val nativeDeviceID = evt.touchID
+                val id = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+                val deltaX = evt.dx
+                val deltaY = evt.dy
+                val pressure = evt.pressure
+                if (windowID == this.Window.NativeWindowID) {
+                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                        val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Changed, Vector2(x, y), Vector2(deltaX, deltaY), pressure)
+                        this.Touchscreen.OnTouchCallback?.invoke(event)
+                    }
+                }
+            }
+            SDL_EVENT_FINGER_UP -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val nativeDeviceID = evt.touchID
+                val id = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+                val pressure = evt.pressure
+                if (windowID == this.Window.NativeWindowID) {
+                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                        val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.End, Vector2(x, y), Vector2(0f, 0f), pressure)
+                        this.Touchscreen.OnTouchCallback?.invoke(event)
+                    }
+                }
+            }
+            SDL_EVENT_FINGER_CANCELED -> {
+                val evt = event.pointed.tfinger
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val nativeDeviceID = evt.touchID
+                val id = evt.fingerID
+                val x = evt.x
+                val y = evt.y
+                val pressure = evt.pressure
+                if (windowID == this.Window.NativeWindowID) {
+                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                        val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Canceled, Vector2(x, y), Vector2(0f, 0f), pressure)
+                        this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -304,74 +372,6 @@ public open class ClientEngine : Engine {
                     if (axis != null) {
                         val event = GamepadAxisActionEvent(timestamp, nativeDeviceID, playerIndex, axis, value)
                         playerGamepad.OnAxisActionCallback?.invoke(event)
-                    }
-                }
-            }
-
-            // Touchscreen
-            SDL_EVENT_FINGER_DOWN -> {
-                val evt = event.pointed.tfinger
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val nativeDeviceID = evt.touchID
-                val id = evt.fingerID
-                val x = evt.x
-                val y = evt.y
-                val pressure = evt.pressure
-                if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
-                        val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Begin, Vector2(x, y), Vector2(0f, 0f), pressure)
-                        this.Touchscreen.OnTouchCallback?.invoke(event)
-                    }
-                }
-            }
-            SDL_EVENT_FINGER_MOTION -> {
-                val evt = event.pointed.tfinger
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val nativeDeviceID = evt.touchID
-                val id = evt.fingerID
-                val x = evt.x
-                val y = evt.y
-                val deltaX = evt.dx
-                val deltaY = evt.dy
-                val pressure = evt.pressure
-                if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
-                        val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Changed, Vector2(x, y), Vector2(deltaX, deltaY), pressure)
-                        this.Touchscreen.OnTouchCallback?.invoke(event)
-                    }
-                }
-            }
-            SDL_EVENT_FINGER_UP -> {
-                val evt = event.pointed.tfinger
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val nativeDeviceID = evt.touchID
-                val id = evt.fingerID
-                val x = evt.x
-                val y = evt.y
-                val pressure = evt.pressure
-                if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
-                        val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.End, Vector2(x, y), Vector2(0f, 0f), pressure)
-                        this.Touchscreen.OnTouchCallback?.invoke(event)
-                    }
-                }
-            }
-            SDL_EVENT_FINGER_CANCELED -> {
-                val evt = event.pointed.tfinger
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val nativeDeviceID = evt.touchID
-                val id = evt.fingerID
-                val x = evt.x
-                val y = evt.y
-                val pressure = evt.pressure
-                if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
-                        val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Canceled, Vector2(x, y), Vector2(0f, 0f), pressure)
-                        this.Touchscreen.OnTouchCallback?.invoke(event)
                     }
                 }
             }

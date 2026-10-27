@@ -23,7 +23,7 @@ download_git_repository() {
   fi
 }
 
-download_git_repository "/workspace/projects/SDL"       "https://github.com/libsdl-org/SDL.git"       "release-3.4.18"
-download_git_repository "/workspace/projects/SDL_image" "https://github.com/libsdl-org/SDL_image.git" "release-3.4.8"
-download_git_repository "/workspace/projects/SDL_ttf"   "https://github.com/libsdl-org/SDL_ttf.git"   "release-3.2.2"
-download_git_repository "/workspace/projects/SDL_mixer" "https://github.com/libsdl-org/SDL_mixer.git" "release-3.2.4"
+download_git_repository "/workspace/src/SDL"       "https://github.com/libsdl-org/SDL.git"       "release-3.4.18"
+download_git_repository "/workspace/src/SDL_image" "https://github.com/libsdl-org/SDL_image.git" "release-3.4.8"
+download_git_repository "/workspace/src/SDL_ttf"   "https://github.com/libsdl-org/SDL_ttf.git"   "release-3.2.2"
+download_git_repository "/workspace/src/SDL_mixer" "https://github.com/libsdl-org/SDL_mixer.git" "release-3.2.4"

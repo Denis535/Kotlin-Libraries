@@ -3,7 +3,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_sdl_linux() {
-    PROJ_DIR=/workspace/projects/SDL
+    PROJ_DIR=/workspace/src/SDL
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL
 
@@ -30,7 +30,7 @@ install_sdl_linux() {
 }
 
 install_sdl_image_linux() {
-    PROJ_DIR=/workspace/projects/SDL_image
+    PROJ_DIR=/workspace/src/SDL_image
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_image
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL_image
 
@@ -48,7 +48,7 @@ install_sdl_image_linux() {
 }
 
 install_sdl_ttf_linux() {
-    PROJ_DIR=/workspace/projects/SDL_ttf
+    PROJ_DIR=/workspace/src/SDL_ttf
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_ttf
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL_ttf
 
@@ -66,7 +66,7 @@ install_sdl_ttf_linux() {
 }
 
 install_sdl_mixer_linux() {
-    PROJ_DIR=/workspace/projects/SDL_mixer
+    PROJ_DIR=/workspace/src/SDL_mixer
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_mixer
     INSTALL_DIR=/workspace/dist/x86_64-linux-gnu/SDL_mixer
 
