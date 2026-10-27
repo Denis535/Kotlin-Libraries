@@ -105,58 +105,47 @@ public abstract class Engine : AutoCloseable {
         check(!this.IsClosed)
         check(!this.IsRunning)
         this.IsRunning = true
-        this.ProcessLoop(fixedTimeStep)
+        this.RunLoop(fixedTimeStep)
     }
 
-    private fun ProcessLoop(fixedTimeStep: Float = 1.0f / 20.0f) {
-        check(!this.IsClosed)
+    private fun RunLoop(fixedTimeStep: Float) {
         this.OnStart()
         this.OnStartCallback?.invoke()
         while (this.IsRunning) {
-            this.ProcessFrame(fixedTimeStep)
+            this.RunFrame(fixedTimeStep)
         }
         this.OnStopCallback?.invoke()
         this.OnStop()
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun ProcessFrame(fixedTimeStep: Float) {
-        check(!this.IsClosed)
+    private fun RunFrame(fixedTimeStep: Float) {
         val startTime = SDL_GetTicks().SDL_CheckError()
-        run {
-            this.OnFrameBegin()
-            memScoped {
-                val event = this.alloc<SDL_Event>()
-                while (SDL_PollEvent(event.ptr).SDL_CheckError()) {
-                    this@Engine.OnEvent(event.ptr)
-                }
+        this.OnFrameBegin()
+        memScoped {
+            val event = this.alloc<SDL_Event>()
+            while (SDL_PollEvent(event.ptr).SDL_CheckError()) {
+                this@Engine.OnEvent(event.ptr)
             }
-            run {
-                this.OnFixedFrameBegin()
-                if (FixedFrame.Number == 0U) {
-                    this.OnFixedUpdateCallback?.invoke()
-                    FixedFrame.Number++
-                    FixedFrame.TimeStep = fixedTimeStep
-                } else {
-                    while (FixedFrame.Time <= Frame.Time) {
-                        this.OnFixedUpdateCallback?.invoke()
-                        FixedFrame.Number++
-                        FixedFrame.TimeStep = fixedTimeStep
-                    }
-                }
-                this.OnFixedFrameEnd()
-            }
-            this.OnUpdateCallback?.invoke()
-            if (this is ClientEngine) {
-                this.OnRenderCallback?.invoke()
-            }
-            this.OnFrameEnd()
         }
+        this.RunFixedFrame(fixedTimeStep)
+        this.OnUpdateCallback?.invoke()
+        this.OnFrameEnd()
         val endTime = SDL_GetTicks().SDL_CheckError()
         val deltaTime = (endTime - startTime).toFloat() / 1000f
         Frame.Number++
         Frame.Time += deltaTime
         Frame.TimeStep = deltaTime
+    }
+
+    private fun RunFixedFrame(fixedTimeStep: Float) {
+        while (FixedFrame.Number == 0U || FixedFrame.Time <= Frame.Time) {
+            this.OnFixedFrameBegin()
+            this.OnFixedUpdateCallback?.invoke()
+            this.OnFixedFrameEnd()
+            FixedFrame.Number++
+            FixedFrame.TimeStep = fixedTimeStep
+        }
     }
 
     protected open fun OnStart() {

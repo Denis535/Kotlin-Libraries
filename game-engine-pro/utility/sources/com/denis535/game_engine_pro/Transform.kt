@@ -1,52 +1,50 @@
 package com.denis535.game_engine_pro
 
 public interface Transform {
+
     public val Position: Vector3
     public val Rotation: Quaternion
     public val Scale: Vector3
+
+    public fun TransformPoint(point: Vector3): Vector3 {
+        return TransformPoint(this.Position, this.Rotation, this.Scale, point.X, point.Y, point.Z)
+    }
+
+    public fun TransformPoint(x: Float, y: Float, z: Float): Vector3 {
+        return TransformPoint(this.Position, this.Rotation, this.Scale, x, y, z)
+    }
+
+    public fun InverseTransformPoint(point: Vector3): Vector3 {
+        return InverseTransformPoint(this.Position, this.Rotation, this.Scale, point.X, point.Y, point.Z)
+    }
+
+    public fun InverseTransformPoint(x: Float, y: Float, z: Float): Vector3 {
+        return InverseTransformPoint(this.Position, this.Rotation, this.Scale, x, y, z)
+    }
+
 }
 
-public interface StaticTransform : Transform
+public open class StaticTransform(
+    public override val Position: Vector3,
+    public override val Rotation: Quaternion,
+    public override val Scale: Vector3,
+) : Transform
 
-public class TransformImpl(
+public open class DynamicTransform(
     public override var Position: Vector3,
     public override var Rotation: Quaternion,
     public override var Scale: Vector3,
 ) : Transform
-
-public class StaticTransformImpl(
-    public override val Position: Vector3,
-    public override val Rotation: Quaternion,
-    public override val Scale: Vector3,
-) : StaticTransform
-
-public fun Transform.TransformPoint(point: Vector3): Vector3 {
-    return TransformPoint(this.Position, this.Rotation, this.Scale, point.X, point.Y, point.Z)
-}
-
-public fun Transform.TransformPoint(x: Float, y: Float, z: Float): Vector3 {
-    return TransformPoint(this.Position, this.Rotation, this.Scale, x, y, z)
-}
-
-public fun Transform.InverseTransformPoint(point: Vector3): Vector3 {
-    return InverseTransformPoint(this.Position, this.Rotation, this.Scale, point.X, point.Y, point.Z)
-}
-
-public fun Transform.InverseTransformPoint(x: Float, y: Float, z: Float): Vector3 {
-    return InverseTransformPoint(this.Position, this.Rotation, this.Scale, x, y, z)
-}
 
 private fun TransformPoint(position: Vector3, rotation: Quaternion, scale: Vector3, x: Float, y: Float, z: Float): Vector3 {
     var x = x * scale.X
     var y = y * scale.Y
     var z = z * scale.Z
 
-    // t = 2 * cross(rotation.xyz, point)
     val tx = 2f * (rotation.Y * z - rotation.Z * y)
     val ty = 2f * (rotation.Z * x - rotation.X * z)
     val tz = 2f * (rotation.X * y - rotation.Y * x)
 
-    // result = point + rotation.w * t + cross(rotation.xyz, t)
     x += rotation.W * tx + (rotation.Y * tz - rotation.Z * ty)
     y += rotation.W * ty + (rotation.Z * tx - rotation.X * tz)
     z += rotation.W * tz + (rotation.X * ty - rotation.Y * tx)

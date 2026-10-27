@@ -4,11 +4,11 @@ import cnames.structs.*
 import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
 
-public class Content : AssetLoader, AutoCloseable {
-    private sealed class LoadFileAsyncResult {
-        public class Completed(public val File: ByteArray) : LoadFileAsyncResult()
-        public class Faulted(public val Error: String) : LoadFileAsyncResult()
-        public object Canceled : LoadFileAsyncResult()
+public class Content : AutoCloseable {
+    public sealed class LoadAssetAsyncResult {
+        public class Completed(public val Asset: ByteArray) : LoadAssetAsyncResult()
+        public class Faulted(public val Error: String) : LoadAssetAsyncResult()
+        public object Canceled : LoadAssetAsyncResult()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -24,12 +24,9 @@ public class Content : AssetLoader, AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public constructor(path: String?) {
         val properties = SDL_CreateProperties().SDL_CheckError()
-        try {
-            this.NativeStorage = SDL_OpenTitleStorage(path, properties).SDL_CheckError()!!
-        } finally {
-            SDL_DestroyProperties(properties).SDL_CheckError()
-        }
+        this.NativeStorage = SDL_OpenTitleStorage(path, properties).SDL_CheckError()!!
         this.NativeAsyncIOQueue = SDL_CreateAsyncIOQueue().SDL_CheckError()!!
+        SDL_DestroyProperties(properties).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -43,16 +40,16 @@ public class Content : AssetLoader, AutoCloseable {
         memScoped {
             val outcome = this.alloc<SDL_AsyncIOOutcome>()
             while (SDL_GetAsyncIOResult(this@Content.NativeAsyncIOQueue, outcome.ptr).SDL_CheckError()) {
-                val callbackStableRef = outcome.userdata!!.asStableRef<(LoadFileAsyncResult) -> Unit>()
+                val callbackStableRef = outcome.userdata!!.asStableRef<(LoadAssetAsyncResult) -> Unit>()
                 try {
                     if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE) {
                         val data = outcome.buffer!!.readBytes(outcome.bytes_transferred.toInt())
-                        callbackStableRef.get().invoke(LoadFileAsyncResult.Completed(data))
+                        callbackStableRef.get().invoke(LoadAssetAsyncResult.Completed(data))
                     } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE) {
                         val error = SDL.GetError() ?: "unknown error"
-                        callbackStableRef.get().invoke(LoadFileAsyncResult.Faulted(error))
+                        callbackStableRef.get().invoke(LoadAssetAsyncResult.Faulted(error))
                     } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED) {
-                        callbackStableRef.get().invoke(LoadFileAsyncResult.Canceled)
+                        callbackStableRef.get().invoke(LoadAssetAsyncResult.Canceled)
                     }
                 } finally {
                     SDL_free(outcome.buffer).SDL_CheckError()
@@ -63,7 +60,7 @@ public class Content : AssetLoader, AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun IsFile(path: String): Boolean {
+    public fun IsAsset(path: String): Boolean {
         memScoped {
             val info = this.alloc<SDL_PathInfo>()
             if (SDL_GetStoragePathInfo(this@Content.NativeStorage, path, info.ptr).SDL_CheckError()) {
@@ -85,7 +82,7 @@ public class Content : AssetLoader, AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetDirectoryContents(path: String): List<String> {
+    public fun GetContents(path: String): List<String> {
         val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userdata, _, filename ->
             val list = userdata!!.asStableRef<MutableList<String>>().get()
             list += filename!!.toKString()
@@ -104,7 +101,7 @@ public class Content : AssetLoader, AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun LoadFile(path: String): ByteArray {
+    public fun LoadAsset(path: String): ByteArray {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Content.NativeStorage, path, length.ptr).SDL_CheckError()) {
@@ -125,34 +122,12 @@ public class Content : AssetLoader, AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun LoadFileAsync(path: String, callback: (LoadFileAsyncResult) -> Unit) {
+    public fun LoadAssetAsync(path: String, callback: (LoadAssetAsyncResult) -> Unit) {
         val callbackStableRef = StableRef.create(callback).asCPointer()
         if (SDL_LoadFileAsync(path, this.NativeAsyncIOQueue, callbackStableRef).SDL_CheckError()) {
             return
         }
         error("Couldn't load file: $path")
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun <T : Asset> LoadAsset(path: String, factory: (ByteArray) -> T): T {
-        return factory(this.LoadFile(path))
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun <T : Asset> LoadAssetAsync(path: String, callback: (LoadAssetAsyncResult<T>) -> Unit, factory: (ByteArray) -> T) {
-        this.LoadFileAsync(path) {
-            when (it) {
-                is LoadFileAsyncResult.Completed -> {
-                    callback.invoke(LoadAssetAsyncResult.Completed(factory(it.File)))
-                }
-                is LoadFileAsyncResult.Faulted -> {
-                    callback.invoke(LoadAssetAsyncResult.Faulted(it.Error))
-                }
-                is LoadFileAsyncResult.Canceled -> {
-                    callback.invoke(LoadAssetAsyncResult.Canceled)
-                }
-            }
-        }
     }
 
 }

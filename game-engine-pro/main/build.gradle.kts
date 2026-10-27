@@ -1,5 +1,5 @@
 plugins {
-    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0"
+    this.id("org.jetbrains.kotlin.multiplatform") version "2.4.21"
     this.id("signing")
     this.id("maven-publish")
 }
@@ -24,8 +24,7 @@ kotlin {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
             this.dependencies {
-                this.api("io.github.denis535:game-engine-pro-content:1.0.2")
-                this.api("io.github.denis535:game-engine-pro-utility:1.0.0")
+                this.api("io.github.denis535:game-engine-pro-utility:1.0.1")
             }
         }
         val mingwX64Main by getting {}

@@ -1,24 +1,24 @@
 package com.denis535.game_engine_pro
 
 public interface AssetLoader {
-    public fun <T : Asset> LoadAsset(path: String, factory: (ByteArray) -> T): T
-    public fun <T : Asset> LoadAssetAsync(path: String, callback: (LoadAssetAsyncResult<T>) -> Unit, factory: (ByteArray) -> T)
+
+    public fun LoadAsset(path: String): ByteArray
+    public fun LoadAssetAsync(path: String, callback: (LoadAssetAsyncResult) -> Unit)
+
 }
 
-public sealed class LoadAssetAsyncResult<out T : Asset> {
-    public class Completed<out T : Asset>(public val Asset: T) : LoadAssetAsyncResult<T>()
-    public class Faulted(public val Error: String) : LoadAssetAsyncResult<Nothing>()
-    public object Canceled : LoadAssetAsyncResult<Nothing>()
+public sealed class LoadAssetAsyncResult {
+    public class Completed(public val Asset: ByteArray) : LoadAssetAsyncResult()
+    public class Faulted(public val Error: String) : LoadAssetAsyncResult()
+    public object Canceled : LoadAssetAsyncResult()
 }
 
 public fun AssetLoader.LoadBinaryAsset(path: String): BinaryAsset {
-    return this.LoadAsset(path) { data ->
-        BinaryAsset(data)
-    }
+    val asset = this.LoadAsset(path)
+    return BinaryAsset(asset)
 }
 
 public fun AssetLoader.LoadTextAsset(path: String): TextAsset {
-    return this.LoadAsset(path) { data ->
-        TextAsset(data.decodeToString())
-    }
+    val asset = this.LoadAsset(path)
+    return TextAsset(asset.decodeToString())
 }

@@ -14,6 +14,16 @@ public object Utils {
         get() = SDL_GetBasePath().SDL_CheckError()?.toKString()
 
     @OptIn(ExperimentalForeignApi::class)
+    public fun CheckMainThread() {
+        check(SDL_IsMainThread().SDL_CheckError())
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun Delay(durationMs: UInt) {
+        SDL_Delay(durationMs).SDL_CheckError()
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
     public fun ShowInfoMessage(title: String?, message: String?) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title, message, null).SDL_CheckError()
     }
@@ -26,16 +36,6 @@ public object Utils {
     @OptIn(ExperimentalForeignApi::class)
     public fun ShowErrorMessage(title: String?, message: String?) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, null).SDL_CheckError()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public fun CheckMainThread() {
-        check(SDL_IsMainThread().SDL_CheckError())
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public fun Delay(durationMs: UInt) {
-        SDL_Delay(durationMs).SDL_CheckError()
     }
 
 }

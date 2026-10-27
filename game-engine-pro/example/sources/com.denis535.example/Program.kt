@@ -9,28 +9,29 @@ public fun Main(args: Array<String>) {
     ClientEngine2().apply {
         this.OnStartCallback = {}
         this.OnStopCallback = {}
-        this.OnRenderCallback = {
-            Utils.Delay(10U)
-        }
-        this.OnUpdateCallback = {
-//            println("Frame: " + Frame.Number)
-        }
-        this.OnFixedUpdateCallback = {
-//            println("FixedFrame: " + FixedFrame.Number)
-        }
-        this.OnMouseMoveCallback = { event ->
+
+        this.Mouse.OnMoveCallback = { event ->
 //            println(event.Cursor)
         }
-        this.OnMouseButtonActionCallback = { event ->
+        this.Mouse.OnButtonActionCallback = { event ->
 //            println(event.Button)
         }
-        this.OnMouseWheelScrollCallback = { event ->
+        this.Mouse.OnWheelScrollCallback = { event ->
 //            println(event.Scroll.Y)
         }
-        this.OnKeyboardKeyActionCallback = { event ->
+        this.Keyboard.OnKeyActionCallback = { event ->
             if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
                 this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen
             }
+        }
+
+        this.OnFixedUpdateCallback = {
+            Utils.Delay(10U)
+//            println("FixedFrame: " + FixedFrame.Number)
+        }
+        this.OnUpdateCallback = {
+            Utils.Delay(10U)
+//            println("Frame: " + Frame.Number)
         }
     }.use {
         it.Run()
@@ -43,7 +44,7 @@ private class ClientEngine2 : ClientEngine {
     public val Storage: Storage
 
     public constructor() : super(Manifest("Example", "com.denis535", "example", null, "Denis535")) {
-        this.Window = Window2(WindowDescription.Window("Example", IsResizable = true))
+        this.Window = Window2(WindowDescription.Window("Example", 1024, 512, IsResizable = false))
         this.Content = Content(null)
         this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
         this.Window!!.Show()

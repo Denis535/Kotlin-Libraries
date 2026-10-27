@@ -68,9 +68,9 @@ public class Touchscreen : AutoCloseable {
 }
 
 public class TouchEvent(
-    internal val NativeDeviceID: ULong,
     public val Timestamp: Float,
     public val WindowID: UInt,
+    internal val NativeDeviceID: ULong,
     public val ID: ULong,
     public val State: TouchState,
     public val Point: Vector2, // [0..1]

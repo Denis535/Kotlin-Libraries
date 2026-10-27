@@ -15,11 +15,8 @@ public class Storage : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public constructor(group: String, name: String) {
         val properties = SDL_CreateProperties().SDL_CheckError()
-        try {
-            this.NativeStorage = SDL_OpenUserStorage(group, name, properties).SDL_CheckError()!!
-        } finally {
-            SDL_DestroyProperties(properties).SDL_CheckError()
-        }
+        this.NativeStorage = SDL_OpenUserStorage(group, name, properties).SDL_CheckError()!!
+        SDL_DestroyProperties(properties).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -50,7 +47,7 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetDirectoryContents(path: String): List<String> {
+    public fun GetContents(path: String): List<String> {
         val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userdata, _, filename ->
             val list = userdata!!.asStableRef<MutableList<String>>().get()
             list += filename!!.toKString()
@@ -99,20 +96,20 @@ public class Storage : AutoCloseable {
         error("Couldn't save file: $path")
     }
 
+    @OptIn(ExperimentalForeignApi::class)
+    public fun DeleteFile(path: String) {
+        if (SDL_RemoveStoragePath(this.NativeStorage, path).SDL_CheckError()) {
+            return
+        }
+        error("Couldn't delete file or directory: $path")
+    }
+
     public fun LoadText(path: String): String {
         return this.LoadFile(path).decodeToString()
     }
 
     public fun SaveText(path: String, text: String) {
         this.SaveFile(path, text.encodeToByteArray())
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public fun Delete(path: String) {
-        if (SDL_RemoveStoragePath(this.NativeStorage, path).SDL_CheckError()) {
-            return
-        }
-        error("Couldn't delete file or directory: $path")
     }
 
 }
