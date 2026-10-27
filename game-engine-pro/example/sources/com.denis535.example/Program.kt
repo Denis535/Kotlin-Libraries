@@ -21,7 +21,7 @@ public fun Main(args: Array<String>) {
         }
         this.Keyboard.OnKeyActionCallback = { event ->
             if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
-                this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen
+                this.Window.IsFullScreen = !this.Window.IsFullScreen
             }
         }
 
@@ -43,12 +43,13 @@ private class ClientEngine2 : ClientEngine {
     public val Content: Content
     public val Storage: Storage
 
-    public constructor() : super(Manifest("Example", "com.denis535", "example", null, "Denis535")) {
-        this.Window = Window2(WindowDescription.Window("Example", 1024, 512, IsResizable = false))
+    public constructor() : super(
+        Manifest("Example", "com.denis535", "example", null, "Denis535"),
+        WindowDescription.Window("Example", IsResizable = false)) {
         this.Content = Content(null)
         this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
-        this.Window!!.Show()
-        this.Window!!.Raise()
+        this.Window.Show()
+        this.Window.Raise()
     }
 
     public override fun close() {
@@ -74,17 +75,6 @@ private class ClientEngine2 : ClientEngine {
 
     protected override fun OnFrameEnd() {
         super.OnFrameEnd()
-    }
-
-}
-
-private class Window2 : Window {
-
-    public constructor(description: WindowDescription) : super(description) {
-    }
-
-    public override fun close() {
-        super.close()
     }
 
 }

@@ -5,7 +5,7 @@ import com.denis535.game_engine_pro.*
 import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
 
-public open class Window : AutoCloseable {
+public class Window : AutoCloseable {
 
     public var IsClosed: Boolean = false
         private set
@@ -21,6 +21,13 @@ public open class Window : AutoCloseable {
         get() {
             check(!this.IsClosed)
             return SDL_GetWindowID(this.NativeWindow).SDL_CheckError()
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val Display: Display
+        get() {
+            check(!this.IsClosed)
+            return Display(SDL_GetDisplayForWindow(this.NativeWindow).SDL_CheckError())
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -112,6 +119,21 @@ public open class Window : AutoCloseable {
             SDL_SetWindowResizable(this.NativeWindow, value).SDL_CheckError()
         }
     @OptIn(ExperimentalForeignApi::class)
+    public var IsTextInputEnabled: Boolean
+        get() {
+            check(!this.IsClosed)
+            return SDL_TextInputActive(this.NativeWindow).SDL_CheckError()
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value) {
+                SDL_StartTextInput(this.NativeWindow).SDL_CheckError()
+            } else {
+                SDL_StopTextInput(this.NativeWindow).SDL_CheckError()
+            }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public var IsMouseLocked: Boolean
         get() {
             check(!this.IsClosed)
@@ -152,20 +174,6 @@ public open class Window : AutoCloseable {
             check(!this.IsClosed)
             SDL_SetWindowKeyboardGrab(this.NativeWindow, value).SDL_CheckError()
         }
-    @OptIn(ExperimentalForeignApi::class)
-    public var IsTextInputEnabled: Boolean
-        get() {
-            check(!this.IsClosed)
-            return SDL_TextInputActive(this.NativeWindow).SDL_CheckError()
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value) {
-                SDL_StartTextInput(this.NativeWindow).SDL_CheckError()
-            } else {
-                SDL_StopTextInput(this.NativeWindow).SDL_CheckError()
-            }
-        }
 
     @OptIn(ExperimentalForeignApi::class)
     public val HasMouseFocus: Boolean
@@ -180,13 +188,6 @@ public open class Window : AutoCloseable {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_INPUT_FOCUS != 0UL
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val Display: Display
-        get() {
-            check(!this.IsClosed)
-            return Display(SDL_GetDisplayForWindow(this.NativeWindow).SDL_CheckError())
         }
 
     public var OnMouseFocusCallback: ((MouseFocusEvent) -> Unit)? = null
@@ -217,6 +218,7 @@ public open class Window : AutoCloseable {
             }
             field = value
         }
+
     public var OnZoomCallback: ((ZoomEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
@@ -231,6 +233,7 @@ public open class Window : AutoCloseable {
             }
             field = value
         }
+
     public var OnTextCallback: ((TextEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
