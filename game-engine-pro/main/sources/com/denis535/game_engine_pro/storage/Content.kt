@@ -23,10 +23,13 @@ public class Content : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(path: String?) {
-        val properties = SDL_CreateProperties().SDL_CheckError()
-        this.NativeStorage = SDL_OpenTitleStorage(path, properties).SDL_CheckError()!!
+        this.NativeStorage = run {
+            val properties = SDL_CreateProperties().SDL_CheckError()
+            val result = SDL_OpenTitleStorage(path, properties).SDL_CheckError()!!
+            SDL_DestroyProperties(properties).SDL_CheckError()
+            result
+        }
         this.NativeAsyncIOQueue = SDL_CreateAsyncIOQueue().SDL_CheckError()!!
-        SDL_DestroyProperties(properties).SDL_CheckError()
     }
 
     @OptIn(ExperimentalForeignApi::class)

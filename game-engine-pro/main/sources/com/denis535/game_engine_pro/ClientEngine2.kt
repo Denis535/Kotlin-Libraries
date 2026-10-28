@@ -6,8 +6,15 @@ import com.denis535.game_engine_pro.storage.*
 
 public open class ClientEngine2 : ClientEngine {
 
-    public constructor(manifest: Manifest, isFullScreen: Boolean = false, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) : super(manifest) {
-        this.Window = Window(manifest.Title, isFullScreen, width, height, isResizable)
+    public constructor(
+        manifest: Manifest,
+        api: GraphicsApi = GraphicsApi.OpenGL,
+        isFullScreen: Boolean = false,
+        width: Int = 1280,
+        height: Int = 720,
+        isResizable: Boolean = false
+    ) : super(manifest) {
+        this.Window = Window(manifest.Title, api, isFullScreen, width, height, isResizable)
         this.Cursor = Cursor()
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
