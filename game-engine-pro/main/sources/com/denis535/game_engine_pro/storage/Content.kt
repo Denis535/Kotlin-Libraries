@@ -36,7 +36,7 @@ public class Content : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Process() {
+    internal fun Process() {
         memScoped {
             val outcome = this.alloc<SDL_AsyncIOOutcome>()
             while (SDL_GetAsyncIOResult(this@Content.NativeAsyncIOQueue, outcome.ptr).SDL_CheckError()) {

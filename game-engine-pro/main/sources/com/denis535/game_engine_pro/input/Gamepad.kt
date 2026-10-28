@@ -104,7 +104,7 @@ public class Gamepad : AutoCloseable {
             field = value
         }
 
-    internal constructor()
+    public constructor()
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {

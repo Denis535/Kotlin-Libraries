@@ -23,7 +23,7 @@ public class Keyboard : AutoCloseable {
             field = value
         }
 
-    internal constructor()
+    public constructor()
 
     public override fun close() {
         check(!this.IsClosed)

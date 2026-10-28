@@ -2,64 +2,43 @@ package com.denis535.game_engine_pro
 
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
+import com.denis535.game_engine_pro.storage.*
 import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
 
-public open class ClientEngine : Engine {
+public abstract class ClientEngine : Engine {
 
-    public val Window: Window
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-    public val Cursor: Cursor
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public val Touchscreen: Touchscreen
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-    public val Mouse: Mouse
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-    public val Keyboard: Keyboard
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-    public val Gamepads: List<Gamepad>
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
+    public lateinit var Window: Window
+        protected set
+    public lateinit var Content: Content
+        protected set
+    public lateinit var Storage: Storage
+        protected set
+    public lateinit var Cursor: Cursor
+        protected set
+    public lateinit var Touchscreen: Touchscreen
+        protected set
+    public lateinit var Mouse: Mouse
+        protected set
+    public lateinit var Keyboard: Keyboard
+        protected set
+    public lateinit var Gamepads: List<Gamepad>
+        protected set
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest, windowDescription: WindowDescription) : super(manifest) {
+    public constructor(manifest: Manifest) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO or SDL_INIT_SENSOR or SDL_INIT_GAMEPAD).SDL_CheckError()
-        this.Window = Window(windowDescription)
-        this.Cursor = Cursor()
-        this.Touchscreen = Touchscreen()
-        this.Mouse = Mouse()
-        this.Keyboard = Keyboard()
-        this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
     }
 
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        this.Gamepads.asReversed().forEach { it.close() }
-        this.Keyboard.close()
-        this.Mouse.close()
-        this.Touchscreen.close()
-        this.Cursor.close()
-        this.Window.close()
         super.close()
+    }
+
+    protected override fun OnFrameBegin() {
+        super.OnFrameBegin()
+        this.Content.Process()
     }
 
     @OptIn(ExperimentalForeignApi::class)

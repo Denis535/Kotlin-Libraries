@@ -48,7 +48,7 @@ public class Touchscreen : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    internal constructor() {
+    public constructor() {
         memScoped {
             val count = this.alloc<IntVar>()
             val devices = SDL_GetTouchDevices(count.ptr).SDL_CheckError()
