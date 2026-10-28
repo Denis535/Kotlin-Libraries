@@ -10,10 +10,6 @@ public abstract class ClientEngine : Engine {
 
     public lateinit var Window: Window
         protected set
-    public lateinit var Content: Content
-        protected set
-    public lateinit var Storage: Storage
-        protected set
     public lateinit var Cursor: Cursor
         protected set
     public lateinit var Touchscreen: Touchscreen
@@ -23,6 +19,10 @@ public abstract class ClientEngine : Engine {
     public lateinit var Keyboard: Keyboard
         protected set
     public lateinit var Gamepads: List<Gamepad>
+        protected set
+    public var Content: Content? = null
+        protected set
+    public var Storage: Storage? = null
         protected set
 
     @OptIn(ExperimentalForeignApi::class)
@@ -38,7 +38,7 @@ public abstract class ClientEngine : Engine {
 
     protected override fun OnFrameBegin() {
         super.OnFrameBegin()
-        this.Content.Process()
+        this.Content?.Process()
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -352,6 +352,10 @@ public abstract class ClientEngine : Engine {
                 }
             }
         }
+    }
+
+    protected override fun OnFrameEnd() {
+        super.OnFrameEnd()
     }
 
 }

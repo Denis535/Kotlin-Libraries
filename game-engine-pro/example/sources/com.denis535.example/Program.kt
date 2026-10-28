@@ -49,13 +49,13 @@ private class ClientEngine2 : ClientEngine {
 
     public constructor() : super(Manifest("Example", "com.denis535", "example", null, "Denis535")) {
         this.Window = Window("Example", isResizable = true)
-        this.Content = Content(null)
-        this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
         this.Cursor = Cursor()
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
         this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
+        this.Content = Content(null)
+        this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
 
         this.Window.Show()
         this.Window.Raise()
@@ -64,13 +64,13 @@ private class ClientEngine2 : ClientEngine {
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
+        this.Storage!!.close()
+        this.Content!!.close()
         this.Gamepads.asReversed().forEach { it.close() }
         this.Keyboard.close()
         this.Mouse.close()
         this.Touchscreen.close()
         this.Cursor.close()
-        this.Storage.close()
-        this.Content.close()
         this.Window.close()
         super.close()
     }
