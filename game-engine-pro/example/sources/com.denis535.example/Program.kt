@@ -10,17 +10,24 @@ public fun Main(args: Array<String>) {
         this.OnStartCallback = {}
         this.OnStopCallback = {}
 
+        this.Window.OnCursorEnterCallback = { event ->
+//            println(event)
+        }
+        this.Window.OnCursorLeaveCallback = { event ->
+//            println(event)
+        }
+        this.Window.OnKeyboardFocusCallback = { event ->
+//            println(event)
+        }
+
         this.Mouse.OnMoveCallback = { event ->
-//            println(event.Cursor)
         }
         this.Mouse.OnButtonActionCallback = { event ->
-//            println(event.Button)
         }
         this.Mouse.OnWheelScrollCallback = { event ->
-//            println(event.Scroll.Y)
         }
         this.Keyboard.OnKeyActionCallback = { event ->
-            if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
+            if (event.Key == KeyboardKey.Enter && event.IsPressed && !event.IsRepeated && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
                 this.Window.IsFullScreen = !this.Window.IsFullScreen
             }
         }
@@ -41,7 +48,7 @@ public fun Main(args: Array<String>) {
 private class ClientEngine2 : ClientEngine {
 
     public constructor() : super(Manifest("Example", "com.denis535", "example", null, "Denis535")) {
-        this.Window = Window(WindowDescription.Window("Example", IsResizable = false))
+        this.Window = Window(WindowDescription.Window("Example", IsResizable = true))
         this.Content = Content(null)
         this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
         this.Cursor = Cursor()

@@ -194,7 +194,7 @@ public abstract class Engine : AutoCloseable {
 
 }
 
-public class Manifest(
+public data class Manifest(
     public val Title: String,
     public val Group: String,
     public val Name: String,

@@ -330,48 +330,45 @@ public class Window : AutoCloseable {
 
 }
 
-public sealed class WindowDescription(
-    public val Title: String,
-) {
-    public class FullScreen(
-        title: String,
+public sealed class WindowDescription {
+    public data class FullScreen(
+        public val Title: String,
         public val Width: Int = 1280,
         public val Height: Int = 720,
         public val IsResizable: Boolean = false,
-    ) : WindowDescription(title)
-
-    public class Window(
-        title: String,
+    ) : WindowDescription()
+    public data class Window(
+        public val Title: String,
         public val Width: Int = 1280,
         public val Height: Int = 720,
         public val IsResizable: Boolean = false,
-    ) : WindowDescription(title)
+    ) : WindowDescription()
 }
 
-public class CursorEnterEvent(
+public data class CursorEnterEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
 )
 
-public class CursorLeaveEvent(
+public data class CursorLeaveEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
 )
 
-public class KeyboardFocusEvent(
+public data class KeyboardFocusEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val IsFocusGained: Boolean,
 )
 
-public class ZoomEvent(
+public data class ZoomEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val State: ZoomState,
     public val Value: Float, // value <= 1 or value >= 1
 )
 
-public class TextEvent(
+public data class TextEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Value: String,

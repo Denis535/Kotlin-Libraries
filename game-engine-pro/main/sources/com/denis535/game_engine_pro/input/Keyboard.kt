@@ -39,7 +39,7 @@ public class Keyboard : AutoCloseable {
 
 }
 
-public class KeyboardKeyActionEvent(
+public data class KeyboardKeyActionEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Key: KeyboardKey,
