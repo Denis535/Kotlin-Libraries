@@ -48,7 +48,7 @@ public fun Main(args: Array<String>) {
 private class ClientEngine2 : ClientEngine {
 
     public constructor() : super(Manifest("Example", "com.denis535", "example", null, "Denis535")) {
-        this.Window = Window(WindowDescription.Window("Example", IsResizable = true))
+        this.Window = Window("Example", isResizable = true)
         this.Content = Content(null)
         this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
         this.Cursor = Cursor()

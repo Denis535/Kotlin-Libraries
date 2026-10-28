@@ -264,27 +264,17 @@ public class Window : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(description: WindowDescription) {
+    public constructor(title: String, isFullScreen: Boolean = false, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) {
         val properties = SDL_CreateProperties().SDL_CheckError().apply {
             SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true).SDL_CheckError()
             SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true).SDL_CheckError()
-            if (description is WindowDescription.FullScreen) {
-                SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title).SDL_CheckError()
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true).SDL_CheckError()
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong()).SDL_CheckError()
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong()).SDL_CheckError()
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable).SDL_CheckError()
-            } else if (description is WindowDescription.Window) {
-                SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, description.Title).SDL_CheckError()
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, false).SDL_CheckError()
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, description.Width.toLong()).SDL_CheckError()
-                SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, description.Height.toLong()).SDL_CheckError()
-                SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, description.IsResizable).SDL_CheckError()
-            }
+            SDL_SetStringProperty(this, SDL_PROP_WINDOW_CREATE_TITLE_STRING, title).SDL_CheckError()
+            SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, isFullScreen).SDL_CheckError()
+            SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
+            SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
+            SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width.toLong()).SDL_CheckError()
+            SDL_SetNumberProperty(this, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height.toLong()).SDL_CheckError()
+            SDL_SetBooleanProperty(this, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, isResizable).SDL_CheckError()
         }
         this.NativeWindow = SDL_CreateWindowWithProperties(properties).SDL_CheckError()!!.apply {
             SDL_SetWindowMinimumSize(this, 320, 240).SDL_CheckError()
@@ -328,21 +318,6 @@ public class Window : AutoCloseable {
         }
     }
 
-}
-
-public sealed class WindowDescription {
-    public data class FullScreen(
-        public val Title: String,
-        public val Width: Int = 1280,
-        public val Height: Int = 720,
-        public val IsResizable: Boolean = false,
-    ) : WindowDescription()
-    public data class Window(
-        public val Title: String,
-        public val Width: Int = 1280,
-        public val Height: Int = 720,
-        public val IsResizable: Boolean = false,
-    ) : WindowDescription()
 }
 
 public data class CursorEnterEvent(
