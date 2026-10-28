@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro
+package com.denis535.game_engine_pro.storage
 
 import cnames.structs.*
 import com.denis535.internal.sdl.*

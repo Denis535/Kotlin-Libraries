@@ -190,7 +190,21 @@ public class Window : AutoCloseable {
             return flags and SDL_WINDOW_INPUT_FOCUS != 0UL
         }
 
-    public var OnMouseFocusCallback: ((MouseFocusEvent) -> Unit)? = null
+    public var OnMouseEnterCallback: ((MouseEnterEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+    public var OnMouseLeaveCallback: ((MouseLeaveEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -334,10 +348,14 @@ public sealed class WindowDescription(
     ) : WindowDescription(title)
 }
 
-public class MouseFocusEvent(
+public class MouseEnterEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
-    public val IsFocusGained: Boolean,
+)
+
+public class MouseLeaveEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
 )
 
 public class KeyboardFocusEvent(

@@ -98,8 +98,8 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = MouseFocusEvent(timestamp, windowID, true)
-                    this.Window.OnMouseFocusCallback?.invoke(event)
+                    val event = MouseEnterEvent(timestamp, windowID)
+                    this.Window.OnMouseEnterCallback?.invoke(event)
                 }
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
@@ -107,8 +107,8 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = MouseFocusEvent(timestamp, windowID, false)
-                    this.Window.OnMouseFocusCallback?.invoke(event)
+                    val event = MouseLeaveEvent(timestamp, windowID)
+                    this.Window.OnMouseLeaveCallback?.invoke(event)
                 }
             }
 
