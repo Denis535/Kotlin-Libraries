@@ -12,18 +12,62 @@ public abstract class ClientEngine : Engine {
         protected set
     public lateinit var Cursor: Cursor
         protected set
-    public lateinit var Touchscreen: Touchscreen
-        protected set
-    public lateinit var Mouse: Mouse
-        protected set
-    public lateinit var Keyboard: Keyboard
-        protected set
-    public lateinit var Gamepads: List<Gamepad>
-        protected set
+
+    public var Touchscreen: Touchscreen? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        protected set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+    public var Mouse: Mouse? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        protected set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+    public var Keyboard: Keyboard? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        protected set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+    public var Gamepads: List<Gamepad>? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        protected set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+
     public var Content: Content? = null
-        protected set
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        protected set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
     public var Storage: Storage? = null
-        protected set
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        protected set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest) : super(manifest) {
@@ -165,9 +209,9 @@ public abstract class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                    if (nativeDeviceID == this.Touchscreen?.NativeDeviceID) {
                         val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Begin, Vector2(x, y), Vector2(0f, 0f), pressure)
-                        this.Touchscreen.OnTouchCallback?.invoke(event)
+                        this.Touchscreen?.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -183,9 +227,9 @@ public abstract class ClientEngine : Engine {
                 val deltaY = evt.dy
                 val pressure = evt.pressure
                 if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                    if (nativeDeviceID == this.Touchscreen?.NativeDeviceID) {
                         val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Changed, Vector2(x, y), Vector2(deltaX, deltaY), pressure)
-                        this.Touchscreen.OnTouchCallback?.invoke(event)
+                        this.Touchscreen?.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -199,9 +243,9 @@ public abstract class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                    if (nativeDeviceID == this.Touchscreen?.NativeDeviceID) {
                         val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.End, Vector2(x, y), Vector2(0f, 0f), pressure)
-                        this.Touchscreen.OnTouchCallback?.invoke(event)
+                        this.Touchscreen?.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -215,9 +259,9 @@ public abstract class ClientEngine : Engine {
                 val y = evt.y
                 val pressure = evt.pressure
                 if (windowID == this.Window.NativeWindowID) {
-                    if (nativeDeviceID == this.Touchscreen.NativeDeviceID) {
+                    if (nativeDeviceID == this.Touchscreen?.NativeDeviceID) {
                         val event = TouchEvent(timestamp, windowID, nativeDeviceID, id, TouchState.Canceled, Vector2(x, y), Vector2(0f, 0f), pressure)
-                        this.Touchscreen.OnTouchCallback?.invoke(event)
+                        this.Touchscreen?.OnTouchCallback?.invoke(event)
                     }
                 }
             }
@@ -234,7 +278,7 @@ public abstract class ClientEngine : Engine {
                 val deltaY = evt.yrel
                 if (windowID == this.Window.NativeWindowID) {
                     val event = MouseMoveEvent(timestamp, windowID, nativeDeviceID, Vector2(x, y), Vector2(deltaX, deltaY))
-                    this.Mouse.OnMoveCallback?.invoke(event)
+                    this.Mouse?.OnMoveCallback?.invoke(event)
                 }
             }
             SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
@@ -248,7 +292,7 @@ public abstract class ClientEngine : Engine {
                 if (windowID == this.Window.NativeWindowID) {
                     if (button != null) {
                         val event = MouseButtonActionEvent(timestamp, windowID, nativeDeviceID, button, isPressed, clickCount)
-                        this.Mouse.OnButtonActionCallback?.invoke(event)
+                        this.Mouse?.OnButtonActionCallback?.invoke(event)
                     }
                 }
             }
@@ -274,7 +318,7 @@ public abstract class ClientEngine : Engine {
                 }
                 if (windowID == this.Window.NativeWindowID) {
                     val event = MouseWheelScrollEvent(timestamp, windowID, nativeDeviceID, Vector2(scrollX, scrollY), Vector2I(integerScrollX, integerScrollY))
-                    this.Mouse.OnWheelScrollCallback?.invoke(event)
+                    this.Mouse?.OnWheelScrollCallback?.invoke(event)
                 }
             }
 
@@ -289,7 +333,7 @@ public abstract class ClientEngine : Engine {
                 if (windowID == this.Window.NativeWindowID) {
                     if (key != null) {
                         val event = KeyboardKeyActionEvent(timestamp, windowID, key, isPressed, isRepeated)
-                        this.Keyboard.OnKeyActionCallback?.invoke(event)
+                        this.Keyboard?.OnKeyActionCallback?.invoke(event)
                     }
                 }
             }
@@ -302,7 +346,7 @@ public abstract class ClientEngine : Engine {
 //                if (playerIndex != -1) {
 //                    // TODO
 //                }
-                val playerGamepad = this.Gamepads.getOrNull(playerIndex)
+                val playerGamepad = this.Gamepads?.getOrNull(playerIndex)
                 if (playerGamepad != null) {
                     playerGamepad.NativeDevice = SDL_OpenGamepad(nativeDeviceID).SDL_CheckError()
                 }
@@ -311,7 +355,7 @@ public abstract class ClientEngine : Engine {
                 val evt = event.pointed.gdevice
                 val nativeDeviceID = evt.which
                 val playerIndex = SDL_GetGamepadPlayerIndexForID(nativeDeviceID).SDL_CheckError()
-                val playerGamepad = this.Gamepads.getOrNull(playerIndex)
+                val playerGamepad = this.Gamepads?.getOrNull(playerIndex)
                 if (playerGamepad != null) {
                     SDL_CloseGamepad(playerGamepad.NativeDevice).SDL_CheckError()
                     playerGamepad.NativeDevice = null
@@ -324,7 +368,7 @@ public abstract class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val nativeDeviceID = evt.which
                 val playerIndex = SDL_GetGamepadPlayerIndexForID(nativeDeviceID).SDL_CheckError()
-                val playerGamepad = this.Gamepads.getOrNull(playerIndex)
+                val playerGamepad = this.Gamepads?.getOrNull(playerIndex)
                 val button = GamepadButton.FromNativeValue(evt.button.toInt())
                 val isPressed = evt.down
                 if (playerGamepad != null) {
@@ -339,7 +383,7 @@ public abstract class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val nativeDeviceID = evt.which
                 val playerIndex = SDL_GetGamepadPlayerIndexForID(nativeDeviceID).SDL_CheckError()
-                val playerGamepad = this.Gamepads.getOrNull(playerIndex)
+                val playerGamepad = this.Gamepads?.getOrNull(playerIndex)
                 val axis = GamepadAxis.FromNativeValue(evt.axis.toInt())
                 val value = evt.value.let {
                     Math.Lerp(-1f, 1f, Math.InverseLerp(SDL_JOYSTICK_AXIS_MIN.toFloat(), SDL_JOYSTICK_AXIS_MAX.toFloat(), it.toFloat()))
