@@ -139,4 +139,6 @@ public enum class KeyboardKey {
     Keypad_Multiply,
     Keypad_Divide,
     Keypad_Enter;
+
+    public companion object
 }

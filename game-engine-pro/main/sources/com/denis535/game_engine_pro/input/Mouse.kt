@@ -121,4 +121,6 @@ public enum class MouseButton {
     Middle,
     X1,
     X2;
+
+    public companion object
 }

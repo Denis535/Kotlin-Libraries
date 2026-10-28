@@ -210,6 +210,8 @@ public enum class GamepadButton {
     Misc_4,
     Misc_5,
     Misc_6;
+
+    public companion object
 }
 
 public enum class GamepadAxis {
@@ -221,4 +223,6 @@ public enum class GamepadAxis {
 
     LeftTrigger,
     RightTrigger;
+
+    public companion object
 }

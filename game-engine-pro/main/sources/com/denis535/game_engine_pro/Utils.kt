@@ -106,8 +106,8 @@ internal fun KeyboardKey.ToNativeValue(): SDL_Scancode {
 
         KeyboardKey.Up -> SDL_SCANCODE_UP
         KeyboardKey.Down -> SDL_SCANCODE_DOWN
-        KeyboardKey.KeyboardKey.Left -> SDL_SCANCODE_LEFT
-        KeyboardKey.KeyboardKey.Right -> SDL_SCANCODE_RIGHT
+        KeyboardKey.Left -> SDL_SCANCODE_LEFT
+        KeyboardKey.Right -> SDL_SCANCODE_RIGHT
 
         KeyboardKey.Space -> SDL_SCANCODE_SPACE
         KeyboardKey.Backspace -> SDL_SCANCODE_BACKSPACE
@@ -211,7 +211,7 @@ internal fun GamepadAxis.ToNativeValue(): Int {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun FromNativeValue(value: Int): MouseButton? {
+internal fun MouseButton.Companion.FromNativeValue(value: Int): MouseButton? {
     return when (value) {
         SDL_BUTTON_LEFT -> MouseButton.Left
         SDL_BUTTON_RIGHT -> MouseButton.Right
@@ -223,7 +223,7 @@ internal fun FromNativeValue(value: Int): MouseButton? {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun FromNativeValue(value: SDL_Scancode): KeyboardKey? {
+internal fun KeyboardKey.Companion.FromNativeValue(value: SDL_Scancode): KeyboardKey? {
     return when (value) {
         SDL_SCANCODE_A -> KeyboardKey.Letter_A
         SDL_SCANCODE_B -> KeyboardKey.Letter_B
@@ -321,7 +321,7 @@ internal fun FromNativeValue(value: SDL_Scancode): KeyboardKey? {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun FromNativeValue(value: Int): GamepadButton? {
+internal fun GamepadButton.Companion.FromNativeValue(value: Int): GamepadButton? {
     return when (value) {
         SDL_GAMEPAD_BUTTON_DPAD_LEFT -> GamepadButton.Left
         SDL_GAMEPAD_BUTTON_DPAD_RIGHT -> GamepadButton.Right
@@ -361,7 +361,7 @@ internal fun FromNativeValue(value: Int): GamepadButton? {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun FromNativeValue(value: Int): GamepadAxis? {
+internal fun GamepadAxis.Companion.FromNativeValue(value: Int): GamepadAxis? {
     return when (value) {
         SDL_GAMEPAD_AXIS_LEFTX -> GamepadAxis.LeftX
         SDL_GAMEPAD_AXIS_LEFTY -> GamepadAxis.LeftY
