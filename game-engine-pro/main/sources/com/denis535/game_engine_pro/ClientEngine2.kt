@@ -1,8 +1,10 @@
 package com.denis535.game_engine_pro
 
+import com.denis535.game_engine_pro.audio.*
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.storage.*
+import com.denis535.game_engine_pro.video.*
 
 public open class ClientEngine2 : ClientEngine {
 
@@ -16,6 +18,8 @@ public open class ClientEngine2 : ClientEngine {
     ) : super(manifest) {
         this.Window = Window(manifest.Title, api, isFullScreen, width, height, isResizable)
         this.Cursor = Cursor()
+        this.Video = Video()
+        this.Audio = Audio()
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
@@ -33,6 +37,8 @@ public open class ClientEngine2 : ClientEngine {
         this.Keyboard!!.close()
         this.Mouse!!.close()
         this.Touchscreen!!.close()
+        this.Audio.close()
+        this.Video.close()
         this.Cursor.close()
         this.Window.close()
         super.close()

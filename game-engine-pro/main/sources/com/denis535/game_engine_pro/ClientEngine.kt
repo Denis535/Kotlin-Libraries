@@ -1,8 +1,10 @@
 package com.denis535.game_engine_pro
 
+import com.denis535.game_engine_pro.audio.*
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.storage.*
+import com.denis535.game_engine_pro.video.*
 import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
 
@@ -11,6 +13,11 @@ public abstract class ClientEngine : Engine {
     public lateinit var Window: Window
         protected set
     public lateinit var Cursor: Cursor
+        protected set
+
+    public lateinit var Video: Video
+        protected set
+    public lateinit var Audio: Audio
         protected set
 
     public var Touchscreen: Touchscreen? = null
@@ -82,6 +89,8 @@ public abstract class ClientEngine : Engine {
 
     protected override fun OnFrameBegin() {
         super.OnFrameBegin()
+        this.Video.OnFrameBegin()
+        this.Audio.OnFrameBegin()
         this.Content?.Process()
     }
 
@@ -399,6 +408,8 @@ public abstract class ClientEngine : Engine {
     }
 
     protected override fun OnFrameEnd() {
+        this.Audio.OnFrameEnd()
+        this.Video.OnFrameEnd()
         super.OnFrameEnd()
     }
 
