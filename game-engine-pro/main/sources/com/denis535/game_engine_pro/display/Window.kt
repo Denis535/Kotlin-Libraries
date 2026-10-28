@@ -190,7 +190,7 @@ public class Window : AutoCloseable {
             return flags and SDL_WINDOW_INPUT_FOCUS != 0UL
         }
 
-    public var OnMouseEnterCallback: ((MouseEnterEvent) -> Unit)? = null
+    public var OnCursorEnterCallback: ((CursorEnterEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -204,7 +204,7 @@ public class Window : AutoCloseable {
             }
             field = value
         }
-    public var OnMouseLeaveCallback: ((MouseLeaveEvent) -> Unit)? = null
+    public var OnCursorLeaveCallback: ((CursorLeaveEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -348,12 +348,12 @@ public sealed class WindowDescription(
     ) : WindowDescription(title)
 }
 
-public class MouseEnterEvent(
+public class CursorEnterEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
 )
 
-public class MouseLeaveEvent(
+public class CursorLeaveEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
 )
@@ -368,13 +368,13 @@ public class ZoomEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val State: ZoomState,
-    public val Zoom: Float, // value <= 1 or value >= 1
+    public val Value: Float, // value <= 1 or value >= 1
 )
 
 public class TextEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
-    public val Text: String,
+    public val Value: String,
 )
 
 public enum class ZoomState {

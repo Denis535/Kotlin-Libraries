@@ -86,9 +86,6 @@ public open class ClientEngine : Engine {
             SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED -> {
             }
             SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-//                val evt = event.pointed.window
-//                val timestamp = Frame.Time
-//                val windowID = evt.windowID
                 this.IsRunning = false
             }
 
@@ -98,8 +95,8 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = MouseEnterEvent(timestamp, windowID)
-                    this.Window.OnMouseEnterCallback?.invoke(event)
+                    val event = CursorEnterEvent(timestamp, windowID)
+                    this.Window.OnCursorEnterCallback?.invoke(event)
                 }
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
@@ -107,8 +104,8 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = MouseLeaveEvent(timestamp, windowID)
-                    this.Window.OnMouseLeaveCallback?.invoke(event)
+                    val event = CursorLeaveEvent(timestamp, windowID)
+                    this.Window.OnCursorLeaveCallback?.invoke(event)
                 }
             }
 
@@ -137,9 +134,9 @@ public open class ClientEngine : Engine {
                 val evt = event.pointed.pinch
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val zoom = evt.scale
+                val value = evt.scale
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, zoom)
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, value)
                     this.Window.OnZoomCallback?.invoke(event)
                 }
             }
@@ -147,9 +144,9 @@ public open class ClientEngine : Engine {
                 val evt = event.pointed.pinch
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val zoom = evt.scale
+                val value = evt.scale
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, zoom)
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, value)
                     this.Window.OnZoomCallback?.invoke(event)
                 }
             }
@@ -157,9 +154,9 @@ public open class ClientEngine : Engine {
                 val evt = event.pointed.pinch
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val zoom = evt.scale
+                val value = evt.scale
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = ZoomEvent(timestamp, windowID, ZoomState.End, zoom)
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.End, value)
                     this.Window.OnZoomCallback?.invoke(event)
                 }
             }
@@ -169,10 +166,10 @@ public open class ClientEngine : Engine {
                 val evt = event.pointed.text
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
-                val text = evt.text?.toKStringFromUtf8()
+                val value = evt.text?.toKStringFromUtf8()
                 if (windowID == this.Window.NativeWindowID) {
-                    if (text != null) {
-                        val event = TextEvent(timestamp, windowID, text)
+                    if (value != null) {
+                        val event = TextEvent(timestamp, windowID, value)
                         this.Window.OnTextCallback?.invoke(event)
                     }
                 }
