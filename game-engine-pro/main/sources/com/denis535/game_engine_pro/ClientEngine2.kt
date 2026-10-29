@@ -10,16 +10,14 @@ public open class ClientEngine2 : ClientEngine {
 
     public constructor(
         manifest: Manifest,
-        api: GraphicsApi = GraphicsApi.OpenGL,
-        isFullScreen: Boolean = false,
-        width: Int = 1280,
-        height: Int = 720,
-        isResizable: Boolean = false
+        window: (ClientEngine) -> Window,
+        video: (ClientEngine) -> Video,
+        audio: (ClientEngine) -> Audio,
     ) : super(manifest) {
-        this.Window = Window(manifest.Title, api, isFullScreen, width, height, isResizable)
+        this.Window = window(this)
         this.Cursor = Cursor()
-        this.Video = Video()
-        this.Audio = Audio()
+        this.Video = video(this)
+        this.Audio = audio(this)
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
@@ -30,14 +28,16 @@ public open class ClientEngine2 : ClientEngine {
 
     public constructor(
         manifest: Manifest,
-        window: (ClientEngine) -> Window,
-        video: (ClientEngine) -> Video,
-        audio: (ClientEngine) -> Audio,
+        api: GraphicsApi = GraphicsApi.OpenGL,
+        isFullScreen: Boolean = false,
+        width: Int = 1280,
+        height: Int = 720,
+        isResizable: Boolean = false
     ) : super(manifest) {
-        this.Window = window(this)
+        this.Window = Window(manifest.Title, api, isFullScreen, width, height, isResizable)
         this.Cursor = Cursor()
-        this.Video = video(this)
-        this.Audio = audio(this)
+        this.Video = Video()
+        this.Audio = Audio()
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
