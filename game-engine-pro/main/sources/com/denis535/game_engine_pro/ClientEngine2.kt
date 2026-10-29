@@ -28,6 +28,24 @@ public open class ClientEngine2 : ClientEngine {
         this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
     }
 
+    public constructor(
+        manifest: Manifest,
+        window: (ClientEngine) -> Window,
+        video: (ClientEngine) -> Video,
+        audio: (ClientEngine) -> Audio,
+    ) : super(manifest) {
+        this.Window = window(this)
+        this.Cursor = Cursor()
+        this.Video = video(this)
+        this.Audio = audio(this)
+        this.Touchscreen = Touchscreen()
+        this.Mouse = Mouse()
+        this.Keyboard = Keyboard()
+        this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
+        this.Content = Content(null)
+        this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
+    }
+
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
