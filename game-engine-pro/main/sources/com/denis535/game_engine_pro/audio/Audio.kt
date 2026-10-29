@@ -1,6 +1,6 @@
 package com.denis535.game_engine_pro.audio
 
-public open class Audio : AutoCloseable {
+public abstract class Audio : AutoCloseable {
 
     public var IsClosed: Boolean = false
         private set

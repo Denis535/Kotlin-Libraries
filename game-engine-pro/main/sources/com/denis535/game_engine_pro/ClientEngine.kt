@@ -8,89 +8,128 @@ import com.denis535.game_engine_pro.video.*
 import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
 
-public abstract class ClientEngine : Engine {
+public open class ClientEngine : Engine {
 
-    public lateinit var Window: Window
-        protected set
-    public lateinit var Cursor: Cursor
-        protected set
-
-    public lateinit var Video: Video
-        protected set
-    public lateinit var Audio: Audio
-        protected set
-
-    public var Touchscreen: Touchscreen? = null
+    public val Window: Window
         get() {
             check(!this.IsClosed)
             return field
         }
-        protected set(value) {
-            check(!this.IsClosed)
-            field = value
-        }
-    public var Mouse: Mouse? = null
+    public val Cursor: Cursor
         get() {
             check(!this.IsClosed)
             return field
-        }
-        protected set(value) {
-            check(!this.IsClosed)
-            field = value
-        }
-    public var Keyboard: Keyboard? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        protected set(value) {
-            check(!this.IsClosed)
-            field = value
-        }
-    public var Gamepads: List<Gamepad>? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        protected set(value) {
-            check(!this.IsClosed)
-            field = value
         }
 
-    public var Content: Content? = null
+    public val Video: Video?
         get() {
             check(!this.IsClosed)
             return field
         }
-        protected set(value) {
-            check(!this.IsClosed)
-            field = value
-        }
-    public var Storage: Storage? = null
+    public val Audio: Audio?
         get() {
             check(!this.IsClosed)
             return field
         }
-        protected set(value) {
+
+    public val Touchscreen: Touchscreen?
+        get() {
             check(!this.IsClosed)
-            field = value
+            return field
+        }
+    public val Mouse: Mouse?
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+    public val Keyboard: Keyboard?
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+    public val Gamepads: List<Gamepad>?
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
+    public val Content: Content?
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+    public val Storage: Storage?
+        get() {
+            check(!this.IsClosed)
+            return field
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest) : super(manifest) {
+    public constructor(
+        manifest: Manifest,
+        window: (ClientEngine) -> Window,
+        cursor: (ClientEngine) -> Cursor,
+        video: ((ClientEngine) -> Video)?,
+        audio: ((ClientEngine) -> Audio)?,
+        touchscreen: ((ClientEngine) -> Touchscreen)?,
+        mouse: ((ClientEngine) -> Mouse)?,
+        keyboard: ((ClientEngine) -> Keyboard)?,
+        gamepads: ((ClientEngine) -> List<Gamepad>)?,
+        content: ((ClientEngine) -> Content)?,
+        storage: ((ClientEngine) -> Storage)?
+    ) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO or SDL_INIT_SENSOR or SDL_INIT_GAMEPAD).SDL_CheckError()
+        this.Window = window(this)
+        this.Cursor = cursor(this)
+        this.Video = video?.invoke(this)
+        this.Audio = audio?.invoke(this)
+        this.Touchscreen = touchscreen?.invoke(this)
+        this.Mouse = mouse?.invoke(this)
+        this.Keyboard = keyboard?.invoke(this)
+        this.Gamepads = gamepads?.invoke(this)
+        this.Content = content?.invoke(this)
+        this.Storage = storage?.invoke(this)
     }
+
+    public constructor(
+        manifest: Manifest,
+        window: (ClientEngine) -> Window,
+        video: ((ClientEngine) -> Video)?,
+        audio: ((ClientEngine) -> Audio)?,
+    ) : this(
+        manifest,
+        window,
+        { Cursor() },
+        video,
+        audio,
+        { Touchscreen() },
+        { Mouse() },
+        { Keyboard() },
+        { listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad()) },
+        { Content(null) },
+        { Storage(manifest.Group, manifest.Name) },
+    )
 
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
+        this.Storage?.close()
+        this.Content?.close()
+        this.Gamepads?.asReversed()?.forEach { it.close() }
+        this.Keyboard?.close()
+        this.Mouse?.close()
+        this.Touchscreen?.close()
+        this.Audio?.close()
+        this.Video?.close()
+        this.Cursor.close()
+        this.Window.close()
         super.close()
     }
 
     protected override fun OnFrameBegin() {
         super.OnFrameBegin()
-        this.Video.OnFrameBegin()
-        this.Audio.OnFrameBegin()
+        this.Video?.OnFrameBegin()
+        this.Audio?.OnFrameBegin()
         this.Content?.Process()
     }
 
@@ -408,8 +447,8 @@ public abstract class ClientEngine : Engine {
     }
 
     protected override fun OnFrameEnd() {
-        this.Audio.OnFrameEnd()
-        this.Video.OnFrameEnd()
+        this.Audio?.OnFrameEnd()
+        this.Video?.OnFrameEnd()
         super.OnFrameEnd()
     }
 

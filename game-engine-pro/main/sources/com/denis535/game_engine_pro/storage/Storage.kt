@@ -58,13 +58,12 @@ public class Storage : AutoCloseable {
         }
         val result = mutableListOf<String>()
         val resultStableRef = StableRef.create(result)
-        try {
-            if (SDL_EnumerateStorageDirectory(this.NativeStorage, path, callback, resultStableRef.asCPointer()).SDL_CheckError()) {
-                return result
-            }
-            error("Couldn't enumerate directory: $path")
-        } finally {
+        if (SDL_EnumerateStorageDirectory(this.NativeStorage, path, callback, resultStableRef.asCPointer()).SDL_CheckError()) {
             resultStableRef.dispose()
+            return result
+        } else {
+            resultStableRef.dispose()
+            error("Couldn't enumerate directory: $path")
         }
     }
 

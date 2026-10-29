@@ -18,15 +18,13 @@ public class Touchscreen : AutoCloseable {
             this.NativeDeviceID?.let {
                 memScoped {
                     val count = this.alloc<IntVar>()
-                    val touches = SDL_GetTouchFingers(it, count.ptr).SDL_CheckError()
-                    try {
-                        return List(count.value) { i ->
-                            val touch = touches!![i]!!
-                            Touch(touch.pointed.id, Vector2(touch.pointed.x, touch.pointed.y), touch.pointed.pressure)
-                        }
-                    } finally {
-                        SDL_free(touches)
+                    val touches = SDL_GetTouchFingers(it, count.ptr).SDL_CheckError()!!
+                    val touches2 = List(count.value) { i ->
+                        val touch = touches[i]!!
+                        Touch(touch.pointed.id, Vector2(touch.pointed.x, touch.pointed.y), touch.pointed.pressure)
                     }
+                    SDL_free(touches)
+                    return touches2
                 }
             }
             return listOf()
@@ -49,14 +47,19 @@ public class Touchscreen : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        memScoped {
+        this@Touchscreen.NativeDeviceID = memScoped {
             val count = this.alloc<IntVar>()
-            val devices = SDL_GetTouchDevices(count.ptr).SDL_CheckError()
-            try {
-                this@Touchscreen.NativeDeviceID = (0 until count.value).asSequence().map { devices!![it] }.firstOrNull { SDL_GetTouchDeviceType(it).SDL_CheckError() == SDL_TOUCH_DEVICE_DIRECT }
-            } finally {
-                SDL_free(devices).SDL_CheckError()
+            val devices = SDL_GetTouchDevices(count.ptr).SDL_CheckError()!!
+            var result: SDL_TouchID? = null
+            for (i in 0 until count.value) {
+                val device = devices[i]
+                if (SDL_GetTouchDeviceType(device) == SDL_TOUCH_DEVICE_DIRECT) {
+                    result = device
+                    break
+                }
             }
+            SDL_free(devices)
+            result
         }
     }
 

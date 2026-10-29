@@ -6,7 +6,7 @@ import kotlinx.cinterop.*
 
 public class Content : AutoCloseable {
     public sealed class LoadAssetAsyncResult {
-        public class Completed(public val Asset: ByteArray) : LoadAssetAsyncResult()
+        public class Completed(public val Data: ByteArray) : LoadAssetAsyncResult()
         public class Faulted(public val Error: String) : LoadAssetAsyncResult()
         public object Canceled : LoadAssetAsyncResult()
     }
@@ -43,20 +43,27 @@ public class Content : AutoCloseable {
         memScoped {
             val outcome = this.alloc<SDL_AsyncIOOutcome>()
             while (SDL_GetAsyncIOResult(this@Content.NativeAsyncIOQueue, outcome.ptr).SDL_CheckError()) {
-                val callbackStableRef = outcome.userdata!!.asStableRef<(LoadAssetAsyncResult) -> Unit>()
-                try {
-                    if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE) {
+                when (outcome.result) {
+                    SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE -> {
+                        val callbackStableRef = outcome.userdata!!.asStableRef<(LoadAssetAsyncResult) -> Unit>()
                         val data = outcome.buffer!!.readBytes(outcome.bytes_transferred.toInt())
+                        SDL_free(outcome.buffer).SDL_CheckError()
                         callbackStableRef.get().invoke(LoadAssetAsyncResult.Completed(data))
-                    } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE) {
+                        callbackStableRef.dispose()
+                    }
+                    SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE -> {
+                        val callbackStableRef = outcome.userdata!!.asStableRef<(LoadAssetAsyncResult) -> Unit>()
                         val error = SDL.GetError() ?: "unknown error"
                         callbackStableRef.get().invoke(LoadAssetAsyncResult.Faulted(error))
-                    } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED) {
-                        callbackStableRef.get().invoke(LoadAssetAsyncResult.Canceled)
+                        callbackStableRef.dispose()
                     }
-                } finally {
-                    SDL_free(outcome.buffer).SDL_CheckError()
-                    callbackStableRef.dispose()
+                    SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED -> {
+                        val callbackStableRef = outcome.userdata!!.asStableRef<(LoadAssetAsyncResult) -> Unit>()
+                        callbackStableRef.get().invoke(LoadAssetAsyncResult.Canceled)
+                        callbackStableRef.dispose()
+                    }
+                    else -> {
+                    }
                 }
             }
         }
@@ -93,13 +100,12 @@ public class Content : AutoCloseable {
         }
         val result = mutableListOf<String>()
         val resultStableRef = StableRef.create(result)
-        try {
-            if (SDL_EnumerateStorageDirectory(this.NativeStorage, path, callback, resultStableRef.asCPointer()).SDL_CheckError()) {
-                return result
-            }
-            error("Couldn't enumerate directory: $path")
-        } finally {
+        if (SDL_EnumerateStorageDirectory(this.NativeStorage, path, callback, resultStableRef.asCPointer()).SDL_CheckError()) {
             resultStableRef.dispose()
+            return result
+        } else {
+            resultStableRef.dispose()
+            error("Couldn't enumerate directory: $path")
         }
     }
 
