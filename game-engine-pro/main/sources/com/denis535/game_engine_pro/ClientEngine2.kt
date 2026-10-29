@@ -26,26 +26,6 @@ public open class ClientEngine2 : ClientEngine {
         this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
     }
 
-    public constructor(
-        manifest: Manifest,
-        api: GraphicsApi = GraphicsApi.OpenGL,
-        isFullScreen: Boolean = false,
-        width: Int = 1280,
-        height: Int = 720,
-        isResizable: Boolean = false
-    ) : super(manifest) {
-        this.Window = Window(manifest.Title, api, isFullScreen, width, height, isResizable)
-        this.Cursor = Cursor()
-        this.Video = Video()
-        this.Audio = Audio()
-        this.Touchscreen = Touchscreen()
-        this.Mouse = Mouse()
-        this.Keyboard = Keyboard()
-        this.Gamepads = listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad())
-        this.Content = Content(null)
-        this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
-    }
-
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)

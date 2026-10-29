@@ -1,10 +1,18 @@
 package com.denis535.example
 
 import com.denis535.game_engine_pro.*
+import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
+import com.denis535.game_engine_pro.video.*
+import com.denis535.game_engine_pro.audio.*
 
 public fun Main(args: Array<String>) {
-    ClientEngine2(Manifest("Example", "com.denis535", "example")).apply {
+    ClientEngine2(
+        Manifest("Example", "com.denis535", "example"),
+        {Window("Example")},
+        {Video()},
+        {Audio()}
+    ).apply {
         this.OnStartCallback = {}
         this.OnStopCallback = {}
 
