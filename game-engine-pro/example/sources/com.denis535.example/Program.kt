@@ -7,7 +7,7 @@ import com.denis535.game_engine_pro.video.*
 import com.denis535.game_engine_pro.audio.*
 
 public fun Main(args: Array<String>) {
-    ClientEngine2(
+    SimpleClientEngine(
         Manifest("Example", "com.denis535", "example"),
         {Window("Example")},
         {Video()},

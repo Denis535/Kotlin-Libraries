@@ -6,7 +6,7 @@ import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.storage.*
 import com.denis535.game_engine_pro.video.*
 
-public open class ClientEngine2 : ClientEngine {
+public open class SimpleClientEngine : ClientEngine {
 
     public constructor(
         manifest: Manifest,
