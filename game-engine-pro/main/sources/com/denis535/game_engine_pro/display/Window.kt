@@ -266,23 +266,23 @@ public class Window : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public constructor(
         title: String,
-        api: GraphicsApi = GraphicsApi.OpenGL,
         isFullScreen: Boolean = false,
-        width: Int = 1280,
-        height: Int = 720,
-        isResizable: Boolean = false
+        width: Int? = 1280,
+        height: Int? = 720,
+        isResizable: Boolean = false,
+        api: GraphicsApi = GraphicsApi.OpenGL,
     ) {
         this.NativeWindow = run {
             val properties = SDL_CreateProperties().SDL_CheckError()
             SDL_SetStringProperty(properties, SDL_PROP_WINDOW_CREATE_TITLE_STRING, title).SDL_CheckError()
-            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, api == GraphicsApi.OpenGL).SDL_CheckError()
-            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, api == GraphicsApi.Vulkan).SDL_CheckError()
             SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, isFullScreen).SDL_CheckError()
             SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
             SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_CENTERED.toLong()).SDL_CheckError()
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width.toLong()).SDL_CheckError()
-            SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height.toLong()).SDL_CheckError()
+            if (width != null) SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width.toLong()).SDL_CheckError()
+            if (height != null) SDL_SetNumberProperty(properties, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height.toLong()).SDL_CheckError()
             SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, isResizable).SDL_CheckError()
+            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, api == GraphicsApi.OpenGL).SDL_CheckError()
+            SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, api == GraphicsApi.Vulkan).SDL_CheckError()
             SDL_SetBooleanProperty(properties, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true).SDL_CheckError()
             val result = SDL_CreateWindowWithProperties(properties).SDL_CheckError()!!
             SDL_DestroyProperties(properties).SDL_CheckError()

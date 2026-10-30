@@ -76,7 +76,7 @@ public open class ClientEngine : Engine {
         keyboard: ((ClientEngine) -> Keyboard)?,
         gamepads: ((ClientEngine) -> List<Gamepad>)?,
         content: ((ClientEngine) -> Content)?,
-        storage: ((ClientEngine) -> Storage)?
+        storage: ((ClientEngine) -> Storage)?,
     ) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO or SDL_INIT_SENSOR or SDL_INIT_GAMEPAD).SDL_CheckError()
         this.Window = window(this)

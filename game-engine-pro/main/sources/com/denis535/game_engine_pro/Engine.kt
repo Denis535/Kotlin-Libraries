@@ -53,7 +53,7 @@ public abstract class Engine : AutoCloseable {
             field = value
         }
 
-    public var OnUpdateCallback: (() -> Unit)? = null
+    public var OnFixedUpdateCallback: (() -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -67,7 +67,7 @@ public abstract class Engine : AutoCloseable {
             }
             field = value
         }
-    public var OnFixedUpdateCallback: (() -> Unit)? = null
+    public var OnUpdateCallback: (() -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
