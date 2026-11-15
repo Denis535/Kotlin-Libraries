@@ -106,8 +106,8 @@ public open class ClientEngine : Engine {
         { Mouse() },
         { Keyboard() },
         { listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad()) },
-        { Content(null) },
-        { Storage(manifest.Group, manifest.Name) },
+        null,
+        null,
     )
 
     public override fun close() {

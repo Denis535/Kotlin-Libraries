@@ -11,13 +11,13 @@ public class Window : AutoCloseable {
         private set
 
     @OptIn(ExperimentalForeignApi::class)
-    private val NativeWindow: CPointer<SDL_Window>
+    public val NativeWindow: CPointer<SDL_Window>
         get() {
             check(!this.IsClosed)
             return field
         }
     @OptIn(ExperimentalForeignApi::class)
-    internal val NativeWindowID: UInt
+    public val NativeWindowID: UInt
         get() {
             check(!this.IsClosed)
             return SDL_GetWindowID(this.NativeWindow).SDL_CheckError()

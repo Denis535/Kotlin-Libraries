@@ -16,9 +16,9 @@ public data class Display(public val ID: UInt) {
     @OptIn(ExperimentalForeignApi::class)
     public val Mode: DisplayMode
         get() {
-            val mode = SDL_GetCurrentDisplayMode(this@Display.ID).SDL_CheckError()
+            val mode = SDL_GetCurrentDisplayMode(this@Display.ID).SDL_CheckError()!!
             return DisplayMode(
-                mode!!.pointed.w,
+                mode.pointed.w,
                 mode.pointed.h,
                 mode.pointed.pixel_density,
                 mode.pointed.refresh_rate,
@@ -31,11 +31,11 @@ public data class Display(public val ID: UInt) {
         get() {
             memScoped {
                 val count = this.alloc<IntVar>()
-                val modes = SDL_GetFullscreenDisplayModes(this@Display.ID, count.ptr).SDL_CheckError()
+                val modes = SDL_GetFullscreenDisplayModes(this@Display.ID, count.ptr).SDL_CheckError()!!
                 return List(count.value) { i ->
-                    val mode = modes!![i]
+                    val mode = modes[i]!!
                     DisplayMode(
-                        mode!!.pointed.w,
+                        mode.pointed.w,
                         mode.pointed.h,
                         mode.pointed.pixel_density,
                         mode.pointed.refresh_rate,

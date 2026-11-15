@@ -10,12 +10,12 @@ public class Gamepad : AutoCloseable {
         private set
 
     @OptIn(ExperimentalForeignApi::class)
-    internal var NativeDevice: CPointer<cnames.structs.SDL_Gamepad>? = null
+    public var NativeDevice: CPointer<cnames.structs.SDL_Gamepad>? = null
         get() {
             check(!this.IsClosed)
             return field
         }
-        set(value) {
+        internal set(value) {
             check(!this.IsClosed)
             if (field != null) {
                 require(value == null)

@@ -15,16 +15,16 @@ public class Touchscreen : AutoCloseable {
     public val Touches: List<Touch>
         get() {
             check(!this.IsClosed)
-            this.NativeDeviceID?.let {
-                memScoped {
+            memScoped {
+                this@Touchscreen.NativeDeviceID?.let {
                     val count = this.alloc<IntVar>()
                     val touches = SDL_GetTouchFingers(it, count.ptr).SDL_CheckError()!!
-                    val touches2 = List(count.value) { i ->
+                    val result = List(count.value) { i ->
                         val touch = touches[i]!!
                         Touch(touch.pointed.id, Vector2(touch.pointed.x, touch.pointed.y), touch.pointed.pressure)
                     }
                     SDL_free(touches)
-                    return touches2
+                    return result
                 }
             }
             return listOf()
@@ -47,19 +47,13 @@ public class Touchscreen : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this@Touchscreen.NativeDeviceID = memScoped {
+        memScoped {
             val count = this.alloc<IntVar>()
             val devices = SDL_GetTouchDevices(count.ptr).SDL_CheckError()!!
-            var result: SDL_TouchID? = null
-            for (i in 0 until count.value) {
-                val device = devices[i]
-                if (SDL_GetTouchDeviceType(device) == SDL_TOUCH_DEVICE_DIRECT) {
-                    result = device
-                    break
-                }
-            }
+            this@Touchscreen.NativeDeviceID = (0 until count.value).asSequence()
+                .map { devices[it] }
+                .firstOrNull { SDL_GetTouchDeviceType(it) == SDL_TOUCH_DEVICE_DIRECT }
             SDL_free(devices)
-            result
         }
     }
 
