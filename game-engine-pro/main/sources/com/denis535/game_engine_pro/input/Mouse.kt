@@ -111,8 +111,8 @@ public data class MouseWheelScrollEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     internal val NativeDeviceID: UInt,
-    public val Scroll: Vector2,
-    public val IntegerScroll: Vector2I,
+    public val Delta: Vector2,
+    public val IntegerDelta: Vector2I,
 )
 
 public enum class MouseButton {

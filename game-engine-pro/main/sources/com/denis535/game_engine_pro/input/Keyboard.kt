@@ -34,8 +34,8 @@ public class Keyboard : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public fun IsKeyPressed(key: KeyboardKey): Boolean {
         check(!this.IsClosed)
-        val state = SDL_GetKeyboardState(null).SDL_CheckError()
-        return state!![key.ToNativeValue().toInt()].value
+        val state = SDL_GetKeyboardState(null).SDL_CheckError()!!
+        return state[key.ToNativeValue().toInt()].value
     }
 
 }
