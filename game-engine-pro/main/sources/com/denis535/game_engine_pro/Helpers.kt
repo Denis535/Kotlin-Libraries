@@ -5,6 +5,7 @@ import com.denis535.game_engine_pro.input.*
 import kotlinx.cinterop.*
 import sdl.*
 
+// CursorStyle
 @OptIn(ExperimentalForeignApi::class)
 internal fun CursorStyle.ToNativeValue(): SDL_SystemCursor {
     return when (this) {
@@ -69,6 +70,7 @@ internal fun CursorStyle.Companion.FromNativeValue(value: SDL_SystemCursor): Cur
     }
 }
 
+// MouseButton
 @OptIn(ExperimentalForeignApi::class)
 internal fun MouseButton.ToNativeValue(): Int {
     return when (this) {
@@ -91,6 +93,19 @@ internal fun MouseButton.ToNativeMask(): UInt {
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
+internal fun MouseButton.Companion.FromNativeValue(value: Int): MouseButton? {
+    return when (value) {
+        SDL_BUTTON_LEFT -> MouseButton.Left
+        SDL_BUTTON_RIGHT -> MouseButton.Right
+        SDL_BUTTON_MIDDLE -> MouseButton.Middle
+        SDL_BUTTON_X1 -> MouseButton.X1
+        SDL_BUTTON_X2 -> MouseButton.X2
+        else -> null
+    }
+}
+
+// KeyboardKey
 @OptIn(ExperimentalForeignApi::class)
 internal fun KeyboardKey.ToNativeValue(): SDL_Scancode {
     return when (this) {
@@ -184,69 +199,6 @@ internal fun KeyboardKey.ToNativeValue(): SDL_Scancode {
         KeyboardKey.Keypad_Multiply -> SDL_SCANCODE_KP_MULTIPLY
         KeyboardKey.Keypad_Divide -> SDL_SCANCODE_KP_DIVIDE
         KeyboardKey.Keypad_Enter -> SDL_SCANCODE_KP_ENTER
-    }
-}
-
-@OptIn(ExperimentalForeignApi::class)
-internal fun GamepadButton.ToNativeValue(): Int {
-    return when (this) {
-        GamepadButton.Left -> SDL_GAMEPAD_BUTTON_DPAD_LEFT
-        GamepadButton.Right -> SDL_GAMEPAD_BUTTON_DPAD_RIGHT
-        GamepadButton.Up -> SDL_GAMEPAD_BUTTON_DPAD_UP
-        GamepadButton.Down -> SDL_GAMEPAD_BUTTON_DPAD_DOWN
-
-        GamepadButton.South -> SDL_GAMEPAD_BUTTON_SOUTH
-        GamepadButton.East -> SDL_GAMEPAD_BUTTON_EAST
-        GamepadButton.West -> SDL_GAMEPAD_BUTTON_WEST
-        GamepadButton.North -> SDL_GAMEPAD_BUTTON_NORTH
-
-        GamepadButton.LeftStick -> SDL_GAMEPAD_BUTTON_LEFT_STICK
-        GamepadButton.RightStick -> SDL_GAMEPAD_BUTTON_RIGHT_STICK
-
-        GamepadButton.LeftShoulder -> SDL_GAMEPAD_BUTTON_LEFT_SHOULDER
-        GamepadButton.RightShoulder -> SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER
-
-        GamepadButton.LeftPaddle_1 -> SDL_GAMEPAD_BUTTON_LEFT_PADDLE1
-        GamepadButton.RightPaddle_1 -> SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1
-        GamepadButton.LeftPaddle_2 -> SDL_GAMEPAD_BUTTON_LEFT_PADDLE2
-        GamepadButton.RightPaddle_2 -> SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2
-
-        GamepadButton.Start -> SDL_GAMEPAD_BUTTON_START
-        GamepadButton.Back -> SDL_GAMEPAD_BUTTON_BACK
-        GamepadButton.Guide -> SDL_GAMEPAD_BUTTON_GUIDE
-
-        GamepadButton.Touchpad -> SDL_GAMEPAD_BUTTON_TOUCHPAD
-
-        GamepadButton.Misc_1 -> SDL_GAMEPAD_BUTTON_MISC1
-        GamepadButton.Misc_2 -> SDL_GAMEPAD_BUTTON_MISC2
-        GamepadButton.Misc_3 -> SDL_GAMEPAD_BUTTON_MISC3
-        GamepadButton.Misc_4 -> SDL_GAMEPAD_BUTTON_MISC4
-        GamepadButton.Misc_5 -> SDL_GAMEPAD_BUTTON_MISC5
-        GamepadButton.Misc_6 -> SDL_GAMEPAD_BUTTON_MISC6
-    }
-}
-
-@OptIn(ExperimentalForeignApi::class)
-internal fun GamepadAxis.ToNativeValue(): Int {
-    return when (this) {
-        GamepadAxis.LeftX -> SDL_GAMEPAD_AXIS_LEFTX
-        GamepadAxis.LeftY -> SDL_GAMEPAD_AXIS_LEFTY
-        GamepadAxis.RightX -> SDL_GAMEPAD_AXIS_RIGHTX
-        GamepadAxis.RightY -> SDL_GAMEPAD_AXIS_RIGHTY
-        GamepadAxis.LeftTrigger -> SDL_GAMEPAD_AXIS_LEFT_TRIGGER
-        GamepadAxis.RightTrigger -> SDL_GAMEPAD_AXIS_RIGHT_TRIGGER
-    }
-}
-
-@OptIn(ExperimentalForeignApi::class)
-internal fun MouseButton.Companion.FromNativeValue(value: Int): MouseButton? {
-    return when (value) {
-        SDL_BUTTON_LEFT -> MouseButton.Left
-        SDL_BUTTON_RIGHT -> MouseButton.Right
-        SDL_BUTTON_MIDDLE -> MouseButton.Middle
-        SDL_BUTTON_X1 -> MouseButton.X1
-        SDL_BUTTON_X2 -> MouseButton.X2
-        else -> null
     }
 }
 
@@ -348,6 +300,46 @@ internal fun KeyboardKey.Companion.FromNativeValue(value: SDL_Scancode): Keyboar
     }
 }
 
+// GamepadButton
+@OptIn(ExperimentalForeignApi::class)
+internal fun GamepadButton.ToNativeValue(): Int {
+    return when (this) {
+        GamepadButton.Left -> SDL_GAMEPAD_BUTTON_DPAD_LEFT
+        GamepadButton.Right -> SDL_GAMEPAD_BUTTON_DPAD_RIGHT
+        GamepadButton.Up -> SDL_GAMEPAD_BUTTON_DPAD_UP
+        GamepadButton.Down -> SDL_GAMEPAD_BUTTON_DPAD_DOWN
+
+        GamepadButton.South -> SDL_GAMEPAD_BUTTON_SOUTH
+        GamepadButton.East -> SDL_GAMEPAD_BUTTON_EAST
+        GamepadButton.West -> SDL_GAMEPAD_BUTTON_WEST
+        GamepadButton.North -> SDL_GAMEPAD_BUTTON_NORTH
+
+        GamepadButton.LeftStick -> SDL_GAMEPAD_BUTTON_LEFT_STICK
+        GamepadButton.RightStick -> SDL_GAMEPAD_BUTTON_RIGHT_STICK
+
+        GamepadButton.LeftShoulder -> SDL_GAMEPAD_BUTTON_LEFT_SHOULDER
+        GamepadButton.RightShoulder -> SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER
+
+        GamepadButton.LeftPaddle_1 -> SDL_GAMEPAD_BUTTON_LEFT_PADDLE1
+        GamepadButton.RightPaddle_1 -> SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1
+        GamepadButton.LeftPaddle_2 -> SDL_GAMEPAD_BUTTON_LEFT_PADDLE2
+        GamepadButton.RightPaddle_2 -> SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2
+
+        GamepadButton.Start -> SDL_GAMEPAD_BUTTON_START
+        GamepadButton.Back -> SDL_GAMEPAD_BUTTON_BACK
+        GamepadButton.Guide -> SDL_GAMEPAD_BUTTON_GUIDE
+
+        GamepadButton.Touchpad -> SDL_GAMEPAD_BUTTON_TOUCHPAD
+
+        GamepadButton.Misc_1 -> SDL_GAMEPAD_BUTTON_MISC1
+        GamepadButton.Misc_2 -> SDL_GAMEPAD_BUTTON_MISC2
+        GamepadButton.Misc_3 -> SDL_GAMEPAD_BUTTON_MISC3
+        GamepadButton.Misc_4 -> SDL_GAMEPAD_BUTTON_MISC4
+        GamepadButton.Misc_5 -> SDL_GAMEPAD_BUTTON_MISC5
+        GamepadButton.Misc_6 -> SDL_GAMEPAD_BUTTON_MISC6
+    }
+}
+
 @OptIn(ExperimentalForeignApi::class)
 internal fun GamepadButton.Companion.FromNativeValue(value: Int): GamepadButton? {
     return when (value) {
@@ -385,6 +377,19 @@ internal fun GamepadButton.Companion.FromNativeValue(value: Int): GamepadButton?
         SDL_GAMEPAD_BUTTON_MISC5 -> GamepadButton.Misc_5
         SDL_GAMEPAD_BUTTON_MISC6 -> GamepadButton.Misc_6
         else -> null
+    }
+}
+
+// GamepadAxis
+@OptIn(ExperimentalForeignApi::class)
+internal fun GamepadAxis.ToNativeValue(): Int {
+    return when (this) {
+        GamepadAxis.LeftX -> SDL_GAMEPAD_AXIS_LEFTX
+        GamepadAxis.LeftY -> SDL_GAMEPAD_AXIS_LEFTY
+        GamepadAxis.RightX -> SDL_GAMEPAD_AXIS_RIGHTX
+        GamepadAxis.RightY -> SDL_GAMEPAD_AXIS_RIGHTY
+        GamepadAxis.LeftTrigger -> SDL_GAMEPAD_AXIS_LEFT_TRIGGER
+        GamepadAxis.RightTrigger -> SDL_GAMEPAD_AXIS_RIGHT_TRIGGER
     }
 }
 
