@@ -5,8 +5,8 @@ import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.storage.*
 import com.denis535.game_engine_pro.video.*
-import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
+import sdl.*
 
 public open class ClientEngine : Engine {
 
@@ -32,83 +32,75 @@ public open class ClientEngine : Engine {
             return field
         }
 
-    public val Touchscreen: Touchscreen?
+    public var Touchscreen: Touchscreen? = null
         get() {
             check(!this.IsClosed)
             return field
         }
-    public val Mouse: Mouse?
+        set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+    public var Mouse: Mouse? = null
         get() {
             check(!this.IsClosed)
             return field
         }
-    public val Keyboard: Keyboard?
+        set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+    public var Keyboard: Keyboard? = null
         get() {
             check(!this.IsClosed)
             return field
         }
-    public val Gamepads: List<Gamepad>?
+        set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+    public var Gamepads: List<Gamepad>? = null
         get() {
             check(!this.IsClosed)
             return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            field = value
         }
 
-    public val Content: Content?
+    public var Content: Content? = null
         get() {
             check(!this.IsClosed)
             return field
         }
-    public val Storage: Storage?
+        set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+    public var Storage: Storage? = null
         get() {
             check(!this.IsClosed)
             return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            field = value
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(
         manifest: Manifest,
         window: (ClientEngine) -> Window,
-        cursor: (ClientEngine) -> Cursor,
         video: ((ClientEngine) -> Video)?,
         audio: ((ClientEngine) -> Audio)?,
-        touchscreen: ((ClientEngine) -> Touchscreen)?,
-        mouse: ((ClientEngine) -> Mouse)?,
-        keyboard: ((ClientEngine) -> Keyboard)?,
-        gamepads: ((ClientEngine) -> List<Gamepad>)?,
-        content: ((ClientEngine) -> Content)?,
-        storage: ((ClientEngine) -> Storage)?,
     ) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO or SDL_INIT_SENSOR or SDL_INIT_GAMEPAD).SDL_CheckError()
         this.Window = window(this)
-        this.Cursor = cursor(this)
+        this.Cursor = Cursor()
         this.Video = video?.invoke(this)
         this.Audio = audio?.invoke(this)
-        this.Touchscreen = touchscreen?.invoke(this)
-        this.Mouse = mouse?.invoke(this)
-        this.Keyboard = keyboard?.invoke(this)
-        this.Gamepads = gamepads?.invoke(this)
-        this.Content = content?.invoke(this)
-        this.Storage = storage?.invoke(this)
     }
-
-    public constructor(
-        manifest: Manifest,
-        window: (ClientEngine) -> Window,
-        video: ((ClientEngine) -> Video)?,
-        audio: ((ClientEngine) -> Audio)?,
-    ) : this(
-        manifest,
-        window,
-        { Cursor() },
-        video,
-        audio,
-        { Touchscreen() },
-        { Mouse() },
-        { Keyboard() },
-        { listOf(Gamepad(), Gamepad(), Gamepad(), Gamepad()) },
-        null,
-        null,
-    )
 
     public override fun close() {
         check(!this.IsClosed)

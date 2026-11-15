@@ -1,7 +1,7 @@
 package com.denis535.game_engine_pro.storage
 
-import com.denis535.internal.sdl.*
 import kotlinx.cinterop.*
+import sdl.*
 
 public class Storage : AutoCloseable {
 

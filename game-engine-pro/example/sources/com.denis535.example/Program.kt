@@ -11,6 +11,11 @@ public fun Main(args: Array<String>) {
         null,
         null
     ).apply {
+        this.Touchscreen = Touchscreen()
+        this.Mouse = Mouse()
+        this.Keyboard = Keyboard()
+        this.Gamepads = listOf(Gamepad(), Gamepad())
+
         this.OnStartCallback = {}
         this.OnStopCallback = {}
 

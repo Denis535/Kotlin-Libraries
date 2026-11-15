@@ -1,8 +1,9 @@
 package com.denis535.game_engine_pro.display
 
 import cnames.structs.*
-import com.denis535.internal.sdl.*
+import com.denis535.game_engine_pro.*
 import kotlinx.cinterop.*
+import sdl.*
 
 public class Cursor : AutoCloseable {
 
@@ -91,69 +92,5 @@ public enum class CursorStyle {
     DoubleArrowResize_NW_SE,
     DoubleArrowResize_NE_SW;
 
-    @OptIn(ExperimentalForeignApi::class)
-    internal fun ToNativeValue(): SDL_SystemCursor {
-        return when (this) {
-            Arrow -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_DEFAULT
-            Text -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_TEXT
-            Pointer -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_POINTER
-            Crosshair -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_CROSSHAIR
-            Progress -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_PROGRESS
-            Wait -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_WAIT
-            NotAllowed -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_NOT_ALLOWED
-
-            Move -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_MOVE
-
-            SingleArrowResize_N -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_N_RESIZE
-            SingleArrowResize_S -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_S_RESIZE
-            SingleArrowResize_W -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_W_RESIZE
-            SingleArrowResize_E -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_E_RESIZE
-
-            SingleArrowResize_N_W -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_NW_RESIZE
-            SingleArrowResize_N_E -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_NE_RESIZE
-            SingleArrowResize_S_W -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_SW_RESIZE
-            SingleArrowResize_S_E -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_SE_RESIZE
-
-            DoubleArrowResize_N_S -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_NS_RESIZE
-            DoubleArrowResize_W_E -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_EW_RESIZE
-
-            DoubleArrowResize_NW_SE -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_NWSE_RESIZE
-            DoubleArrowResize_NE_SW -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_NESW_RESIZE
-        }
-    }
-
-    public companion object {
-        @OptIn(ExperimentalForeignApi::class)
-        internal fun FromNativeValue(value: SDL_SystemCursor): CursorStyle? {
-            return when (value) {
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_DEFAULT -> Arrow
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_TEXT -> Text
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_POINTER -> Pointer
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_CROSSHAIR -> Crosshair
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_PROGRESS -> Progress
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_WAIT -> Wait
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_NOT_ALLOWED -> NotAllowed
-
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_MOVE -> Move
-
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_N_RESIZE -> SingleArrowResize_N
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_S_RESIZE -> SingleArrowResize_S
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_W_RESIZE -> SingleArrowResize_W
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_E_RESIZE -> SingleArrowResize_E
-
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_NW_RESIZE -> SingleArrowResize_N_W
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_NE_RESIZE -> SingleArrowResize_N_E
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_SW_RESIZE -> SingleArrowResize_S_W
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_SE_RESIZE -> SingleArrowResize_S_E
-
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_NS_RESIZE -> DoubleArrowResize_N_S
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_EW_RESIZE -> DoubleArrowResize_W_E
-
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_NWSE_RESIZE -> DoubleArrowResize_NW_SE
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_NESW_RESIZE -> DoubleArrowResize_NE_SW
-
-                else -> null
-            }
-        }
-    }
+    public companion object
 }
