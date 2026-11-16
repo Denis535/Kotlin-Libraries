@@ -3,6 +3,7 @@ package com.denis535.example
 import com.denis535.game_engine_pro.*
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
+import com.denis535.game_engine_pro.storage.*
 
 public fun Main(args: Array<String>) {
     ClientEngine(
@@ -15,6 +16,8 @@ public fun Main(args: Array<String>) {
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
         this.Gamepads = listOf(Gamepad(), Gamepad())
+        this.Content = Content(null)
+        this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
 
         this.OnStartCallback = {}
         this.OnStopCallback = {}
