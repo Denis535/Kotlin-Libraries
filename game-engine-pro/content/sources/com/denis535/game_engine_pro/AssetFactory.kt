@@ -1,19 +1,18 @@
 package com.denis535.game_engine_pro
 
+import kotlinx.serialization.json.*
+
 public object AssetFactory {
 
-    public fun Xlm(data: ByteArray): Unit {
+    public fun Text(data: ByteArray): String {
+        return data.decodeToString()
     }
 
-    public fun Json(data: ByteArray): Unit {
+    public fun Json(data: ByteArray): JsonElement {
+        return Json.parseToJsonElement(data.decodeToString())
     }
 
-//    public fun Ini(data: ByteArray): Unit {
-//    }
-//
 //    public fun Image(data: ByteArray): Unit {
-//    }
-//    public fun Texture(data: ByteArray): Unit {
 //    }
 //
 //    public fun Music(data: ByteArray): Unit {

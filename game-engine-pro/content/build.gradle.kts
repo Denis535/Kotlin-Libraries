@@ -11,6 +11,9 @@ kotlin {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
+            this.dependencies {
+                this.implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
+            }
         }
         val mingwX64Main by getting {}
         val linuxX64Main by getting {}
