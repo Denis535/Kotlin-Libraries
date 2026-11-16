@@ -2,6 +2,10 @@
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
+if ! docker info >/dev/null 2>&1; then
+    sudo systemctl start docker
+fi
+
 docker build -t linux-x64 -f linux-x64.dockerfile .
 
 docker run \

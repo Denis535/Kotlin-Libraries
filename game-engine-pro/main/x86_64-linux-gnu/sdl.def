@@ -1,4 +1,0 @@
-package = sdl
-
-compilerOpts = -I../libs/x86_64-linux-gnu/SDL/include
-headers = SDL3/SDL.h
