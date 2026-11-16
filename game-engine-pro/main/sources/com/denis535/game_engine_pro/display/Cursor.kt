@@ -54,7 +54,7 @@ public class Cursor : AutoCloseable {
             }
         }
 
-    public constructor()
+    internal constructor()
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
