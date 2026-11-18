@@ -14,7 +14,7 @@ docker run \
 --rm \
 --mount type=bind,source="$PWD/workspace",target="/workspace" \
 dockcross/windows-shared-x64 \
-bash -eux /workspace/installer-sdl-windows.sh
+bash -eux /workspace/installer.sh
 
 docker run \
 --user $(id -u):$(id -g) \
@@ -22,4 +22,4 @@ docker run \
 --rm \
 --mount type=bind,source="$PWD/workspace",target="/workspace" \
 linux-x64 \
-bash -eux /workspace/installer-sdl-linux.sh
+bash -eux /workspace/installer.sh
