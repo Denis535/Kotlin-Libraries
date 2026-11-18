@@ -1,0 +1,11 @@
+prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.shared
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libwebpdecoder
+Description: Library for the WebP graphics format (decode only)
+Version: 1.6.0
+Cflags: -I${includedir}
+Libs: -L${libdir} -lwebpdecoder
+Libs.private:   
