@@ -14,10 +14,7 @@ public object AssetDecoder {
 //    public fun ByteArray.DecodeToVideo(): Unit {
 //    }
 //
-//    public fun ByteArray.DecodeToSound(): Unit {
-//    }
-//
-//    public fun ByteArray.DecodeToMusic(): Unit {
+//    public fun ByteArray.DecodeToAudio(): Unit {
 //    }
 //
 //    public fun ByteArray.DecodeToFont(): Unit {
