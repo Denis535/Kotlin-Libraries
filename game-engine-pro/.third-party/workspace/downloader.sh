@@ -47,9 +47,10 @@ download_git_repository "/workspace/src/webp"      "https://github.com/webmproje
 download_git_repository "/workspace/src/ogg"       "https://github.com/xiph/ogg.git"             "v1.3.6"
 download_git_repository "/workspace/src/opus"      "https://github.com/xiph/opus.git"            "v1.6.1"
 download_git_repository "/workspace/src/opusfile"  "https://github.com/xiph/opusfile.git"        "v0.12"
+download_git_repository "/workspace/src/freetype"  "https://github.com/freetype/freetype.git"    "VER-2-15-0"
 
 #download_git_repository "/workspace/src/wuffs"    "https://github.com/google/wuffs.git"         "v0.3.6"
 #download_git_repository "/workspace/src/stb"      "https://github.com/nothings/stb.git"
 #download_git_repository "/workspace/src/dr_libs"  "https://github.com/mackron/dr_libs.git"
 
-download_zip "/workspace/src/inter" "https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip"
+download_zip "/workspace/misc/inter" "https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip"

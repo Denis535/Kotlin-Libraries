@@ -180,17 +180,57 @@ install_opusfile_windows() {
     make install
 }
 
+install_freetype_linux() {
+    SRC_DIR=/workspace/src/freetype
+    BUILD_DIR=/workspace/build/x86_64-linux-gnu/freetype
+    DIST_DIR=/workspace/dist/x86_64-linux-gnu/freetype
+
+    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DFT_DISABLE_HARFBUZZ=ON \
+        -DFT_DISABLE_BZIP2=ON \
+        -DFT_DISABLE_PNG=ON \
+        -DFT_DISABLE_BROTLI=ON \
+        -DFT_DISABLE_HVF=ON
+
+    cmake --build "$BUILD_DIR" --parallel "$(nproc)"
+    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+}
+
+install_freetype_windows() {
+    SRC_DIR=/workspace/src/freetype
+    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/freetype
+    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/freetype
+
+    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DFT_DISABLE_HARFBUZZ=ON \
+        -DFT_DISABLE_BZIP2=ON \
+        -DFT_DISABLE_PNG=ON \
+        -DFT_DISABLE_BROTLI=ON \
+        -DFT_DISABLE_HVF=ON
+
+    cmake --build "$BUILD_DIR" --parallel "$(nproc)"
+    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+}
+
 TRIPLE="${CROSS_TRIPLE:-$(gcc -dumpmachine)}"
 if [[ "$TRIPLE" == *linux* ]]; then
     install_webp_linux
     install_ogg_linux
     install_opus_linux
     install_opusfile_linux
+    install_freetype_linux
 elif [[ "$TRIPLE" == *mingw32* ]]; then
     install_webp_windows
     install_ogg_windows
     install_opus_windows
     install_opusfile_windows
+    install_freetype_windows
 else
     echo "Unsupported target: $TRIPLE" >&2
     exit 1
