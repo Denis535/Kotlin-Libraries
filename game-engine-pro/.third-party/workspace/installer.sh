@@ -52,6 +52,42 @@ install_webp_linux() {
     cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
 }
 
+install_ogg_linux() {
+    SRC_DIR=/workspace/src/ogg
+    BUILD_DIR=/workspace/build/x86_64-linux-gnu/ogg
+    DIST_DIR=/workspace/dist/x86_64-linux-gnu/ogg
+
+    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DBUILD_TESTING=OFF \
+        -DINSTALL_DOCS=OFF \
+        -DINSTALL_PKG_CONFIG_MODULE=OFF \
+        -DINSTALL_CMAKE_PACKAGE_MODULE=OFF
+
+    cmake --build "$BUILD_DIR" --parallel "$(nproc)"
+    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+}
+
+install_ogg_windows() {
+    SRC_DIR=/workspace/src/ogg
+    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/ogg
+    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/ogg
+
+    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DBUILD_TESTING=OFF \
+        -DINSTALL_DOCS=OFF \
+        -DINSTALL_PKG_CONFIG_MODULE=OFF \
+        -DINSTALL_CMAKE_PACKAGE_MODULE=OFF
+
+    cmake --build "$BUILD_DIR" --parallel "$(nproc)"
+    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+}
+
 install_opus_linux() {
     SRC_DIR=/workspace/src/opus
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/opus
@@ -93,9 +129,11 @@ install_opus_windows() {
 TRIPLE="${CROSS_TRIPLE:-$(gcc -dumpmachine)}"
 if [[ "$TRIPLE" == *mingw32* ]]; then
     install_webp_windows
+    install_ogg_windows
     install_opus_windows
 elif [[ "$TRIPLE" == *linux* ]]; then
     install_webp_linux
+    install_ogg_linux
     install_opus_linux
 else
     echo "Unsupported target: $TRIPLE" >&2

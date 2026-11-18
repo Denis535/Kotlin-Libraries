@@ -29,6 +29,7 @@ download_git_repository "/workspace/src/SDL_ttf"   "https://github.com/libsdl-or
 download_git_repository "/workspace/src/SDL_mixer" "https://github.com/libsdl-org/SDL_mixer.git" "release-3.2.4"
 
 download_git_repository "/workspace/src/webp"      "https://github.com/webmproject/libwebp.git"  "v1.6.0"
+download_git_repository "/workspace/src/ogg"       "https://github.com/xiph/ogg.git"             "v1.3.6"
 download_git_repository "/workspace/src/opus"      "https://github.com/xiph/opus.git"            "v1.6.1"
 download_git_repository "/workspace/src/opusfile"  "https://github.com/xiph/opusfile.git"        "v0.12"
 
