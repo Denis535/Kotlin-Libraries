@@ -123,17 +123,29 @@ install_opusfile_linux() {
     BUILD_DIR=/workspace/build/x86_64-linux-gnu/opusfile
     DIST_DIR=/workspace/dist/x86_64-linux-gnu/opusfile
 
-    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DBUILD_SHARED_LIBS=OFF \
-        -DCMAKE_PREFIX_PATH="/workspace/dist/x86_64-linux-gnu/ogg;/workspace/dist/x86_64-linux-gnu/opus" \
-        -DOP_DISABLE_HTTP=ON \
-        -DOP_DISABLE_EXAMPLES=ON \
-        -DOP_DISABLE_DOCS=ON
+    OGG_DIR=/workspace/dist/x86_64-linux-gnu/ogg
+    OPUS_DIR=/workspace/dist/x86_64-linux-gnu/opus
 
-    cmake --build "$BUILD_DIR" --parallel "$(nproc)"
-    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+    cd "$SRC_DIR" || return 1
+
+    ./autogen.sh || return 1
+
+    mkdir -p "$BUILD_DIR" "$DIST_DIR"
+
+    cd "$BUILD_DIR" || return 1
+
+    DEPS_CFLAGS="-I$OGG_DIR/include -I$OPUS_DIR/include/opus" \
+    DEPS_LIBS="-L$OGG_DIR/lib -L$OPUS_DIR/lib -lopus -logg" \
+    "$SRC_DIR/configure" \
+        --prefix="$DIST_DIR" \
+        --enable-static \
+        --disable-shared \
+        --disable-http \
+        --disable-examples \
+        --disable-doc || return 1
+
+    make --jobs="$(nproc)" || return 1
+    make install
 }
 
 install_opusfile_windows() {
@@ -141,30 +153,44 @@ install_opusfile_windows() {
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/opusfile
     DIST_DIR=/workspace/dist/x86_64-w64-mingw32/opusfile
 
-    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DBUILD_SHARED_LIBS=OFF \
-        -DCMAKE_PREFIX_PATH="/workspace/dist/x86_64-w64-mingw32/ogg;/workspace/dist/x86_64-w64-mingw32/opus" \
-        -DOP_DISABLE_HTTP=ON \
-        -DOP_DISABLE_EXAMPLES=ON \
-        -DOP_DISABLE_DOCS=ON
+    OGG_DIR=/workspace/dist/x86_64-w64-mingw32/ogg
+    OPUS_DIR=/workspace/dist/x86_64-w64-mingw32/opus
 
-    cmake --build "$BUILD_DIR" --parallel "$(nproc)"
-    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+    cd "$SRC_DIR" || return 1
+
+    ./autogen.sh || return 1
+
+    mkdir -p "$BUILD_DIR" "$DIST_DIR"
+
+    cd "$BUILD_DIR" || return 1
+
+    DEPS_CFLAGS="-I$OGG_DIR/include -I$OPUS_DIR/include/opus" \
+    DEPS_LIBS="-L$OGG_DIR/lib -L$OPUS_DIR/lib -lopus -logg" \
+    "$SRC_DIR/configure" \
+        --build=x86_64-pc-linux-gnu \
+        --host=x86_64-w64-mingw32.shared \
+        --prefix="$DIST_DIR" \
+        --enable-static \
+        --disable-shared \
+        --disable-http \
+        --disable-examples \
+        --disable-doc || return 1
+
+    make --jobs="$(nproc)" || return 1
+    make install
 }
 
 TRIPLE="${CROSS_TRIPLE:-$(gcc -dumpmachine)}"
-if [[ "$TRIPLE" == *mingw32* ]]; then
-    install_webp_windows
-    install_ogg_windows
-    install_opus_windows
-    install_opusfile_windows
-elif [[ "$TRIPLE" == *linux* ]]; then
+if [[ "$TRIPLE" == *linux* ]]; then
     install_webp_linux
     install_ogg_linux
     install_opus_linux
     install_opusfile_linux
+elif [[ "$TRIPLE" == *mingw32* ]]; then
+    install_webp_windows
+    install_ogg_windows
+    install_opus_windows
+    install_opusfile_windows
 else
     echo "Unsupported target: $TRIPLE" >&2
     exit 1
