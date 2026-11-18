@@ -28,6 +28,10 @@ download_git_repository "/workspace/src/SDL_image" "https://github.com/libsdl-or
 download_git_repository "/workspace/src/SDL_ttf"   "https://github.com/libsdl-org/SDL_ttf.git"   "release-3.2.2"
 download_git_repository "/workspace/src/SDL_mixer" "https://github.com/libsdl-org/SDL_mixer.git" "release-3.2.4"
 
-download_git_repository "/workspace/src/wuffs"     "https://github.com/google/wuffs.git"         "v0.3.6"
-download_git_repository "/workspace/src/stb"       "https://github.com/nothings/stb.git"
-download_git_repository "/workspace/src/dr_libs"   "https://github.com/mackron/dr_libs.git"
+download_git_repository "/workspace/src/webp"      "https://github.com/webmproject/libwebp.git"  "v1.6.0"
+download_git_repository "/workspace/src/opus"      "https://github.com/xiph/opus.git"            "v1.6.1"
+download_git_repository "/workspace/src/opusfile"  "https://github.com/xiph/opusfile.git"        "v0.12"
+
+#download_git_repository "/workspace/src/wuffs"    "https://github.com/google/wuffs.git"         "v0.3.6"
+#download_git_repository "/workspace/src/stb"      "https://github.com/nothings/stb.git"
+#download_git_repository "/workspace/src/dr_libs"  "https://github.com/mackron/dr_libs.git"
