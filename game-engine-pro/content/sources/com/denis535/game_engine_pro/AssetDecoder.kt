@@ -4,7 +4,7 @@ import kotlinx.serialization.json.*
 
 public object AssetDecoder {
 
-    public fun ByteArray.ParseToJson(): JsonElement {
+    public fun ByteArray.DecodeToJson(): JsonElement {
         return Json.parseToJsonElement(this.decodeToString())
     }
 
