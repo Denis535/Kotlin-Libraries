@@ -10,8 +10,8 @@ install_sdl_linux() {
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL_VIDEO=ON \
         -DSDL_AUDIO=ON \
@@ -37,8 +37,8 @@ install_sdl_image_linux() {
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDLIMAGE_VENDORED=ON \
         -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3"
@@ -55,8 +55,8 @@ install_sdl_mixer_linux() {
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDLMIXER_VENDORED=ON \
         -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3"
@@ -73,8 +73,8 @@ install_sdl_ttf_linux() {
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=ON \
-        -DSDL_SHARED=OFF \
+        -DSDL_STATIC=OFF \
+        -DSDL_SHARED=ON \
         -DSDL_ENABLE_PCH=OFF \
         -DSDLTTF_VENDORED=ON \
        -DSDL3_DIR="/workspace/dist/x86_64-linux-gnu/SDL/lib/cmake/SDL3"

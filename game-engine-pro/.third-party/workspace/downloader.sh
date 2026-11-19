@@ -38,10 +38,10 @@ download_zip() {
   rm "$DIR/archive.zip"
 }
 
-download_git_repository "/workspace/src/SDL"       "https://github.com/libsdl-org/SDL.git"       "release-3.4.18"
+download_git_repository "/workspace/src/SDL"       "https://github.com/libsdl-org/SDL.git"       "release-3.4.20"
 download_git_repository "/workspace/src/SDL_image" "https://github.com/libsdl-org/SDL_image.git" "release-3.4.8"
-download_git_repository "/workspace/src/SDL_ttf"   "https://github.com/libsdl-org/SDL_ttf.git"   "release-3.2.2"
 download_git_repository "/workspace/src/SDL_mixer" "https://github.com/libsdl-org/SDL_mixer.git" "release-3.2.4"
+download_git_repository "/workspace/src/SDL_ttf"   "https://github.com/libsdl-org/SDL_ttf.git"   "release-3.2.2"
 
 download_git_repository "/workspace/src/webp"      "https://github.com/webmproject/libwebp.git"  "v1.6.0"
 download_git_repository "/workspace/src/ogg"       "https://github.com/xiph/ogg.git"             "v1.3.6"

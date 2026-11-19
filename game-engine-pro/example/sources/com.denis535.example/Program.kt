@@ -4,8 +4,11 @@ import com.denis535.game_engine_pro.*
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.storage.*
+import sdl.*
 
 public fun Main(args: Array<String>) {
+    println(SDL.Version)
+    println(SDL.VersionCompiled)
     ClientEngine(
         Manifest("Example", "com.denis535", "example"),
         { Window("Example") },

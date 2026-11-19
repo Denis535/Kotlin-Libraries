@@ -19,7 +19,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_cmake_targets_defined "")
 set(_cmake_targets_not_defined "")
 set(_cmake_expected_targets "")
-foreach(_cmake_expected_target IN ITEMS SDL3::SDL3-static)
+foreach(_cmake_expected_target IN ITEMS SDL3::SDL3-shared)
   list(APPEND _cmake_expected_targets "${_cmake_expected_target}")
   if(TARGET "${_cmake_expected_target}")
     list(APPEND _cmake_targets_defined "${_cmake_expected_target}")
@@ -55,17 +55,16 @@ if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
 
-# Create imported target SDL3::SDL3-static
-add_library(SDL3::SDL3-static STATIC IMPORTED)
+# Create imported target SDL3::SDL3-shared
+add_library(SDL3::SDL3-shared SHARED IMPORTED)
 
-set_target_properties(SDL3::SDL3-static PROPERTIES
+set_target_properties(SDL3::SDL3-shared PROPERTIES
   COMPATIBLE_INTERFACE_BOOL "SDL3_SHARED"
   COMPATIBLE_INTERFACE_STRING "SDL_VERSION"
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:m>;SDL3::Headers"
-  INTERFACE_LINK_OPTIONS "-pthread"
-  INTERFACE_SDL3_SHARED "FALSE"
+  INTERFACE_LINK_LIBRARIES "SDL3::Headers"
+  INTERFACE_SDL3_SHARED "TRUE"
   INTERFACE_SDL_VERSION "SDL3"
-  SDL_FULL_VERSION "3.4.18"
+  SDL_FULL_VERSION "3.4.20"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)
@@ -73,7 +72,7 @@ if(CMAKE_VERSION VERSION_LESS 2.8.12)
 endif()
 
 # Load information for each installed configuration.
-file(GLOB _cmake_config_files "${CMAKE_CURRENT_LIST_DIR}/SDL3staticTargets-*.cmake")
+file(GLOB _cmake_config_files "${CMAKE_CURRENT_LIST_DIR}/SDL3sharedTargets-*.cmake")
 foreach(_cmake_config_file IN LISTS _cmake_config_files)
   include("${_cmake_config_file}")
 endforeach()

@@ -5,6 +5,26 @@ import kotlinx.cinterop.*
 public object SDL {
 
     @OptIn(ExperimentalForeignApi::class)
+    public val Version: String
+        get() {
+            val version = SDL_GetVersion().SDL_CheckError()
+            val major = ((version) / 1000000)
+            val minor = (((version) / 1000) % 1000)
+            val micro = ((version) % 1000)
+            return "${major}.${minor}.${micro}"
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val VersionCompiled: String
+        get() {
+            val version = SDL_VERSION
+            val major = ((version) / 1000000)
+            val minor = (((version) / 1000) % 1000)
+            val micro = ((version) % 1000)
+            return "${major}.${minor}.${micro}"
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public fun GetError(): String? {
         val error = SDL_GetError()
         if (error != null && error[0] != 0.toByte()) {

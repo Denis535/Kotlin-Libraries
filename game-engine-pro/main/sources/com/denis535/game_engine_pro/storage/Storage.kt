@@ -51,9 +51,9 @@ public class Storage : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun GetContents(path: String): List<String> {
-        val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userdata, _, filename ->
-            val list = userdata!!.asStableRef<MutableList<String>>().get()
-            list += filename!!.toKString()
+        val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { resultStableRef, _, item ->
+            val result = resultStableRef!!.asStableRef<MutableList<String>>().get()
+            result += item!!.toKString()
             SDL_EnumerationResult.SDL_ENUM_CONTINUE
         }
         val result = mutableListOf<String>()
@@ -63,7 +63,7 @@ public class Storage : AutoCloseable {
             return result
         } else {
             resultStableRef.dispose()
-            error("Couldn't enumerate directory: $path")
+            error("Couldn't get contents: $path")
         }
     }
 
@@ -99,19 +99,11 @@ public class Storage : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun DeleteFile(path: String) {
+    public fun Delete(path: String) {
         if (SDL_RemoveStoragePath(this.NativeStorage, path).SDL_CheckError()) {
             return
         }
         error("Couldn't delete file or directory: $path")
-    }
-
-    public fun LoadText(path: String): String {
-        return this.LoadFile(path).decodeToString()
-    }
-
-    public fun SaveText(path: String, text: String) {
-        this.SaveFile(path, text.encodeToByteArray())
     }
 
 }
