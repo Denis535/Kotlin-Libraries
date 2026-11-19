@@ -5,8 +5,20 @@ plugins {
 }
 
 kotlin {
-    this.mingwX64 {}
-    this.linuxX64 {}
+    this.mingwX64 {
+        this.compilations["main"].cinterops {
+            val sdl by creating {
+                this.definitionFile = file("webp.def")
+            }
+        }
+    }
+    this.linuxX64 {
+        this.compilations["main"].cinterops {
+            val sdl by creating {
+                this.definitionFile = file("webp.def")
+            }
+        }
+    }
     this.sourceSets {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
