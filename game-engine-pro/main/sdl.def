@@ -1,18 +1,22 @@
 package = sdl
 
-# compilerOpts.linux = -I./libs/x86_64-linux-gnu/SDL/include
+# static/linux
+# compilerOpts.linux = -I../.third-party/workspace/dist/x86_64-linux-gnu/SDL/include
 # headers.linux = SDL3/SDL.h
-# libraryPaths.linux = ./libs/x86_64-linux-gnu/SDL/lib
+# libraryPaths.linux = ../.third-party/workspace/dist/x86_64-linux-gnu/SDL/lib
 # staticLibraries.linux = libSDL3.a
 
-# compilerOpts.mingw = -I./libs/x86_64-w64-mingw32/SDL/include -mcrc32
+# static/mingw
+# compilerOpts.mingw = -I../.third-party/workspace/dist/x86_64-w64-mingw32/SDL/include -mcrc32
 # headers.mingw = SDL3/SDL.h
-# libraryPaths.mingw = ./libs/x86_64-w64-mingw32/SDL/lib
+# libraryPaths.mingw = ../.third-party/workspace/dist/x86_64-w64-mingw32/SDL/lib
 # staticLibraries.mingw = libSDL3.a
 
+# dynamic/linux
 compilerOpts.linux = -I./libs/x86_64-linux-gnu/SDL/include
 headers.linux = SDL3/SDL.h
 
+# dynamic/mingw
 compilerOpts.mingw = -I./libs/x86_64-w64-mingw32/SDL/include -mcrc32
 headers.mingw = SDL3/SDL.h
 libraryPaths.mingw = ./libs/x86_64-w64-mingw32/SDL/lib
