@@ -1,6 +1,10 @@
 package com.denis535.game_engine_pro
 
 import kotlinx.serialization.json.*
+import kotlinx.cinterop.*
+import webp.*
+import opusfile.*
+import freetype.*
 
 public object AssetDecoder {
 
@@ -8,19 +12,19 @@ public object AssetDecoder {
         return Json.parseToJsonElement(this.decodeToString())
     }
 
-//    public fun ByteArray.DecodeToImage(): Unit {
+//    public fun ByteArray.DecodeToImage(): Unit { // webp
 //    }
 //
-//    public fun ByteArray.DecodeToVideo(): Unit {
+//    public fun ByteArray.DecodeToVideo(): Unit { // mp4 (AV1)
 //    }
 //
-//    public fun ByteArray.DecodeToAudio(): Unit {
+//    public fun ByteArray.DecodeToAudio(): Unit { // ogg (opus)
 //    }
 //
-//    public fun ByteArray.DecodeToTTF(): Unit {
+//    public fun ByteArray.DecodeToFont(): Unit { // ttf
 //    }
 //
-//    public fun ByteArray.DecodeToGLTF(): Unit {
+//    public fun ByteArray.DecodeToGLTF(): Unit { // gltf
 //    }
 
 }
