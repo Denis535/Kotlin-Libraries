@@ -53,4 +53,4 @@ download_git_repository "/workspace/src/freetype"  "https://github.com/freetype/
 #download_git_repository "/workspace/src/stb"      "https://github.com/nothings/stb.git"
 #download_git_repository "/workspace/src/dr_libs"  "https://github.com/mackron/dr_libs.git"
 
-download_zip "/workspace/misc/inter" "https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip"
+download_zip "/workspace/dist/inter" "https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip"

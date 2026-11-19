@@ -10,8 +10,8 @@ install_sdl_windows() {
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=OFF \
-        -DSDL_SHARED=ON \
+        -DSDL_STATIC=ON \
+        -DSDL_SHARED=OFF \
         -DSDL_ENABLE_PCH=OFF \
         -DSDL_VIDEO=ON \
         -DSDL_AUDIO=ON \
@@ -33,28 +33,10 @@ install_sdl_image_windows() {
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=OFF \
-        -DSDL_SHARED=ON \
+        -DSDL_STATIC=ON \
+        -DSDL_SHARED=OFF \
         -DSDL_ENABLE_PCH=OFF \
         -DSDLIMAGE_VENDORED=ON \
-        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3"
-
-    cmake --build "$BUILD_DIR" -- -j$(nproc)
-    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
-}
-
-install_sdl_ttf_windows() {
-    SRC_DIR=/workspace/src/SDL_ttf
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_ttf
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_ttf
-
-    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=OFF \
-        -DSDL_SHARED=ON \
-        -DSDL_ENABLE_PCH=OFF \
-        -DSDLTTF_VENDORED=ON \
         -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3"
 
     cmake --build "$BUILD_DIR" -- -j$(nproc)
@@ -69,8 +51,8 @@ install_sdl_mixer_windows() {
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -DSDL_STATIC=OFF \
-        -DSDL_SHARED=ON \
+        -DSDL_STATIC=ON \
+        -DSDL_SHARED=OFF \
         -DSDL_ENABLE_PCH=OFF \
         -DSDLMIXER_VENDORED=ON \
         -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3"
@@ -79,7 +61,25 @@ install_sdl_mixer_windows() {
     cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
 }
 
+install_sdl_ttf_windows() {
+    SRC_DIR=/workspace/src/SDL_ttf
+    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_ttf
+    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_ttf
+
+    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DSDL_STATIC=ON \
+        -DSDL_SHARED=OFF \
+        -DSDL_ENABLE_PCH=OFF \
+        -DSDLTTF_VENDORED=ON \
+        -DSDL3_DIR="/workspace/dist/x86_64-w64-mingw32/SDL/lib/cmake/SDL3"
+
+    cmake --build "$BUILD_DIR" -- -j$(nproc)
+    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+}
+
 install_sdl_windows
 #install_sdl_image_windows
-#install_sdl_ttf_windows
 #install_sdl_mixer_windows
+#install_sdl_ttf_windows
