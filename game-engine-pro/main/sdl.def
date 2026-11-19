@@ -1,0 +1,10 @@
+package = sdl
+
+compilerOpts.linux = -I./libs/x86_64-linux-gnu/SDL/include
+headers.linux = SDL3/SDL.h
+
+compilerOpts.mingw = -I./libs/x86_64-w64-mingw32/SDL/include -mcrc32
+headers.mingw = SDL3/SDL.h
+
+libraryPaths.mingw = ./libs/x86_64-w64-mingw32/SDL/lib
+staticLibraries.mingw = libSDL3.dll.a

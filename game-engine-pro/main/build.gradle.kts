@@ -8,14 +8,14 @@ kotlin {
     this.mingwX64 {
         this.compilations["main"].cinterops {
             val sdl by creating {
-                this.definitionFile = file("sdl.x86_64-w64-mingw32.def")
+                this.definitionFile = file("sdl.def")
             }
         }
     }
     this.linuxX64 {
         this.compilations["main"].cinterops {
             val sdl by creating {
-                this.definitionFile = file("sdl.x86_64-linux-gnu.def")
+                this.definitionFile = file("sdl.def")
             }
         }
     }
