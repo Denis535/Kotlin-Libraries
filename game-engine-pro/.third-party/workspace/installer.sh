@@ -180,16 +180,69 @@ install_opusfile_windows() {
     make install
 }
 
-install_freetype_linux() {
-    SRC_DIR=/workspace/src/freetype
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/freetype
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/freetype
+install_harfbuzz_linux() {
+    SRC_DIR=/workspace/src/harfbuzz
+    BUILD_DIR=/workspace/build/x86_64-linux-gnu/harfbuzz
+    DIST_DIR=/workspace/dist/x86_64-linux-gnu/harfbuzz
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
         -DBUILD_SHARED_LIBS=OFF \
-        -DFT_DISABLE_HARFBUZZ=ON \
+        -DHB_HAVE_FREETYPE=OFF \
+        -DHB_HAVE_GRAPHITE2=OFF \
+        -DHB_HAVE_GLIB=OFF \
+        -DHB_HAVE_ICU=OFF \
+        -DHB_HAVE_CAIRO=OFF \
+        -DHB_BUILD_UTILS=OFF \
+        -DHB_BUILD_SUBSET=OFF \
+        -DHB_BUILD_RASTER=OFF \
+        -DHB_BUILD_VECTOR=OFF \
+        -DHB_BUILD_GPU=OFF
+
+    cmake --build "$BUILD_DIR" --parallel "$(nproc)"
+    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+}
+
+install_harfbuzz_windows() {
+    SRC_DIR=/workspace/src/harfbuzz
+    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/harfbuzz
+    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/harfbuzz
+
+    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DHB_HAVE_FREETYPE=OFF \
+        -DHB_HAVE_GRAPHITE2=OFF \
+        -DHB_HAVE_GLIB=OFF \
+        -DHB_HAVE_ICU=OFF \
+        -DHB_HAVE_CAIRO=OFF \
+        -DHB_BUILD_UTILS=OFF \
+        -DHB_BUILD_SUBSET=OFF \
+        -DHB_BUILD_RASTER=OFF \
+        -DHB_BUILD_VECTOR=OFF \
+        -DHB_BUILD_GPU=OFF
+
+    cmake --build "$BUILD_DIR" --parallel "$(nproc)"
+    cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
+}
+
+install_freetype_linux() {
+    SRC_DIR=/workspace/src/freetype
+    BUILD_DIR=/workspace/build/x86_64-linux-gnu/freetype
+    DIST_DIR=/workspace/dist/x86_64-linux-gnu/freetype
+    HB_DIST_DIR=/workspace/dist/x86_64-linux-gnu/harfbuzz
+
+    cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DHarfBuzz_INCLUDE_DIR="$HB_DIST_DIR/include/harfbuzz" \
+        -DHarfBuzz_LIBRARY="$HB_DIST_DIR/lib/libharfbuzz.a" \
+        -DFT_DISABLE_HARFBUZZ=OFF \
+        -DFT_REQUIRE_HARFBUZZ=ON \
+        -DFT_DYNAMIC_HARFBUZZ=OFF \
         -DFT_DISABLE_BZIP2=ON \
         -DFT_DISABLE_PNG=ON \
         -DFT_DISABLE_BROTLI=ON \
@@ -203,12 +256,17 @@ install_freetype_windows() {
     SRC_DIR=/workspace/src/freetype
     BUILD_DIR=/workspace/build/x86_64-w64-mingw32/freetype
     DIST_DIR=/workspace/dist/x86_64-w64-mingw32/freetype
+    HB_DIST_DIR=/workspace/dist/x86_64-w64-mingw32/harfbuzz
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
         -DBUILD_SHARED_LIBS=OFF \
-        -DFT_DISABLE_HARFBUZZ=ON \
+        -DHarfBuzz_INCLUDE_DIR="$HB_DIST_DIR/include/harfbuzz" \
+        -DHarfBuzz_LIBRARY="$HB_DIST_DIR/lib/libharfbuzz.a" \
+        -DFT_DISABLE_HARFBUZZ=OFF \
+        -DFT_REQUIRE_HARFBUZZ=ON \
+        -DFT_DYNAMIC_HARFBUZZ=OFF \
         -DFT_DISABLE_BZIP2=ON \
         -DFT_DISABLE_PNG=ON \
         -DFT_DISABLE_BROTLI=ON \
@@ -224,12 +282,14 @@ if [[ "$TRIPLE" == *linux* ]]; then
     install_ogg_linux
     install_opus_linux
     install_opusfile_linux
+    install_harfbuzz_linux
     install_freetype_linux
 elif [[ "$TRIPLE" == *mingw32* ]]; then
     install_webp_windows
     install_ogg_windows
     install_opus_windows
     install_opusfile_windows
+    install_harfbuzz_windows
     install_freetype_windows
 else
     echo "Unsupported target: $TRIPLE" >&2

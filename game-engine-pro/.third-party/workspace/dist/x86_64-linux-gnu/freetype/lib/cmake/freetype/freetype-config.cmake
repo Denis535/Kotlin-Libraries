@@ -60,7 +60,7 @@ add_library(freetype STATIC IMPORTED)
 
 set_target_properties(freetype PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/freetype2"
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:ZLIB::ZLIB>"
+  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:ZLIB::ZLIB>;\$<LINK_ONLY:HarfBuzz::HarfBuzz>"
 )
 
 # Create imported target Freetype::Freetype

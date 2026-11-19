@@ -47,6 +47,7 @@ download_git_repository "/workspace/src/webp"      "https://github.com/webmproje
 download_git_repository "/workspace/src/ogg"       "https://github.com/xiph/ogg.git"             "v1.3.6"
 download_git_repository "/workspace/src/opus"      "https://github.com/xiph/opus.git"            "v1.6.1"
 download_git_repository "/workspace/src/opusfile"  "https://github.com/xiph/opusfile.git"        "v0.12"
+download_git_repository "/workspace/src/harfbuzz"  "https://github.com/harfbuzz/harfbuzz.git"    "15.1.0"
 download_git_repository "/workspace/src/freetype"  "https://github.com/freetype/freetype.git"    "VER-2-15-0"
 
 #download_git_repository "/workspace/src/wuffs"    "https://github.com/google/wuffs.git"         "v0.3.6"
