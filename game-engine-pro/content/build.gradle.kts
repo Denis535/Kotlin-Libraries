@@ -7,15 +7,21 @@ plugins {
 kotlin {
     this.mingwX64 {
         this.compilations["main"].cinterops {
-            val sdl by creating {
+            val webp by creating {
                 this.definitionFile = file("webp.def")
+            }
+            val opusfile by creating {
+                this.definitionFile = file("opusfile.def")
             }
         }
     }
     this.linuxX64 {
         this.compilations["main"].cinterops {
-            val sdl by creating {
+            val webp by creating {
                 this.definitionFile = file("webp.def")
+            }
+            val opusfile by creating {
+                this.definitionFile = file("opusfile.def")
             }
         }
     }
