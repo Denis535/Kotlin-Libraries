@@ -51,8 +51,9 @@ public class Storage : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun GetContents(path: String): List<String> {
-        val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { resultStableRef, _, item ->
-            val result = resultStableRef!!.asStableRef<MutableList<String>>().get()
+        val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userData, _, item ->
+            val resultStableRef = userData!!.asStableRef<MutableList<String>>()
+            val result = resultStableRef.get()
             result += item!!.toKString()
             SDL_EnumerationResult.SDL_ENUM_CONTINUE
         }

@@ -46,22 +46,25 @@ public class Content : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     private fun Process(outcome: SDL_AsyncIOOutcome) {
         if (outcome.type == SDL_AsyncIOTaskType.SDL_ASYNCIO_TASK_READ) {
-            val callbackStableRef = outcome.userdata!!.asStableRef<(AssetAsync) -> Unit>()
+            val userDataStableRef = outcome.userdata!!.asStableRef<Pair<String, ((AssetAsync) -> Unit)>>()
+            val userData = userDataStableRef.get()
+            val path = userData.first
+            val callback = userData.second
             run {
                 if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE) {
                     val data = outcome.buffer!!.readBytes(outcome.bytes_transferred.toInt())
-                    callbackStableRef.get().invoke(AssetAsync.Completed(data))
+                    callback.invoke(AssetAsync.Completed(path, data))
                     SDL_free(outcome.buffer).SDL_CheckError()
                 } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE) {
                     val error = SDL.GetError() ?: "unknown error"
-                    callbackStableRef.get().invoke(AssetAsync.Faulted(error))
+                    callback.invoke(AssetAsync.Faulted(path, error))
                     SDL_free(outcome.buffer).SDL_CheckError()
                 } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED) {
-                    callbackStableRef.get().invoke(AssetAsync.Canceled())
+                    callback.invoke(AssetAsync.Canceled(path))
                     SDL_free(outcome.buffer).SDL_CheckError()
                 }
             }
-            callbackStableRef.dispose()
+            userDataStableRef.dispose()
         }
     }
 
@@ -89,8 +92,9 @@ public class Content : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun GetContents(path: String): List<String> {
-        val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { resultStableRef, _, item ->
-            val result = resultStableRef!!.asStableRef<MutableList<String>>().get()
+        val callback = staticCFunction<COpaquePointer?, CPointer<ByteVar>?, CPointer<ByteVar>?, SDL_EnumerationResult> { userData, _, item ->
+            val resultStableRef = userData!!.asStableRef<MutableList<String>>()
+            val result = resultStableRef.get()
             result += item!!.toKString()
             SDL_EnumerationResult.SDL_ENUM_CONTINUE
         }
@@ -128,8 +132,9 @@ public class Content : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun LoadAssetAsync(path: String, callback: (AssetAsync) -> Unit) {
-        val callbackStableRef = StableRef.create(callback).asCPointer()
-        if (SDL_LoadFileAsync(path, this.NativeAsyncIOQueue, callbackStableRef).SDL_CheckError()) {
+        val userData = Pair(path, callback)
+        val userDataStableRef = StableRef.create(userData)
+        if (SDL_LoadFileAsync(path, this.NativeAsyncIOQueue, userDataStableRef.asCPointer()).SDL_CheckError()) {
             return
         }
         error("Couldn't load asset: $path")
