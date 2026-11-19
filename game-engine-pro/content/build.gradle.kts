@@ -13,6 +13,9 @@ kotlin {
             val opusfile by creating {
                 this.definitionFile = file("opusfile.def")
             }
+            val freetype by creating {
+                this.definitionFile = file("freetype.def")
+            }
         }
     }
     this.linuxX64 {
@@ -22,6 +25,9 @@ kotlin {
             }
             val opusfile by creating {
                 this.definitionFile = file("opusfile.def")
+            }
+            val freetype by creating {
+                this.definitionFile = file("freetype.def")
             }
         }
     }
