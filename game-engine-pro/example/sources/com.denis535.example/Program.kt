@@ -9,12 +9,7 @@ import sdl.*
 public fun Main(args: Array<String>) {
     println(SDL.Version)
     println(SDL.VersionCompiled)
-    ClientEngine(
-        Manifest("Example", "com.denis535", "example"),
-        { Window("Example") },
-        null,
-        null
-    ).apply {
+    ClientEngine(Manifest("Example", "com.denis535", "example"), { Window("Example") }).apply {
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()

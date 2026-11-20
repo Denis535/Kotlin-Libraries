@@ -8,23 +8,23 @@ import freetype.*
 
 public object AssetDecoder {
 
-    public fun ByteArray.DecodeToJson(): JsonElement {
-        return Json.parseToJsonElement(this.decodeToString())
+    public fun Json(data: ByteArray, path: String?): JsonElement {
+        return Json.parseToJsonElement(data.decodeToString())
     }
 
-//    public fun ByteArray.DecodeToImage(): Unit { // webp
+//    public fun Image(data: ByteArray, path: String?): Image { // webp
 //    }
 //
-//    public fun ByteArray.DecodeToVideo(): Unit { // mp4 (AV1)
+//    public fun Video(data: ByteArray, path: String?): Pair<Video, Audio> { // mp4 (AV1)
 //    }
 //
-//    public fun ByteArray.DecodeToAudio(): Unit { // ogg (opus)
+//    public fun Audio(data: ByteArray, path: String?): Audio { // ogg (opus)
 //    }
 //
-//    public fun ByteArray.DecodeToFont(): Unit { // ttf
+//    public fun Font(data: ByteArray, path: String?): Font { // ttf
 //    }
 //
-//    public fun ByteArray.DecodeToGLTF(): Unit { // gltf
+//    public fun GLTF(data: ByteArray, path: String?): GLTF { // gltf
 //    }
 
 }

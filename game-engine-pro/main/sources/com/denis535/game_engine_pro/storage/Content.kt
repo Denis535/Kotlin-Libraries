@@ -46,21 +46,21 @@ public class Content : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     private fun Process(outcome: SDL_AsyncIOOutcome) {
         if (outcome.type == SDL_AsyncIOTaskType.SDL_ASYNCIO_TASK_READ) {
-            val userDataStableRef = outcome.userdata!!.asStableRef<Pair<String, ((AssetAsync) -> Unit)>>()
+            val userDataStableRef = outcome.userdata!!.asStableRef<Pair<String, ((LoadAssetResultAsync) -> Unit)>>()
             val userData = userDataStableRef.get()
             val path = userData.first
             val callback = userData.second
             run {
                 if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_COMPLETE) {
                     val data = outcome.buffer!!.readBytes(outcome.bytes_transferred.toInt())
-                    callback.invoke(AssetAsync.Completed(path, data))
+                    callback.invoke(LoadAssetResultAsync.Completed(path, data))
                     SDL_free(outcome.buffer).SDL_CheckError()
                 } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_FAILURE) {
                     val error = SDL.GetError() ?: "unknown error"
-                    callback.invoke(AssetAsync.Faulted(path, error))
+                    callback.invoke(LoadAssetResultAsync.Faulted(path, error))
                     SDL_free(outcome.buffer).SDL_CheckError()
                 } else if (outcome.result == SDL_AsyncIOResult.SDL_ASYNCIO_CANCELED) {
-                    callback.invoke(AssetAsync.Canceled(path))
+                    callback.invoke(LoadAssetResultAsync.Canceled(path))
                     SDL_free(outcome.buffer).SDL_CheckError()
                 }
             }
@@ -110,18 +110,18 @@ public class Content : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun LoadAsset(path: String): Asset {
+    public fun LoadAsset(path: String): LoadAssetResult {
         memScoped {
             val length = this.alloc<ULongVar>()
             if (SDL_GetStorageFileSize(this@Content.NativeStorage, path, length.ptr).SDL_CheckError()) {
                 if (length.value == 0UL) {
-                    return Asset(path, ByteArray(0))
+                    return LoadAssetResult(path, ByteArray(0))
                 }
                 if (length.value <= Int.MAX_VALUE.toULong()) {
                     val data = ByteArray(length.value.toInt())
                     data.usePinned {
                         if (SDL_ReadStorageFile(this@Content.NativeStorage, path, it.addressOf(0), length.value).SDL_CheckError()) {
-                            return Asset(path, data)
+                            return LoadAssetResult(path, data)
                         }
                     }
                 }
@@ -131,7 +131,7 @@ public class Content : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun LoadAssetAsync(path: String, callback: (AssetAsync) -> Unit) {
+    public fun LoadAssetAsync(path: String, callback: (LoadAssetResultAsync) -> Unit) {
         val userData = Pair(path, callback)
         val userDataStableRef = StableRef.create(userData)
         if (SDL_LoadFileAsync(path, this.NativeAsyncIOQueue, userDataStableRef.asCPointer()).SDL_CheckError()) {
@@ -142,9 +142,9 @@ public class Content : AutoCloseable {
 
 }
 
-public data class Asset(public val Path: String, public val Data: ByteArray)
-public sealed class AssetAsync {
-    public data class Completed(public val Path: String, public val Data: ByteArray) : AssetAsync()
-    public data class Faulted(public val Path: String, public val Error: String) : AssetAsync()
-    public data class Canceled(public val Path: String) : AssetAsync()
+public data class LoadAssetResult(public val Path: String, public val Data: ByteArray)
+public sealed class LoadAssetResultAsync {
+    public data class Completed(public val Path: String, public val Data: ByteArray) : LoadAssetResultAsync()
+    public data class Faulted(public val Path: String, public val Error: String) : LoadAssetResultAsync()
+    public data class Canceled(public val Path: String) : LoadAssetResultAsync()
 }

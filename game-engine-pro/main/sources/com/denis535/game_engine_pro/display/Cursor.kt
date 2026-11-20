@@ -11,7 +11,7 @@ public class Cursor : AutoCloseable {
         private set
 
     @OptIn(ExperimentalForeignApi::class)
-    private var NativeCustomCursor: CPointer<SDL_Cursor>? = null
+    private var CustomNativeCursor: CPointer<SDL_Cursor>? = null
         set(value) {
             check(!this.IsClosed)
             if (field != null) {
@@ -48,9 +48,9 @@ public class Cursor : AutoCloseable {
         set(value) {
             check(!this.IsClosed)
             if (value != null) {
-                this.NativeCustomCursor = SDL_CreateSystemCursor(value.ToNativeValue()).SDL_CheckError()
+                this.CustomNativeCursor = SDL_CreateSystemCursor(value.ToNativeValue()).SDL_CheckError()
             } else {
-                this.NativeCustomCursor = null
+                this.CustomNativeCursor = null
             }
         }
 
@@ -59,7 +59,7 @@ public class Cursor : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        this.NativeCustomCursor = null
+        this.CustomNativeCursor = null
         this.IsClosed = true
     }
 

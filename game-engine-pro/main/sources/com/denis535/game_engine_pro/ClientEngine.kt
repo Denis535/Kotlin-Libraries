@@ -21,15 +21,23 @@ public open class ClientEngine : Engine {
             return field
         }
 
-    public val Video: Video?
+    public var VideoRenderer: VideoRenderer? = null
         get() {
             check(!this.IsClosed)
             return field
         }
-    public val Audio: Audio?
+        set(value) {
+            check(!this.IsClosed)
+            field = value
+        }
+    public var AudioRenderer: AudioRenderer? = null
         get() {
             check(!this.IsClosed)
             return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            field = value
         }
 
     public var Touchscreen: Touchscreen? = null
@@ -91,15 +99,11 @@ public open class ClientEngine : Engine {
     @OptIn(ExperimentalForeignApi::class)
     public constructor(
         manifest: Manifest,
-        window: (ClientEngine) -> Window,
-        video: ((ClientEngine) -> Video)?,
-        audio: ((ClientEngine) -> Audio)?,
+        window: (ClientEngine) -> Window
     ) : super(manifest) {
         SDL_Init(SDL_INIT_VIDEO or SDL_INIT_SENSOR or SDL_INIT_GAMEPAD).SDL_CheckError()
-        this.Window = window(this)
+        this.Window = window.invoke(this)
         this.Cursor = Cursor()
-        this.Video = video?.invoke(this)
-        this.Audio = audio?.invoke(this)
     }
 
     public override fun close() {
@@ -111,8 +115,8 @@ public open class ClientEngine : Engine {
         this.Keyboard?.close()
         this.Mouse?.close()
         this.Touchscreen?.close()
-        this.Audio?.close()
-        this.Video?.close()
+        this.AudioRenderer?.close()
+        this.VideoRenderer?.close()
         this.Cursor.close()
         this.Window.close()
         super.close()
@@ -120,8 +124,8 @@ public open class ClientEngine : Engine {
 
     protected override fun OnFrameBegin() {
         super.OnFrameBegin()
-        this.Video?.OnFrameBegin()
-        this.Audio?.OnFrameBegin()
+        this.VideoRenderer?.OnFrameBegin()
+        this.AudioRenderer?.OnFrameBegin()
         this.Content?.Process()
     }
 
@@ -439,8 +443,8 @@ public open class ClientEngine : Engine {
     }
 
     protected override fun OnFrameEnd() {
-        this.Audio?.OnFrameEnd()
-        this.Video?.OnFrameEnd()
+        this.AudioRenderer?.OnFrameEnd()
+        this.VideoRenderer?.OnFrameEnd()
         super.OnFrameEnd()
     }
 

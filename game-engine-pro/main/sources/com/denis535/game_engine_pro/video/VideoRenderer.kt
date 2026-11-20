@@ -1,6 +1,6 @@
 package com.denis535.game_engine_pro.video
 
-public abstract class Video : AutoCloseable {
+public abstract class VideoRenderer : AutoCloseable {
 
     public var IsClosed: Boolean = false
         private set
