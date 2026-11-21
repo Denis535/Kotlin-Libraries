@@ -6,15 +6,15 @@ public class Image {
         RGBA,
     }
 
+    public val Format: PixelFormat
     public val Width: Int
     public val Height: Int
-    public val Format: PixelFormat
     public val Pixels: ByteArray
 
-    public constructor(width: Int, height: Int, format: PixelFormat, pixels: ByteArray) {
+    public constructor(format: PixelFormat, width: Int, height: Int, pixels: ByteArray) {
+        this.Format = format
         this.Width = width
         this.Height = height
-        this.Format = format
         this.Pixels = pixels
     }
 

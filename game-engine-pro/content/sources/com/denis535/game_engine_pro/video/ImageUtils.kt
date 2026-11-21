@@ -5,6 +5,7 @@ import webp.*
 
 public object ImageUtils {
 
+    // webp
     @OptIn(ExperimentalForeignApi::class)
     public fun Decode(data: ByteArray, isAlpha: Boolean = false): Image? {
         data.usePinned { data ->
@@ -19,7 +20,7 @@ public object ImageUtils {
                         try {
                             if (pixelsPtr != null) {
                                 val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 4)
-                                return Image(width.value, height.value, Image.PixelFormat.RGBA, pixels)
+                                return Image(Image.PixelFormat.RGBA, width.value, height.value, pixels)
                             }
                         } finally {
                             WebPFree(pixelsPtr)
@@ -29,7 +30,7 @@ public object ImageUtils {
                         try {
                             if (pixelsPtr != null) {
                                 val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 3)
-                                return Image(width.value, height.value, Image.PixelFormat.RGB, pixels)
+                                return Image(Image.PixelFormat.RGB, width.value, height.value, pixels)
                             }
                         } finally {
                             WebPFree(pixelsPtr)
@@ -41,10 +42,9 @@ public object ImageUtils {
         return null
     }
 
+    // webp
     @OptIn(ExperimentalForeignApi::class)
     public fun Encode(image: Image, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
-        val width = image.Width
-        val height = image.Height
         val isAlpha = when (image.Format) {
             Image.PixelFormat.RGB -> false
             Image.PixelFormat.RGBA -> true
@@ -53,6 +53,8 @@ public object ImageUtils {
             Image.PixelFormat.RGB -> image.Width * 3
             Image.PixelFormat.RGBA -> image.Width * 4
         }
+        val width = image.Width
+        val height = image.Height
         image.Pixels.usePinned { pixels ->
             val pixelsPtr = pixels.addressOf(0).reinterpret<UByteVar>()
             memScoped {
