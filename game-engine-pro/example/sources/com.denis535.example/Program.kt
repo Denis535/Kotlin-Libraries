@@ -10,6 +10,8 @@ public fun Main(args: Array<String>) {
     println(SDL.Version)
     println(SDL.VersionCompiled)
     ClientEngine(Manifest("Example", "com.denis535", "example"), { Window("Example") }).apply {
+        this.VideoRenderer = null
+        this.AudioRenderer = null
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
