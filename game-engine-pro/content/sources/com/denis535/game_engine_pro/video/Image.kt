@@ -1,7 +1,6 @@
 package com.denis535.game_engine_pro.video
 
 public class Image {
-
     public enum class PixelFormat {
         RGB,
         RGBA,
