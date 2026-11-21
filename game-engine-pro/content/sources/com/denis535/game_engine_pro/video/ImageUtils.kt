@@ -7,7 +7,6 @@ public object ImageUtils {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun Decode(data: ByteArray, isAlpha: Boolean = false): Image? {
-        var result: Image? = null
         data.usePinned { data ->
             val dataPtr = data.addressOf(0).reinterpret<UByteVar>()
             val dataSize = data.get().size.toULong()
@@ -17,28 +16,33 @@ public object ImageUtils {
                 if (WebPGetInfo(dataPtr, dataSize, width.ptr, height.ptr) != 0) {
                     if (isAlpha) {
                         val pixelsPtr = WebPDecodeRGBA(dataPtr, dataSize, width.ptr, height.ptr)
-                        if (pixelsPtr != null) {
-                            val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 4)
-                            result = Image(width.value, height.value, Image.PixelFormat.RGBA, pixels)
+                        try {
+                            if (pixelsPtr != null) {
+                                val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 4)
+                                return Image(width.value, height.value, Image.PixelFormat.RGBA, pixels)
+                            }
+                        } finally {
+                            WebPFree(pixelsPtr)
                         }
-                        WebPFree(pixelsPtr)
                     } else {
                         val pixelsPtr = WebPDecodeRGB(dataPtr, dataSize, width.ptr, height.ptr)
-                        if (pixelsPtr != null) {
-                            val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 3)
-                            result = Image(width.value, height.value, Image.PixelFormat.RGB, pixels)
+                        try {
+                            if (pixelsPtr != null) {
+                                val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 3)
+                                return Image(width.value, height.value, Image.PixelFormat.RGB, pixels)
+                            }
+                        } finally {
+                            WebPFree(pixelsPtr)
                         }
-                        WebPFree(pixelsPtr)
                     }
                 }
             }
         }
-        return result
+        return null
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun Encode(image: Image, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
-        var result: ByteArray? = null
         val width = image.Width
         val height = image.Height
         val isAlpha = when (image.Format) {
@@ -55,39 +59,51 @@ public object ImageUtils {
                 if (isAlpha) {
                     if (lossless) {
                         val dataPtr = this.alloc<CPointerVar<UByteVar>>()
-                        val dataSize = WebPEncodeLosslessRGBA(pixelsPtr, width, height, stride, dataPtr.ptr)
-                        if (dataPtr.value != null && dataSize != 0uL) {
-                            result = dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
+                        try {
+                            val dataSize = WebPEncodeLosslessRGBA(pixelsPtr, width, height, stride, dataPtr.ptr)
+                            if (dataPtr.value != null && dataSize != 0uL) {
+                                return dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
+                            }
+                        } finally {
+                            WebPFree(dataPtr.value)
                         }
-                        WebPFree(dataPtr.value)
                     } else {
                         val dataPtr = this.alloc<CPointerVar<UByteVar>>()
-                        val dataSize = WebPEncodeRGBA(pixelsPtr, width, height, stride, quality.coerceIn(0f, 100f), dataPtr.ptr)
-                        if (dataPtr.value != null && dataSize != 0uL) {
-                            result = dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
+                        try {
+                            val dataSize = WebPEncodeRGBA(pixelsPtr, width, height, stride, quality.coerceIn(0f, 100f), dataPtr.ptr)
+                            if (dataPtr.value != null && dataSize != 0uL) {
+                                return dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
+                            }
+                        } finally {
+                            WebPFree(dataPtr.value)
                         }
-                        WebPFree(dataPtr.value)
                     }
                 } else {
                     if (lossless) {
                         val dataPtr = this.alloc<CPointerVar<UByteVar>>()
-                        val dataSize = WebPEncodeLosslessRGB(pixelsPtr, width, height, stride, dataPtr.ptr)
-                        if (dataPtr.value != null && dataSize != 0uL) {
-                            result = dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
+                        try {
+                            val dataSize = WebPEncodeLosslessRGB(pixelsPtr, width, height, stride, dataPtr.ptr)
+                            if (dataPtr.value != null && dataSize != 0uL) {
+                                return dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
+                            }
+                        } finally {
+                            WebPFree(dataPtr.value)
                         }
-                        WebPFree(dataPtr.value)
                     } else {
                         val dataPtr = this.alloc<CPointerVar<UByteVar>>()
-                        val dataSize = WebPEncodeRGB(pixelsPtr, width, height, stride, quality.coerceIn(0f, 100f), dataPtr.ptr)
-                        if (dataPtr.value != null && dataSize != 0uL) {
-                            result = dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
+                        try {
+                            val dataSize = WebPEncodeRGB(pixelsPtr, width, height, stride, quality.coerceIn(0f, 100f), dataPtr.ptr)
+                            if (dataPtr.value != null && dataSize != 0uL) {
+                                return dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
+                            }
+                        } finally {
+                            WebPFree(dataPtr.value)
                         }
-                        WebPFree(dataPtr.value)
                     }
                 }
             }
         }
-        return result
+        return null
     }
 
 }
