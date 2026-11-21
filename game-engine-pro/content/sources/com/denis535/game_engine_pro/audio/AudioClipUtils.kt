@@ -26,7 +26,6 @@ public object AudioClipUtils {
                                 while (true) {
                                     val readFrameCount = op_read_stereo(oggOpus, buffer, 2 * 5760)
                                     if (readFrameCount == 0) break
-                                    if (readFrameCount == OP_HOLE) return null
                                     if (readFrameCount < 0) return null
                                     for (i in 0 until 2 * readFrameCount) {
                                         samples[index++] = buffer[i]
@@ -41,7 +40,6 @@ public object AudioClipUtils {
                                 while (true) {
                                     val readFrameCount = op_read(oggOpus, buffer, 5760, null)
                                     if (readFrameCount == 0) break
-                                    if (readFrameCount == OP_HOLE) return null
                                     if (readFrameCount < 0) return null
                                     for (i in 0 until readFrameCount) {
                                         samples[index++] = buffer[i]
