@@ -20,7 +20,7 @@ public object ImageUtils {
                         try {
                             if (pixelsPtr != null) {
                                 val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 4)
-                                return Image(Image.PixelFormat.RGBA, width.value, height.value, pixels)
+                                return Image(Image.ImageFormat.RGBA, width.value, height.value, pixels)
                             }
                         } finally {
                             WebPFree(pixelsPtr)
@@ -30,7 +30,7 @@ public object ImageUtils {
                         try {
                             if (pixelsPtr != null) {
                                 val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 3)
-                                return Image(Image.PixelFormat.RGB, width.value, height.value, pixels)
+                                return Image(Image.ImageFormat.RGB, width.value, height.value, pixels)
                             }
                         } finally {
                             WebPFree(pixelsPtr)
@@ -46,12 +46,12 @@ public object ImageUtils {
     @OptIn(ExperimentalForeignApi::class)
     public fun Encode(image: Image, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
         val isAlpha = when (image.Format) {
-            Image.PixelFormat.RGB -> false
-            Image.PixelFormat.RGBA -> true
+            Image.ImageFormat.RGB -> false
+            Image.ImageFormat.RGBA -> true
         }
         val stride = when (image.Format) {
-            Image.PixelFormat.RGB -> image.Width * 3
-            Image.PixelFormat.RGBA -> image.Width * 4
+            Image.ImageFormat.RGB -> image.Width * 3
+            Image.ImageFormat.RGBA -> image.Width * 4
         }
         val width = image.Width
         val height = image.Height
