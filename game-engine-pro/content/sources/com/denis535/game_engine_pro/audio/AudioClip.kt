@@ -9,15 +9,15 @@ public class AudioClip {
     public val Format: AudioFormat
     public val FramesPerSecond: Int // is always 48000 for Opus
     public val FrameCount: Int
-    public val Samples: ShortArray // (L, R), (L, R), ...
+    public val Frames: ShortArray // (L, R), (L, R), ...
     public val Duration: Double
         get() = this.FrameCount.toDouble() / this.FramesPerSecond
 
-    public constructor(format: AudioFormat, framesPerSecond: Int, frameCount: Int, samples: ShortArray) {
+    public constructor(format: AudioFormat, framesPerSecond: Int, frameCount: Int, frames: ShortArray) {
         this.Format = format
         this.FramesPerSecond = framesPerSecond
         this.FrameCount = frameCount
-        this.Samples = samples
+        this.Frames = frames
     }
 
 }

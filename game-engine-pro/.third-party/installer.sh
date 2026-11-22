@@ -13,13 +13,13 @@ docker run \
 --env HOME=/tmp \
 --rm \
 --mount type=bind,source="$PWD/workspace",target="/workspace" \
-dockcross/windows-shared-x64 \
-bash -eux /workspace/installer.sh
+linux-x64 \
+bash -eux /workspace/installer-linux.sh
 
 docker run \
 --user $(id -u):$(id -g) \
 --env HOME=/tmp \
 --rm \
 --mount type=bind,source="$PWD/workspace",target="/workspace" \
-linux-x64 \
-bash -eux /workspace/installer.sh
+dockcross/windows-shared-x64 \
+bash -eux /workspace/installer-windows.sh

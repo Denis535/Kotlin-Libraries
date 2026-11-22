@@ -21,31 +21,31 @@ public object AudioClipUtils {
                         if (channelCount > 0 && frameCount > 0) {
                             if (isStereo) {
                                 val buffer = this.allocArray<ShortVar>(2 * 5760)
-                                val samples = ShortArray(2 * frameCount.toInt())
                                 var index = 0
+                                val frames = ShortArray(2 * frameCount.toInt())
                                 while (true) {
                                     val readFrameCount = op_read_stereo(oggOpus, buffer, 2 * 5760)
                                     if (readFrameCount == 0) break
                                     if (readFrameCount < 0) return null
-                                    for (i in 0 until 2 * readFrameCount) {
-                                        samples[index++] = buffer[i]
+                                    for (i in 0 until readFrameCount) {
+                                        frames[index++] = buffer[i * 2]
+                                        frames[index++] = buffer[i * 2 + 1]
                                     }
                                 }
-                                return AudioClip(AudioClip.AudioFormat.Stereo, 48000, frameCount.toInt(), samples)
+                                return AudioClip(AudioClip.AudioFormat.Stereo, 48000, frameCount.toInt(), frames)
                             } else {
-                                if (channelCount > 1) return null
-                                val buffer = this.allocArray<ShortVar>(5760)
-                                val samples = ShortArray(1 * frameCount.toInt())
+                                val buffer = this.allocArray<ShortVar>(2 * 5760)
                                 var index = 0
+                                val frames = ShortArray(frameCount.toInt())
                                 while (true) {
-                                    val readFrameCount = op_read(oggOpus, buffer, 5760, null)
+                                    val readFrameCount = op_read_stereo(oggOpus, buffer, 2 * 5760)
                                     if (readFrameCount == 0) break
                                     if (readFrameCount < 0) return null
                                     for (i in 0 until readFrameCount) {
-                                        samples[index++] = buffer[i]
+                                        frames[index++] = ((buffer[i * 2] + buffer[i * 2 + 1]) / 2).toShort()
                                     }
                                 }
-                                return AudioClip(AudioClip.AudioFormat.Mono, 48000, frameCount.toInt(), samples)
+                                return AudioClip(AudioClip.AudioFormat.Mono, 48000, frameCount.toInt(), frames)
                             }
                         }
                     }
