@@ -3,6 +3,7 @@ package com.denis535.game_engine_pro.video
 import com.denis535.game_engine_pro.audio.*
 import kotlinx.cinterop.*
 import nestegg.*
+import dav1d.*
 
 public object VideoClipUtils {
 

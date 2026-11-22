@@ -10,6 +10,9 @@ kotlin {
             val webp by creating {
                 this.definitionFile = file("webp.def")
             }
+            val dav1d by creating {
+                this.definitionFile = file("dav1d.def")
+            }
             val nestegg by creating {
                 this.definitionFile = file("nestegg.def")
             }
@@ -28,6 +31,9 @@ kotlin {
         this.compilations["main"].cinterops {
             val webp by creating {
                 this.definitionFile = file("webp.def")
+            }
+            val dav1d by creating {
+                this.definitionFile = file("dav1d.def")
             }
             val nestegg by creating {
                 this.definitionFile = file("nestegg.def")

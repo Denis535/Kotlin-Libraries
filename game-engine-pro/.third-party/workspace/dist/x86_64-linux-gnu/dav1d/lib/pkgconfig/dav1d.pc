@@ -1,0 +1,9 @@
+prefix=/workspace/dist/x86_64-linux-gnu/dav1d
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: libdav1d
+Description: AV1 decoding library
+Version: 1.5.5
+Libs: -L${libdir} -ldav1d -pthread -ldl
+Cflags: -I${includedir} -pthread

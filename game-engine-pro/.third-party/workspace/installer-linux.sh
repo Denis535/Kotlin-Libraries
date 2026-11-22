@@ -27,6 +27,28 @@ install_webp_linux() {
     cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
 }
 
+install_dav1d_linux() {
+    local SRC_DIR=/workspace/src/dav1d
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/dav1d
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/dav1d
+
+    meson setup "$BUILD_DIR" "$SRC_DIR" \
+        --wipe \
+        --prefix="$DIST_DIR" \
+        --libdir=lib \
+        --buildtype=release \
+        --default-library=static \
+        -Db_staticpic=true \
+        -Denable_asm=true \
+        -Denable_tools=false \
+        -Denable_tests=false \
+        -Denable_examples=false \
+        -Denable_docs=false
+
+    ninja -C "$BUILD_DIR" -j"$(nproc)"
+    meson install -C "$BUILD_DIR"
+}
+
 install_nestegg_linux() {
     local SRC_DIR=/workspace/src/nestegg
     local BUILD_DIR=/workspace/build/x86_64-linux-gnu/nestegg
@@ -154,6 +176,8 @@ install_freetype_linux() {
 }
 
 install_webp_linux
+
+install_dav1d_linux
 install_nestegg_linux
 
 install_ogg_linux

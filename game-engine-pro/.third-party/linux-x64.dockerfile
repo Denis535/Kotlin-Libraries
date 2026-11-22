@@ -18,6 +18,6 @@ RUN apt-get update && \
         libusb-1.0-0-dev gnome-desktop-testing \
         libfribidi-dev libthai-dev \
         build-essential git make autoconf automake libtool \
-        cmake ninja-build pkg-config nasm \
+        cmake meson ninja-build pkg-config nasm \
         ca-certificates curl zip unzip && \
     rm -rf /var/lib/apt/lists/* \

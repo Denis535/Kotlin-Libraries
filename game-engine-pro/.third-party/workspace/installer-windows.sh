@@ -27,6 +27,40 @@ install_webp_windows() {
     cmake --install "$BUILD_DIR" --prefix "$DIST_DIR"
 }
 
+install_dav1d_windows() {
+    local SRC_DIR=/workspace/src/dav1d
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/dav1d
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/dav1d
+
+    cat > /tmp/cross.meson <<EOF
+[binaries]
+c = '$CC'
+ar = '$AR'
+
+[host_machine]
+system = 'windows'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+EOF
+
+    meson setup "$BUILD_DIR" "$SRC_DIR" \
+        --cross-file /tmp/cross.meson \
+        --wipe \
+        --prefix="$DIST_DIR" \
+        --libdir=lib \
+        --buildtype=release \
+        --default-library=static \
+        -Denable_asm=true \
+        -Denable_tools=false \
+        -Denable_tests=false \
+        -Denable_examples=false \
+        -Denable_docs=false
+
+    ninja -C "$BUILD_DIR" -j"$(nproc)"
+    meson install -C "$BUILD_DIR"
+}
+
 install_nestegg_windows() {
     local SRC_DIR=/workspace/src/nestegg
     local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/nestegg
@@ -158,6 +192,8 @@ install_freetype_windows() {
 }
 
 install_webp_windows
+
+install_dav1d_windows
 install_nestegg_windows
 
 install_ogg_windows
