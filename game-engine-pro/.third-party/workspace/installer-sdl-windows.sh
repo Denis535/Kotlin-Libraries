@@ -3,9 +3,9 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_sdl_windows() {
-    SRC_DIR=/workspace/src/SDL
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL
+    local SRC_DIR=/workspace/src/SDL
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -26,9 +26,9 @@ install_sdl_windows() {
 }
 
 install_sdl_image_windows() {
-    SRC_DIR=/workspace/src/SDL_image
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_image
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_image
+    local SRC_DIR=/workspace/src/SDL_image
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_image
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_image
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -44,9 +44,9 @@ install_sdl_image_windows() {
 }
 
 install_sdl_mixer_windows() {
-    SRC_DIR=/workspace/src/SDL_mixer
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_mixer
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_mixer
+    local SRC_DIR=/workspace/src/SDL_mixer
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_mixer
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_mixer
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -62,9 +62,9 @@ install_sdl_mixer_windows() {
 }
 
 install_sdl_ttf_windows() {
-    SRC_DIR=/workspace/src/SDL_ttf
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_ttf
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_ttf
+    local SRC_DIR=/workspace/src/SDL_ttf
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/SDL_ttf
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/SDL_ttf
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \

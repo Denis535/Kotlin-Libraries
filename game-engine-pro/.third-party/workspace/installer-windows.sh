@@ -3,9 +3,9 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_webp_windows() {
-    SRC_DIR=/workspace/src/webp
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/webp
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/webp
+    local SRC_DIR=/workspace/src/webp
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/webp
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/webp
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -28,18 +28,18 @@ install_webp_windows() {
 }
 
 install_nestegg_windows() {
-    SRC_DIR=/workspace/src/nestegg
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/nestegg
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/nestegg
+    local SRC_DIR=/workspace/src/nestegg
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/nestegg
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/nestegg
 
     cd "$SRC_DIR" || return 1
-    ./autogen.sh || return 1
+    autoreconf --install --force || return 1
     mkdir -p "$BUILD_DIR" "$DIST_DIR"
     cd "$BUILD_DIR" || return 1
 
     "$SRC_DIR/configure" \
         --build=x86_64-pc-linux-gnu \
-        --host=x86_64-w64-mingw32.shared \
+        --host=x86_64-w64-mingw32 \
         --prefix="$DIST_DIR" \
         --enable-static \
         --disable-shared || return 1
@@ -49,9 +49,9 @@ install_nestegg_windows() {
 }
 
 install_ogg_windows() {
-    SRC_DIR=/workspace/src/ogg
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/ogg
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/ogg
+    local SRC_DIR=/workspace/src/ogg
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/ogg
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/ogg
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -65,9 +65,9 @@ install_ogg_windows() {
 }
 
 install_opus_windows() {
-    SRC_DIR=/workspace/src/opus
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/opus
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/opus
+    local SRC_DIR=/workspace/src/opus
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/opus
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/opus
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -82,11 +82,11 @@ install_opus_windows() {
 }
 
 install_opusfile_windows() {
-    SRC_DIR=/workspace/src/opusfile
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/opusfile
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/opusfile
-    OGG_DIR=/workspace/dist/x86_64-w64-mingw32/ogg
-    OPUS_DIR=/workspace/dist/x86_64-w64-mingw32/opus
+    local SRC_DIR=/workspace/src/opusfile
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/opusfile
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/opusfile
+    local OGG_DIR=/workspace/dist/x86_64-w64-mingw32/ogg
+    local OPUS_DIR=/workspace/dist/x86_64-w64-mingw32/opus
 
     cd "$SRC_DIR" || return 1
     ./autogen.sh || return 1
@@ -110,9 +110,9 @@ install_opusfile_windows() {
 }
 
 install_harfbuzz_windows() {
-    SRC_DIR=/workspace/src/harfbuzz
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/harfbuzz
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/harfbuzz
+    local SRC_DIR=/workspace/src/harfbuzz
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/harfbuzz
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/harfbuzz
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -134,10 +134,10 @@ install_harfbuzz_windows() {
 }
 
 install_freetype_windows() {
-    SRC_DIR=/workspace/src/freetype
-    BUILD_DIR=/workspace/build/x86_64-w64-mingw32/freetype
-    DIST_DIR=/workspace/dist/x86_64-w64-mingw32/freetype
-    HB_DIST_DIR=/workspace/dist/x86_64-w64-mingw32/harfbuzz
+    local SRC_DIR=/workspace/src/freetype
+    local BUILD_DIR=/workspace/build/x86_64-w64-mingw32/freetype
+    local DIST_DIR=/workspace/dist/x86_64-w64-mingw32/freetype
+    local HB_DIST_DIR=/workspace/dist/x86_64-w64-mingw32/harfbuzz
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -158,8 +158,11 @@ install_freetype_windows() {
 }
 
 install_webp_windows
+install_nestegg_windows
+
 install_ogg_windows
 install_opus_windows
 install_opusfile_windows
+
 install_harfbuzz_windows
 install_freetype_windows

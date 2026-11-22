@@ -3,9 +3,9 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_webp_linux() {
-    SRC_DIR=/workspace/src/webp
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/webp
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/webp
+    local SRC_DIR=/workspace/src/webp
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/webp
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/webp
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -28,12 +28,12 @@ install_webp_linux() {
 }
 
 install_nestegg_linux() {
-    SRC_DIR=/workspace/src/nestegg
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/nestegg
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/nestegg
+    local SRC_DIR=/workspace/src/nestegg
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/nestegg
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/nestegg
 
     cd "$SRC_DIR" || return 1
-    ./autogen.sh || return 1
+    autoreconf --install --force || return 1
     mkdir -p "$BUILD_DIR" "$DIST_DIR"
     cd "$BUILD_DIR" || return 1
 
@@ -47,9 +47,9 @@ install_nestegg_linux() {
 }
 
 install_ogg_linux() {
-    SRC_DIR=/workspace/src/ogg
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/ogg
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/ogg
+    local SRC_DIR=/workspace/src/ogg
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/ogg
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/ogg
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -63,9 +63,9 @@ install_ogg_linux() {
 }
 
 install_opus_linux() {
-    SRC_DIR=/workspace/src/opus
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/opus
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/opus
+    local SRC_DIR=/workspace/src/opus
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/opus
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/opus
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -80,11 +80,11 @@ install_opus_linux() {
 }
 
 install_opusfile_linux() {
-    SRC_DIR=/workspace/src/opusfile
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/opusfile
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/opusfile
-    OGG_DIR=/workspace/dist/x86_64-linux-gnu/ogg
-    OPUS_DIR=/workspace/dist/x86_64-linux-gnu/opus
+    local SRC_DIR=/workspace/src/opusfile
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/opusfile
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/opusfile
+    local OGG_DIR=/workspace/dist/x86_64-linux-gnu/ogg
+    local OPUS_DIR=/workspace/dist/x86_64-linux-gnu/opus
 
     cd "$SRC_DIR" || return 1
     ./autogen.sh || return 1
@@ -106,9 +106,9 @@ install_opusfile_linux() {
 }
 
 install_harfbuzz_linux() {
-    SRC_DIR=/workspace/src/harfbuzz
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/harfbuzz
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/harfbuzz
+    local SRC_DIR=/workspace/src/harfbuzz
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/harfbuzz
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/harfbuzz
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -130,10 +130,10 @@ install_harfbuzz_linux() {
 }
 
 install_freetype_linux() {
-    SRC_DIR=/workspace/src/freetype
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/freetype
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/freetype
-    HB_DIST_DIR=/workspace/dist/x86_64-linux-gnu/harfbuzz
+    local SRC_DIR=/workspace/src/freetype
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/freetype
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/freetype
+    local HB_DIST_DIR=/workspace/dist/x86_64-linux-gnu/harfbuzz
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -154,8 +154,11 @@ install_freetype_linux() {
 }
 
 install_webp_linux
+install_nestegg_linux
+
 install_ogg_linux
 install_opus_linux
 install_opusfile_linux
+
 install_harfbuzz_linux
 install_freetype_linux

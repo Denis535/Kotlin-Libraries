@@ -3,9 +3,9 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 install_sdl_linux() {
-    SRC_DIR=/workspace/src/SDL
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/SDL
+    local SRC_DIR=/workspace/src/SDL
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/SDL
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -30,9 +30,9 @@ install_sdl_linux() {
 }
 
 install_sdl_image_linux() {
-    SRC_DIR=/workspace/src/SDL_image
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_image
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/SDL_image
+    local SRC_DIR=/workspace/src/SDL_image
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_image
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/SDL_image
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -48,9 +48,9 @@ install_sdl_image_linux() {
 }
 
 install_sdl_mixer_linux() {
-    SRC_DIR=/workspace/src/SDL_mixer
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_mixer
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/SDL_mixer
+    local SRC_DIR=/workspace/src/SDL_mixer
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_mixer
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/SDL_mixer
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
@@ -66,9 +66,9 @@ install_sdl_mixer_linux() {
 }
 
 install_sdl_ttf_linux() {
-    SRC_DIR=/workspace/src/SDL_ttf
-    BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_ttf
-    DIST_DIR=/workspace/dist/x86_64-linux-gnu/SDL_ttf
+    local SRC_DIR=/workspace/src/SDL_ttf
+    local BUILD_DIR=/workspace/build/x86_64-linux-gnu/SDL_ttf
+    local DIST_DIR=/workspace/dist/x86_64-linux-gnu/SDL_ttf
 
     cmake -S "$SRC_DIR" -B "$BUILD_DIR" \
         -DCMAKE_BUILD_TYPE=Release \
