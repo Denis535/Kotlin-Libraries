@@ -6,7 +6,27 @@ The platform for the game engine.
 
 ###### com.denis535.game_engine_pro
 
+**com.denis535.game_engine_pro**
 - Engine, ClientEngine, ServerEngine
+
+**com.denis535.game_engine_pro.display**
+- Display
+- Window
+- Cursor
+
+**com.denis535.game_engine_pro.input**
+- Touchscreen
+- Mouse
+- Keyboard
+- Gamepad
+
+**com.denis535.game_engine_pro.storage**
+- Content
+- Storage
+
+###### com.denis535.game-engine-pro-utility
+
+**com.denis535.game_engine_pro**
 - Utils
 - Math
 - Transform, StaticTransform, DynamicTransform
@@ -16,28 +36,28 @@ The platform for the game engine.
 - Quaternion
 - Matrix4x4
 
-###### com.denis535.game_engine_pro.display
+###### com.denis535.game-engine-pro-content
 
-- Display
-- Window
-- Cursor
+**com.denis535.game_engine_pro**
+- JsonUtils
 
-###### com.denis535.game_engine_pro.input
+**com.denis535.game_engine_pro.video**
+- Image
+- ImageUtils
+- VideoClip
+- VideoClipUtils
+- Font
+- FontUtils
+- GLTFUtils
 
-- Touchscreen
-- Mouse
-- Keyboard
-- Gamepad
-
-###### com.denis535.game_engine_pro.storage
-
-- Content
-- Storage
+**com.denis535.game_engine_pro.audio**
+- AudioClip
+- AudioClipUtils
 
 # Links
 
 - https://github.com/Denis535/Kotlin-Libraries/tree/main/game-engine-pro
 - https://github.com/Denis535/KotlinGameExample
 - https://central.sonatype.com/artifact/io.github.denis535/game-engine-pro
+- https://central.sonatype.com/artifact/io.github.denis535/game-engine-pro-utility
 - https://central.sonatype.com/artifact/io.github.denis535/game-engine-pro-content
-- https://central.sonatype.com/artifact/io.github.denis535/game-engine-pro-utilities

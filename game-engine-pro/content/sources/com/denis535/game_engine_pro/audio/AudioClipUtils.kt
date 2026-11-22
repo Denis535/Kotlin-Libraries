@@ -13,18 +13,18 @@ public object AudioClipUtils {
             val dataSize = data.get().size
             memScoped {
                 val error = this.alloc<IntVar>()
-                val oggOpus = op_open_memory(dataPtr, dataSize.toULong(), error.ptr)
+                val stream = op_open_memory(dataPtr, dataSize.toULong(), error.ptr)
                 try {
-                    if (oggOpus != null) {
-                        val channelCount = op_channel_count(oggOpus, -1) // mono, stereo, etc
-                        val frameCount = op_pcm_total(oggOpus, -1)
+                    if (stream != null) {
+                        val channelCount = op_channel_count(stream, -1) // mono, stereo, etc
+                        val frameCount = op_pcm_total(stream, -1)
                         if (channelCount > 0 && frameCount > 0) {
                             if (isStereo) {
                                 val buffer = this.allocArray<ShortVar>(2 * 5760)
                                 var index = 0
                                 val frames = ShortArray(2 * frameCount.toInt())
                                 while (true) {
-                                    val readFrameCount = op_read_stereo(oggOpus, buffer, 2 * 5760)
+                                    val readFrameCount = op_read_stereo(stream, buffer, 2 * 5760)
                                     if (readFrameCount == 0) break
                                     if (readFrameCount < 0) return null
                                     for (i in 0 until readFrameCount) {
@@ -38,7 +38,7 @@ public object AudioClipUtils {
                                 var index = 0
                                 val frames = ShortArray(frameCount.toInt())
                                 while (true) {
-                                    val readFrameCount = op_read_stereo(oggOpus, buffer, 2 * 5760)
+                                    val readFrameCount = op_read_stereo(stream, buffer, 2 * 5760)
                                     if (readFrameCount == 0) break
                                     if (readFrameCount < 0) return null
                                     for (i in 0 until readFrameCount) {
@@ -50,7 +50,7 @@ public object AudioClipUtils {
                         }
                     }
                 } finally {
-                    op_free(oggOpus)
+                    op_free(stream)
                 }
             }
         }
