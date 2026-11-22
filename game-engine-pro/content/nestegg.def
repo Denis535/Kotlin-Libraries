@@ -1,0 +1,13 @@
+package = nestegg
+
+# static/linux
+compilerOpts.linux = -I../.third-party/workspace/dist/x86_64-linux-gnu/nestegg/include
+headers.linux = stddef.h stdint.h nestegg/nestegg.h
+libraryPaths.linux = ../.third-party/workspace/dist/x86_64-linux-gnu/nestegg/lib
+staticLibraries.linux = libnestegg.a
+
+# static/mingw
+compilerOpts.mingw = -I../.third-party/workspace/dist/x86_64-w64-mingw32/nestegg/include
+headers.mingw = stddef.h stdint.h nestegg/nestegg.h
+libraryPaths.mingw = ../.third-party/workspace/dist/x86_64-w64-mingw32/nestegg/lib
+staticLibraries.mingw = libnestegg.a

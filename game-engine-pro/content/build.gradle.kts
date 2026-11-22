@@ -10,6 +10,9 @@ kotlin {
             val webp by creating {
                 this.definitionFile = file("webp.def")
             }
+            val nestegg by creating {
+                this.definitionFile = file("nestegg.def")
+            }
             val opus by creating {
                 this.definitionFile = file("opus.def")
             }
@@ -25,6 +28,9 @@ kotlin {
         this.compilations["main"].cinterops {
             val webp by creating {
                 this.definitionFile = file("webp.def")
+            }
+            val nestegg by creating {
+                this.definitionFile = file("nestegg.def")
             }
             val opus by creating {
                 this.definitionFile = file("opus.def")
