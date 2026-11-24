@@ -14,7 +14,7 @@ public object VideoClipUtils {
         data.usePinned { data ->
             val dataPtr = data.addressOf(0).reinterpret<UByteVar>()
             val dataSize = data.get().size
-            val reader = StableRef.create(DataReader(dataPtr, dataSize.toULong()))
+            val reader = StableRef.create(DataReader(dataPtr, dataSize.toLong()))
             try {
                 memScoped {
                     val nestegg = this.alloc<CPointerVar<cnames.structs.nestegg>>()
@@ -44,16 +44,16 @@ public object VideoClipUtils {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private class DataReader(val ptr: CPointer<UByteVar>, val size: ULong) {
-    public var pos: ULong = 0UL
+private class DataReader(val ptr: CPointer<UByteVar>, val size: Long) {
+    public var pos: Long = 0L
 }
 
 @OptIn(ExperimentalForeignApi::class)
 private fun ReadCallback(buffer: COpaquePointer?, length: ULong, userdata: COpaquePointer?): Long {
     val reader = userdata!!.asStableRef<DataReader>().get()
-    if (reader.pos + length <= reader.size) {
-        memcpy(buffer, reader.ptr + reader.pos.toLong(), length)
-        reader.pos += length
+    if (reader.pos + length.toLong() <= reader.size) {
+        memcpy(buffer, reader.ptr + reader.pos, length)
+        reader.pos += length.toLong()
         return 1
     } else {
         reader.pos = reader.size
@@ -69,17 +69,17 @@ private fun SeekCallback(offset: Long, whence: Int, userdata: COpaquePointer?): 
             offset
         }
         NESTEGG_SEEK_CUR -> {
-            reader.pos.toLong() + offset
+            reader.pos + offset
         }
         NESTEGG_SEEK_END -> {
-            reader.size.toLong() + offset
+            reader.size + offset
         }
         else -> {
             return -1
         }
     }
-    if (newPos >= 0 && newPos.toULong() <= reader.size) {
-        reader.pos = newPos.toULong()
+    if (newPos >= 0 && newPos <= reader.size) {
+        reader.pos = newPos
         return 0
     }
     return -1
@@ -87,5 +87,6 @@ private fun SeekCallback(offset: Long, whence: Int, userdata: COpaquePointer?): 
 
 @OptIn(ExperimentalForeignApi::class)
 private fun TellCallback(userdata: COpaquePointer?): Long {
-    return userdata!!.asStableRef<DataReader>().get().pos.toLong()
+    val reader = userdata!!.asStableRef<DataReader>().get()
+    return reader.pos
 }
