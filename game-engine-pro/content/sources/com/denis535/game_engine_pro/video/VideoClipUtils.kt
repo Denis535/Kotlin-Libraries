@@ -27,29 +27,7 @@ public object VideoClipUtils {
                     }
                     if (nestegg_init(nestegg.ptr, io, null, -1) == 0) {
                         try {
-                            var videoClip: VideoClip? = null
-                            var audioClip: AudioClip? = null
-                            val count = this.alloc<UIntVar>()
-                            if (nestegg_track_count(nestegg.value, count.ptr) == 0) {
-                                for (i in 0u until count.value) {
-                                    val codec = nestegg_track_codec_id(nestegg.value, i)
-                                    if (codec >= 0) {
-                                        when (nestegg_track_type(nestegg.value, i)) {
-                                            NESTEGG_TRACK_VIDEO -> {
-                                                if (videoClip == null) {
-                                                    videoClip = this@VideoClipUtils.ReadVideoClip(nestegg.value!!, i, isAlpha)
-                                                }
-                                            }
-                                            NESTEGG_TRACK_AUDIO -> {
-                                                if (audioClip == null) {
-                                                    audioClip = this@VideoClipUtils.ReadAudioClip(nestegg.value!!, i, isStereo)
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            return Pair(videoClip, audioClip)
+                            return this@VideoClipUtils.ReadVideoAndAudioClip(nestegg.value!!, isAlpha, isStereo)
                         } finally {
                             nestegg_destroy(nestegg.value)
                         }
@@ -63,28 +41,59 @@ public object VideoClipUtils {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun ReadVideoClip(nestegg: CPointer<cnames.structs.nestegg>, track: UInt, isAlpha: Boolean): VideoClip? {
+    private fun ReadVideoAndAudioClip(nestegg: CPointer<cnames.structs.nestegg>, isAlpha: Boolean, isStereo: Boolean): Pair<VideoClip?, AudioClip?> {
+        val packets = this@VideoClipUtils.ReadPackets(nestegg)
+        if (packets != null) {
+            var videoClip: VideoClip? = null
+            var audioClip: AudioClip? = null
+            memScoped {
+                val count = this.alloc<UIntVar>()
+                if (nestegg_track_count(nestegg, count.ptr) == 0) {
+                    for (i in 0u until count.value) {
+                        val codec = nestegg_track_codec_id(nestegg, i)
+                        if (codec == NESTEGG_CODEC_AV1 || codec == NESTEGG_CODEC_OPUS) {
+                            when (nestegg_track_type(nestegg, i)) {
+                                NESTEGG_TRACK_VIDEO -> {
+                                    if (videoClip == null) {
+                                        videoClip = this@VideoClipUtils.ReadVideoClip(nestegg, i, packets, isAlpha)
+                                    }
+                                }
+                                NESTEGG_TRACK_AUDIO -> {
+                                    if (audioClip == null) {
+                                        audioClip = this@VideoClipUtils.ReadAudioClip(nestegg, i, packets, isStereo)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return Pair(videoClip, audioClip)
+        }
+        return Pair(null, null)
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun ReadVideoClip(nestegg: CPointer<cnames.structs.nestegg>, track: UInt, packets: List<Packet>, isAlpha: Boolean): VideoClip? {
         memScoped {
             val videoInfo = this.alloc<nestegg_video_params>()
             if (nestegg_track_video_params(nestegg, track, videoInfo.ptr) == 0) {
                 val width = videoInfo.width
                 val height = videoInfo.height
                 val codecData = this@VideoClipUtils.ReadCodecData(nestegg, track)
-//                val packets = this@VideoClipUtils.ReadPackets(nestegg, track)
             }
         }
         return null
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun ReadAudioClip(nestegg: CPointer<cnames.structs.nestegg>, track: UInt, isStereo: Boolean): AudioClip? {
+    private fun ReadAudioClip(nestegg: CPointer<cnames.structs.nestegg>, track: UInt, packets: List<Packet>, isStereo: Boolean): AudioClip? {
         memScoped {
             val audioInfo = this.alloc<nestegg_audio_params>()
             if (nestegg_track_audio_params(nestegg, track, audioInfo.ptr) == 0) {
                 val channelCount = audioInfo.channels
                 val fps = audioInfo.rate
                 val codecData = this@VideoClipUtils.ReadCodecData(nestegg, track)
-//                val packets = this@VideoClipUtils.ReadPackets(nestegg, track)
             }
         }
         return null
