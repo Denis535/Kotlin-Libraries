@@ -67,7 +67,10 @@ public object VideoClipUtils {
         memScoped {
             val videoInfo = this.alloc<nestegg_video_params>()
             if (nestegg_track_video_params(nestegg, track, videoInfo.ptr) == 0) {
-                // videos += VideoTrackData(i, codec, p.width, p.height, ReadCodecData(ctx, i))
+                val width = videoInfo.width
+                val height = videoInfo.height
+                val codecData = this@VideoClipUtils.ReadCodecData(nestegg, track)
+//                val packets = this@VideoClipUtils.ReadPackets(nestegg, track)
             }
         }
         return null
@@ -78,10 +81,73 @@ public object VideoClipUtils {
         memScoped {
             val audioInfo = this.alloc<nestegg_audio_params>()
             if (nestegg_track_audio_params(nestegg, track, audioInfo.ptr) == 0) {
-                // audios += AudioTrackData(i, codec, p.rate, p.channels, ReadCodecData(ctx, i))
+                val channelCount = audioInfo.channels
+                val fps = audioInfo.rate
+                val codecData = this@VideoClipUtils.ReadCodecData(nestegg, track)
+//                val packets = this@VideoClipUtils.ReadPackets(nestegg, track)
             }
         }
         return null
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun ReadCodecData(nestegg: CPointer<cnames.structs.nestegg>?, track: UInt): List<ByteArray>? {
+        val result = mutableListOf<ByteArray>()
+        memScoped {
+            val count = this.alloc<UIntVar>()
+            if (nestegg_track_codec_data_count(nestegg, track, count.ptr) != 0) return null
+            for (i in 0u until count.value) {
+                memScoped {
+                    val ptr = this.alloc<CPointerVar<UByteVar>>()
+                    val size = this.alloc<ULongVar>()
+                    if (nestegg_track_codec_data(nestegg, track, i, ptr.ptr, size.ptr) != 0) return null
+                    result += ptr.value!!.readBytes(size.value.toInt())
+                }
+            }
+        }
+        return result
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun ReadPackets(nestegg: CPointer<cnames.structs.nestegg>): List<Packet>? {
+        val result = mutableListOf<Packet>()
+        while (true) {
+            memScoped {
+                val packet = this.alloc<CPointerVar<cnames.structs.nestegg_packet>>()
+                run {
+                    val status = nestegg_read_packet(nestegg, packet.ptr)
+                    if (status == 0) break
+                    if (status < 0) return null
+                }
+                try {
+                    val track = this.alloc<UIntVar>()
+                    val timestamp = this.alloc<ULongVar>()
+                    val duration = this.alloc<ULongVar>()
+                    val count = this.alloc<UIntVar>()
+                    if (nestegg_packet_track(packet.value, track.ptr) != 0) return null
+                    if (nestegg_packet_tstamp(packet.value, timestamp.ptr) != 0) timestamp.value = 0UL
+                    if (nestegg_packet_duration(packet.value, duration.ptr) != 0) duration.value = 0UL
+                    if (nestegg_packet_count(packet.value, count.ptr) != 0) return null
+                    memScoped {
+                        val data = mutableListOf<ByteArray>()
+                        var additionalData: ByteArray? = null
+                        val ptr = this.alloc<CPointerVar<UByteVar>>()
+                        val size = this.alloc<ULongVar>()
+                        for (i in 0u until count.value) {
+                            if (nestegg_packet_data(packet.value, i, ptr.ptr, size.ptr) != 0) return null
+                            data += ptr.value!!.readBytes(size.value.toInt())
+                        }
+                        if (nestegg_packet_additional_data(packet.value, 1u, ptr.ptr, size.ptr) == 0) {
+                            additionalData = ptr.value!!.readBytes(size.value.toInt())
+                        }
+                        result += Packet(track.value, timestamp.value, duration.value, data, additionalData)
+                    }
+                } finally {
+                    nestegg_free_packet(packet.value)
+                }
+            }
+        }
+        return result
     }
 
 }
@@ -90,6 +156,8 @@ public object VideoClipUtils {
 private class DataReader(val ptr: CPointer<UByteVar>, val size: Long) {
     public var pos: Long = 0L
 }
+
+private class Packet(val Track: UInt, val Timestamp: ULong, val Duration: ULong, val Data: List<ByteArray>, val AdditionalData: ByteArray?)
 
 @OptIn(ExperimentalForeignApi::class)
 private fun ReadCallback(buffer: COpaquePointer?, length: ULong, userdata: COpaquePointer?): Long {
