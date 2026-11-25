@@ -50,21 +50,21 @@ public object VideoClipUtils {
                 val count = this.alloc<UIntVar>()
                 if (nestegg_track_count(nestegg, count.ptr) == 0) {
                     for (i in 0u until count.value) {
-                        val codec = nestegg_track_codec_id(nestegg, i)
-                        if (codec == NESTEGG_CODEC_AV1 || codec == NESTEGG_CODEC_OPUS) {
-                            when (nestegg_track_type(nestegg, i)) {
-                                NESTEGG_TRACK_VIDEO -> {
-                                    if (videoClip == null) {
-                                        videoClip = this@VideoClipUtils.ReadVideoClip(nestegg, i, packets, isAlpha)
-                                    }
+                        when (nestegg_track_type(nestegg, i)) {
+                            NESTEGG_TRACK_VIDEO -> {
+                                val codec = nestegg_track_codec_id(nestegg, i)
+                                if (videoClip == null && codec == NESTEGG_CODEC_AV1) {
+                                    videoClip = this@VideoClipUtils.ReadVideoClip(nestegg, i, packets, isAlpha)
                                 }
-                                NESTEGG_TRACK_AUDIO -> {
-                                    if (audioClip == null) {
-                                        audioClip = this@VideoClipUtils.ReadAudioClip(nestegg, i, packets, isStereo)
-                                    }
+                            }
+                            NESTEGG_TRACK_AUDIO -> {
+                                val codec = nestegg_track_codec_id(nestegg, i)
+                                if (audioClip == null && codec == NESTEGG_CODEC_OPUS) {
+                                    audioClip = this@VideoClipUtils.ReadAudioClip(nestegg, i, packets, isStereo)
                                 }
                             }
                         }
+
                     }
                 }
             }
