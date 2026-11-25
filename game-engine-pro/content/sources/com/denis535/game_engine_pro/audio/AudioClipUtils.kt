@@ -16,14 +16,7 @@ public object AudioClipUtils {
                 val opus = op_open_memory(dataPtr, dataSize.toULong(), error.ptr)
                 try {
                     if (opus != null) {
-                        val result = this@AudioClipUtils.ReadAll(opus, isStereo)
-                        if (result != null) {
-                            if (isStereo) {
-                                return AudioClip(AudioFormat.Stereo, 48000, result.first, result.second)
-                            } else {
-                                return AudioClip(AudioFormat.Mono, 48000, result.first, result.second)
-                            }
-                        }
+                        return this@AudioClipUtils.ReadAudioClip(opus, isStereo)
                     }
                 } finally {
                     op_free(opus)
@@ -34,7 +27,7 @@ public object AudioClipUtils {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun ReadAll(opus: CPointer<cnames.structs.OggOpusFile>, isStereo: Boolean): Pair<Int, ShortArray>? {
+    private fun ReadAudioClip(opus: CPointer<cnames.structs.OggOpusFile>, isStereo: Boolean): AudioClip? {
         val channelCount = op_channel_count(opus, -1) // mono, stereo, etc
         val frameCount = op_pcm_total(opus, -1)
         if (channelCount > 0 && frameCount > 0) {
@@ -53,7 +46,7 @@ public object AudioClipUtils {
                         }
                     }
                 }
-                return Pair(frameCount.toInt(), frames)
+                return AudioClip(AudioFormat.Stereo, 48000, frameCount.toInt(), frames)
             } else {
                 val frames = ShortArray(frameCount.toInt())
                 memScoped {
@@ -68,7 +61,7 @@ public object AudioClipUtils {
                         }
                     }
                 }
-                return Pair(frameCount.toInt(), frames)
+                return AudioClip(AudioFormat.Mono, 48000, frameCount.toInt(), frames)
             }
         }
         return null
