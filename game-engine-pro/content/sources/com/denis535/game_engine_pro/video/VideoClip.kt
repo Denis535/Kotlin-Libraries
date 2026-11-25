@@ -1,11 +1,6 @@
 package com.denis535.game_engine_pro.video
 
 public class VideoClip {
-    public enum class VideoFormat {
-        RGB,
-        RGBA,
-    }
-
     public val Format: VideoFormat
     public val FramesPerSecond: Double // 24, 30, 60...
     public val Width: Int
@@ -24,4 +19,9 @@ public class VideoClip {
         this.Frames = frames
     }
 
+}
+
+public enum class VideoFormat {
+    RGB,
+    RGBA,
 }

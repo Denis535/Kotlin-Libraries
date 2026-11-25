@@ -7,7 +7,7 @@ public object ImageUtils {
 
     // webp
     @OptIn(ExperimentalForeignApi::class)
-    public fun Decode(data: ByteArray, isAlpha: Boolean = false): Image? {
+    public fun CreateImage(data: ByteArray, isAlpha: Boolean = false): Image? {
         data.usePinned { data ->
             val dataPtr = data.addressOf(0).reinterpret<UByteVar>()
             val dataSize = data.get().size.toULong()
@@ -20,7 +20,7 @@ public object ImageUtils {
                         try {
                             if (pixelsPtr != null) {
                                 val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 4)
-                                return Image(Image.ImageFormat.RGBA, width.value, height.value, pixels)
+                                return Image(ImageFormat.RGBA, width.value, height.value, pixels)
                             }
                         } finally {
                             WebPFree(pixelsPtr)
@@ -30,7 +30,7 @@ public object ImageUtils {
                         try {
                             if (pixelsPtr != null) {
                                 val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 3)
-                                return Image(Image.ImageFormat.RGB, width.value, height.value, pixels)
+                                return Image(ImageFormat.RGB, width.value, height.value, pixels)
                             }
                         } finally {
                             WebPFree(pixelsPtr)
@@ -42,16 +42,15 @@ public object ImageUtils {
         return null
     }
 
-    // webp
     @OptIn(ExperimentalForeignApi::class)
-    public fun Encode(image: Image, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
+    public fun ToWebP(image: Image, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
         val isAlpha = when (image.Format) {
-            Image.ImageFormat.RGB -> false
-            Image.ImageFormat.RGBA -> true
+            ImageFormat.RGB -> false
+            ImageFormat.RGBA -> true
         }
         val stride = when (image.Format) {
-            Image.ImageFormat.RGB -> image.Width * 3
-            Image.ImageFormat.RGBA -> image.Width * 4
+            ImageFormat.RGB -> image.Width * 3
+            ImageFormat.RGBA -> image.Width * 4
         }
         val width = image.Width
         val height = image.Height

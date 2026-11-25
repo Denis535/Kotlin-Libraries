@@ -10,7 +10,7 @@ public object VideoClipUtils {
 
     // webm (av1 + opus)
     @OptIn(ExperimentalForeignApi::class)
-    public fun Decode(data: ByteArray, isAlpha: Boolean = false, isStereo: Boolean = false): Pair<VideoClip?, AudioClip?> {
+    public fun CreateVideoAndAudioClip(data: ByteArray, isAlpha: Boolean = false, isStereo: Boolean = false): Pair<VideoClip?, AudioClip?> {
         data.usePinned { data ->
             val dataPtr = data.addressOf(0).reinterpret<UByteVar>()
             val dataSize = data.get().size
@@ -26,9 +26,7 @@ public object VideoClipUtils {
                     }
                     if (nestegg_init(nestegg.ptr, io, null, -1) == 0) {
                         try {
-//                            val tracks = this@WebmUtils.FindTracks(this, nest)
-                            // tracks.video / tracks.audio: индекс дорожки или -1, если её нет
-                            // TODO: чтение пакетов и декодирование
+                            // как получить все видео и аудио дорожки?
                         } finally {
                             nestegg_destroy(nestegg.value)
                         }
