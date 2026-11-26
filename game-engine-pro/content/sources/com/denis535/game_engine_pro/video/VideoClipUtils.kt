@@ -59,12 +59,7 @@ public object VideoClipUtils {
                 val codec = nestegg_track_codec_id(nestegg, i)
                 if (type == NESTEGG_TRACK_VIDEO) {
                     if (codec == NESTEGG_CODEC_AV1) {
-                        val videoInfo = this.alloc<nestegg_video_params>()
-                        if (nestegg_track_video_params(nestegg, i, videoInfo.ptr) != 0) return null
-                        val width = videoInfo.width
-                        val height = videoInfo.height
-                        val codecData = this@VideoClipUtils.ReadCodecData(nestegg, i)
-                        return VideoTrackData(i, width, height, codecData)
+                        return this@VideoClipUtils.ReadVideoTrackData(nestegg, i)
                     }
                 }
             }
@@ -82,15 +77,39 @@ public object VideoClipUtils {
                 val codec = nestegg_track_codec_id(nestegg, i)
                 if (type == NESTEGG_TRACK_AUDIO) {
                     if (codec == NESTEGG_CODEC_OPUS) {
-                        val audioInfo = this.alloc<nestegg_audio_params>()
-                        if (nestegg_track_audio_params(nestegg, i, audioInfo.ptr) != 0) return null
-                        val channelCount = audioInfo.channels
-                        val fps = audioInfo.rate
-                        val codecData = this@VideoClipUtils.ReadCodecData(nestegg, i)
-                        return AudioTrackData(i, channelCount, fps, codecData)
+                        return this@VideoClipUtils.ReadAudioTrackData(nestegg, i)
                     }
                 }
             }
+        }
+        return null
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun ReadVideoTrackData(nestegg: CPointer<nestegg>, track: UInt): VideoTrackData? {
+        memScoped {
+            val info = this.alloc<nestegg_video_params>()
+            if (nestegg_track_video_params(nestegg, track, info.ptr) != 0) return null
+            val width = info.width
+            val height = info.height
+            val alphaMode = info.alpha_mode
+            val codecData = this@VideoClipUtils.ReadCodecData(nestegg, track)
+            if (codecData != null) return VideoTrackData(track, width, height, codecData)
+        }
+        return null
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun ReadAudioTrackData(nestegg: CPointer<nestegg>, track: UInt): AudioTrackData? {
+        memScoped {
+            val info = this.alloc<nestegg_audio_params>()
+            if (nestegg_track_audio_params(nestegg, track, info.ptr) != 0) return null
+            val channelCount = info.channels
+            val fps = info.rate
+            val codecDelay = info.codec_delay
+            val seekPreroll = info.seek_preroll
+            val codecData = this@VideoClipUtils.ReadCodecData(nestegg, track)
+            if (codecData != null) return AudioTrackData(track, channelCount, fps, codecData)
         }
         return null
     }
@@ -100,9 +119,9 @@ public object VideoClipUtils {
         val result = mutableListOf<ByteArray>()
         memScoped {
             val count = this.alloc<UIntVar>()
+            if (nestegg_track_codec_data_count(nestegg, track, count.ptr) != 0) return null
             val ptr = this.alloc<CPointerVar<UByteVar>>()
             val size = this.alloc<ULongVar>()
-            if (nestegg_track_codec_data_count(nestegg, track, count.ptr) != 0) return null
             for (i in 0u until count.value) {
                 if (nestegg_track_codec_data(nestegg, track, i, ptr.ptr, size.ptr) != 0) return null
                 result += ptr.value!!.readBytes(size.value.toInt())
@@ -117,8 +136,8 @@ public object VideoClipUtils {
             memScoped {
                 val packet = this.alloc<CPointerVar<nestegg_packet>>()
                 val status = nestegg_read_packet(nestegg, packet.ptr)
-                try {
-                    if (status > 0) {
+                if (status > 0) {
+                    try {
                         val track = this.alloc<UIntVar>()
                         if (nestegg_packet_track(packet.value, track.ptr) != 0) return false
                         if (track.value == videoTrackData?.Track) {
@@ -161,15 +180,15 @@ public object VideoClipUtils {
                             }
                             audioTrackData.Packets += Packet(track.value, timestamp.value, duration.value, data, additionalData)
                         }
+                    } finally {
+                        nestegg_free_packet(packet.value)
                     }
-                    if (status == 0) {
-                        break
-                    }
-                    if (status < 0) {
-                        return false
-                    }
-                } finally {
-                    nestegg_free_packet(packet.value)
+                }
+                if (status == 0) {
+                    break
+                }
+                if (status < 0) {
+                    return false
                 }
             }
         }
@@ -183,11 +202,11 @@ private class DataReader(val ptr: CPointer<UByteVar>, val size: Long) {
     public var pos: Long = 0L
 }
 
-private class VideoTrackData(val Track: UInt, val Width: UInt, val Height: UInt, CodecData: List<ByteArray>?) {
+private class VideoTrackData(val Track: UInt, val Width: UInt, val Height: UInt, val CodecData: List<ByteArray>) {
     public val Packets: MutableList<Packet> = mutableListOf()
 }
 
-private class AudioTrackData(val Track: UInt, val ChannelCount: UInt, val Fps: Double, CodecData: List<ByteArray>?) {
+private class AudioTrackData(val Track: UInt, val ChannelCount: UInt, val Fps: Double, val CodecData: List<ByteArray>) {
     public val Packets: MutableList<Packet> = mutableListOf()
 }
 
