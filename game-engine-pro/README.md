@@ -20,7 +20,7 @@ The platform for the game engine.
 - Keyboard
 - Gamepad
 
-**com.denis535.game_engine_pro.storage**
+**com.denis535.game_engine_pro.io**
 - Content
 - Storage
 
@@ -38,21 +38,14 @@ The platform for the game engine.
 
 ###### com.denis535.game-engine-pro-content
 
-**com.denis535.game_engine_pro**
-- JsonUtils
-
 **com.denis535.game_engine_pro.video**
 - Image
-- ImageUtils
+- AnimatedImage
 - VideoClip
-- VideoClipUtils
 - Font
-- FontUtils
-- GLTFUtils
 
 **com.denis535.game_engine_pro.audio**
 - AudioClip
-- AudioClipUtils
 
 # Links
 

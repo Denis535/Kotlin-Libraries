@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro.storage
+package com.denis535.game_engine_pro.io
 
 import cnames.structs.*
 import kotlinx.cinterop.*
