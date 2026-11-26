@@ -7,7 +7,7 @@ import webp.*
 public object WebpEncoder {
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Encode(image: Image, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
+    public fun EncodeImage(image: Image, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
         val isAlpha = when (image.Format) {
             ImageFormat.RGB -> false
             ImageFormat.RGBA -> true

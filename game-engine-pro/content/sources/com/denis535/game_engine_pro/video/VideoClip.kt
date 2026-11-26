@@ -8,9 +8,9 @@ public class VideoClip {
     public val FrameCount: Int
     public val Duration: Double
         get() = this.FrameCount.toDouble() / this.FramesPerSecond
-    public val Frames: ByteArray
+    public val Frames: List<ByteArray>
 
-    public constructor(format: VideoFormat, framesPerSecond: Double, width: Int, height: Int, frameCount: Int, frames: ByteArray) {
+    public constructor(format: VideoFormat, framesPerSecond: Double, width: Int, height: Int, frameCount: Int, frames: List<ByteArray>) {
         this.Format = format
         this.FramesPerSecond = framesPerSecond
         this.Width = width

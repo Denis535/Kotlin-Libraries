@@ -11,7 +11,7 @@ public object WebmDecoder {
 
     // webm (av1 + opus)
     @OptIn(ExperimentalForeignApi::class)
-    public fun Decode(data: ByteArray, isAlpha: Boolean = false, isStereo: Boolean = false): Pair<VideoClip?, AudioClip?>? {
+    public fun DecodeVideoAndAudioClip(data: ByteArray, isAlpha: Boolean = false, isStereo: Boolean = false): Pair<VideoClip?, AudioClip?>? {
         data.usePinned { data ->
             val dataPtr = data.addressOf(0).reinterpret<UByteVar>()
             val dataSize = data.get().size

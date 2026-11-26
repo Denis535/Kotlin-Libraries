@@ -8,7 +8,7 @@ public object OggDecoder {
 
     // ogg (opus)
     @OptIn(ExperimentalForeignApi::class)
-    public fun Decode(data: ByteArray, isStereo: Boolean = false): AudioClip? {
+    public fun DecodeAudioClip(data: ByteArray, isStereo: Boolean = false): AudioClip? {
         data.usePinned { data ->
             val dataPtr = data.addressOf(0).reinterpret<UByteVar>()
             val dataSize = data.get().size
