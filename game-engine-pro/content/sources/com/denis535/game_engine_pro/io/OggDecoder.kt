@@ -1,13 +1,14 @@
-package com.denis535.game_engine_pro.audio
+package com.denis535.game_engine_pro.io
 
+import com.denis535.game_engine_pro.audio.*
 import kotlinx.cinterop.*
 import opusfile.*
 
-public object AudioClipUtils {
+public object OggDecoder {
 
     // ogg (opus)
     @OptIn(ExperimentalForeignApi::class)
-    public fun CreateAudioClip(data: ByteArray, isStereo: Boolean = false): AudioClip? {
+    public fun Decode(data: ByteArray, isStereo: Boolean = false): AudioClip? {
         data.usePinned { data ->
             val dataPtr = data.addressOf(0).reinterpret<UByteVar>()
             val dataSize = data.get().size
@@ -16,7 +17,7 @@ public object AudioClipUtils {
                 val opus = op_open_memory(dataPtr, dataSize.toULong(), error.ptr)
                 try {
                     if (opus != null) {
-                        return this@AudioClipUtils.ReadAudioClip(opus, isStereo)
+                        return this@OggDecoder.ReadAudioClip(opus, isStereo)
                     }
                 } finally {
                     op_free(opus)

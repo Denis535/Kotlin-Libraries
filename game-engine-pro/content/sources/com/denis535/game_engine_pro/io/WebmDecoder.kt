@@ -1,16 +1,17 @@
-package com.denis535.game_engine_pro.video
+package com.denis535.game_engine_pro.io
 
 import cnames.structs.*
+import com.denis535.game_engine_pro.video.*
 import com.denis535.game_engine_pro.audio.*
 import kotlinx.cinterop.*
 import nestegg.*
 import platform.posix.*
 
-public object VideoClipUtils {
+public object WebmDecoder {
 
     // webm (av1 + opus)
     @OptIn(ExperimentalForeignApi::class)
-    public fun CreateVideoAndAudioClip(data: ByteArray, isAlpha: Boolean = false, isStereo: Boolean = false): Pair<VideoClip?, AudioClip?>? {
+    public fun Decode(data: ByteArray, isAlpha: Boolean = false, isStereo: Boolean = false): Pair<VideoClip?, AudioClip?>? {
         data.usePinned { data ->
             val dataPtr = data.addressOf(0).reinterpret<UByteVar>()
             val dataSize = data.get().size
@@ -26,7 +27,7 @@ public object VideoClipUtils {
                     }
                     if (nestegg_init(nestegg.ptr, io, null, -1) == 0) {
                         try {
-                            return this@VideoClipUtils.ReadVideoAndAudioClip(nestegg.value!!, isAlpha, isStereo)
+                            return this@WebmDecoder.ReadVideoAndAudioClip(nestegg.value!!, isAlpha, isStereo)
                         } finally {
                             nestegg_destroy(nestegg.value)
                         }
@@ -59,7 +60,7 @@ public object VideoClipUtils {
                 val codec = nestegg_track_codec_id(nestegg, i)
                 if (type == NESTEGG_TRACK_VIDEO) {
                     if (codec == NESTEGG_CODEC_AV1) {
-                        return this@VideoClipUtils.ReadVideoTrackData(nestegg, i)
+                        return this@WebmDecoder.ReadVideoTrackData(nestegg, i)
                     }
                 }
             }
@@ -77,7 +78,7 @@ public object VideoClipUtils {
                 val codec = nestegg_track_codec_id(nestegg, i)
                 if (type == NESTEGG_TRACK_AUDIO) {
                     if (codec == NESTEGG_CODEC_OPUS) {
-                        return this@VideoClipUtils.ReadAudioTrackData(nestegg, i)
+                        return this@WebmDecoder.ReadAudioTrackData(nestegg, i)
                     }
                 }
             }
@@ -92,8 +93,8 @@ public object VideoClipUtils {
             if (nestegg_track_video_params(nestegg, track, info.ptr) != 0) return null
             val width = info.width
             val height = info.height
-            val alphaMode = info.alpha_mode
-            val codecData = this@VideoClipUtils.ReadCodecData(nestegg, track)
+            val isAlpha = info.alpha_mode == 1u
+            val codecData = this@WebmDecoder.ReadCodecData(nestegg, track)
             if (codecData != null) return VideoTrackData(track, width, height, codecData)
         }
         return null
@@ -108,7 +109,7 @@ public object VideoClipUtils {
             val fps = info.rate
             val codecDelay = info.codec_delay
             val seekPreroll = info.seek_preroll
-            val codecData = this@VideoClipUtils.ReadCodecData(nestegg, track)
+            val codecData = this@WebmDecoder.ReadCodecData(nestegg, track)
             if (codecData != null) return AudioTrackData(track, channelCount, fps, codecData)
         }
         return null
