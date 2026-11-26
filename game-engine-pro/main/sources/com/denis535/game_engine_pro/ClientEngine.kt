@@ -3,7 +3,7 @@ package com.denis535.game_engine_pro
 import com.denis535.game_engine_pro.audio.*
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
-import com.denis535.game_engine_pro.storage.*
+import com.denis535.game_engine_pro.io.*
 import com.denis535.game_engine_pro.video.*
 import kotlinx.cinterop.*
 import sdl.*
