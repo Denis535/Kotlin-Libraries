@@ -320,7 +320,7 @@ public open class ClientEngine : Engine {
                 if (windowID == this.Window.NativeWindowID) {
                     if (button != null) {
                         val event = MouseButtonEvent(timestamp, windowID, nativeDeviceID, button, isPressed, clickCount)
-                        this.Mouse?.OnButtonActionCallback?.invoke(event)
+                        this.Mouse?.OnButtonCallback?.invoke(event)
                     }
                 }
             }

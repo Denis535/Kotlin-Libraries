@@ -31,7 +31,7 @@ public fun Main(args: Array<String>) {
 
         this.Mouse!!.OnMoveCallback = { event ->
         }
-        this.Mouse!!.OnButtonActionCallback = { event ->
+        this.Mouse!!.OnButtonCallback = { event ->
         }
         this.Mouse!!.OnScrollCallback = { event ->
         }
