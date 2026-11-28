@@ -21,5 +21,5 @@ docker run \
 --env HOME=/tmp \
 --rm \
 --mount type=bind,source="$PWD/workspace",target="/workspace" \
-dockcross/windows-shared-x64 \
+dockcross/windows-static-x64 \
 bash -eux /workspace/installer-windows.sh

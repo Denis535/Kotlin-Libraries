@@ -2,12 +2,12 @@ package = webp
 
 # static/linux
 compilerOpts.linux = -I../.third-party/workspace/dist/x86_64-linux-gnu/webp/include
-headers.linux = webp/decode.h webp/encode.h webp/demux.h webp/mux_types.h webp/types.h
+headers.linux = webp/decode.h webp/encode.h webp/mux.h webp/demux.h webp/mux_types.h webp/types.h
 libraryPaths.linux = ../.third-party/workspace/dist/x86_64-linux-gnu/webp/lib
-staticLibraries.linux = libwebp.a libwebpdecoder.a libwebpdemux.a libsharpyuv.a
+staticLibraries.linux = libwebp.a libwebpdecoder.a libwebpmux.a libwebpdemux.a libsharpyuv.a
 
 # static/mingw
 compilerOpts.mingw = -I../.third-party/workspace/dist/x86_64-w64-mingw32/webp/include
-headers.mingw = webp/decode.h webp/encode.h webp/demux.h webp/mux_types.h webp/types.h
+headers.mingw = webp/decode.h webp/encode.h webp/mux.h webp/demux.h webp/mux_types.h webp/types.h
 libraryPaths.mingw = ../.third-party/workspace/dist/x86_64-w64-mingw32/webp/lib
-staticLibraries.mingw = libwebp.a libwebpdecoder.a libwebpdemux.a libsharpyuv.a
+staticLibraries.mingw = libwebp.a libwebpdecoder.a libwebpmux.a libwebpdemux.a libsharpyuv.a

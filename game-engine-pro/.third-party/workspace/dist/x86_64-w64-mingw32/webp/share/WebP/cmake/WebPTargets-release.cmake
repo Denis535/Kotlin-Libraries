@@ -45,5 +45,15 @@ set_target_properties(WebP::webpdemux PROPERTIES
 list(APPEND _cmake_import_check_targets WebP::webpdemux )
 list(APPEND _cmake_import_check_files_for_WebP::webpdemux "${_IMPORT_PREFIX}/lib/libwebpdemux.a" )
 
+# Import target "WebP::libwebpmux" for configuration "Release"
+set_property(TARGET WebP::libwebpmux APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(WebP::libwebpmux PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libwebpmux.a"
+  )
+
+list(APPEND _cmake_import_check_targets WebP::libwebpmux )
+list(APPEND _cmake_import_check_files_for_WebP::libwebpmux "${_IMPORT_PREFIX}/lib/libwebpmux.a" )
+
 # Commands beyond this point should not need to know the version.
 set(CMAKE_IMPORT_FILE_VERSION)

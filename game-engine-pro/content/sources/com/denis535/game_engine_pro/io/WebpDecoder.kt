@@ -60,6 +60,11 @@ public object WebpDecoder {
                 try {
                     val info = this.alloc<WebPAnimInfo>()
                     if (WebPAnimDecoderGetInfo(decoder, info.ptr) == 0) return null
+                    val format = if (isAlpha) {
+                        ImageFormat.RGBA
+                    } else {
+                        ImageFormat.RGB
+                    }
                     val width = info.canvas_width.toInt()
                     val height = info.canvas_height.toInt()
                     val frames = mutableListOf<AnimatedImage.Frame>()
@@ -67,18 +72,12 @@ public object WebpDecoder {
                     val timestamp = this.alloc<IntVar>()
                     while (WebPAnimDecoderHasMoreFrames(decoder) != 0) {
                         if (WebPAnimDecoderGetNext(decoder, framePtr.ptr, timestamp.ptr) == 0) return null
-                        val pixels = framePtr.value!!.reinterpret<ByteVar>().readBytes(width * height * 4)
-                        if (isAlpha) {
-                            frames += AnimatedImage.Frame(timestamp.value, pixels)
-                        } else {
-                            frames += AnimatedImage.Frame(timestamp.value, RgbaToRgb(pixels))
+                        val pixels = framePtr.value!!.reinterpret<ByteVar>().readBytes(width * height * 4).let {
+                            if (isAlpha) it else RgbaToRgb(it)
                         }
+                        frames += AnimatedImage.Frame(timestamp.value, pixels)
                     }
-                    if (isAlpha) {
-                        return AnimatedImage(ImageFormat.RGBA, width, height, frames)
-                    } else {
-                        return AnimatedImage(ImageFormat.RGB, width, height, frames)
-                    }
+                    return AnimatedImage(format, width, height, frames)
                 } finally {
                     WebPAnimDecoderDelete(decoder)
                 }

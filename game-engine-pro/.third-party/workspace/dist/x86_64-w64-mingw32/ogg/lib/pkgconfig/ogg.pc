@@ -1,9 +1,9 @@
 # ogg pkg-config file
 
-prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.shared
-exec_prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.shared/bin
-libdir=/usr/src/mxe/usr/x86_64-w64-mingw32.shared/lib
-includedir=/usr/src/mxe/usr/x86_64-w64-mingw32.shared/include
+prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.static
+exec_prefix=/usr/src/mxe/usr/x86_64-w64-mingw32.static/bin
+libdir=/usr/src/mxe/usr/x86_64-w64-mingw32.static/lib
+includedir=/usr/src/mxe/usr/x86_64-w64-mingw32.static/include
 
 Name: ogg
 Description: ogg is a library for manipulating ogg bitstreams

@@ -12,7 +12,7 @@ install_webp_windows() {
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
         -DBUILD_SHARED_LIBS=OFF \
         -DWEBP_ENABLE_SIMD=ON \
-        -DWEBP_BUILD_LIBWEBPMUX=OFF \
+        -DWEBP_BUILD_LIBWEBPMUX=ON \
         -DWEBP_BUILD_ANIM_UTILS=OFF \
         -DWEBP_BUILD_GIF2WEBP=OFF \
         -DWEBP_BUILD_IMG2WEBP=OFF \
@@ -131,7 +131,7 @@ install_opusfile_windows() {
     DEPS_LIBS="-L$OGG_DIR/lib -L$OPUS_DIR/lib -lopus -logg" \
     "$SRC_DIR/configure" \
         --build=x86_64-pc-linux-gnu \
-        --host=x86_64-w64-mingw32.shared \
+        --host=x86_64-w64-mingw32 \
         --prefix="$DIST_DIR" \
         --enable-static \
         --disable-shared \

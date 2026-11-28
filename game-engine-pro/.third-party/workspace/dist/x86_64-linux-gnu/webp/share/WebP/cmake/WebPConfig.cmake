@@ -37,7 +37,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/WebPTargets.cmake")
 set_and_check(WebP_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/include")
 set(WebP_INCLUDE_DIRS ${WebP_INCLUDE_DIR})
 set(WEBP_INCLUDE_DIRS ${WebP_INCLUDE_DIR})
-set(WebP_LIBRARIES "webpdecoder;webp;webpdemux")
+set(WebP_LIBRARIES "webpdecoder;webp;webpdemux;webpmux")
 set(WEBP_LIBRARIES "${WebP_LIBRARIES}")
 
 check_required_components(WebP)

@@ -24,6 +24,8 @@ public class AnimatedImage {
     public val Format: ImageFormat
     public val Width: Int
     public val Height: Int
+    public val Duration: Double
+        get() = this.Frames.last().TimestampMs / 1000.0
     public val Frames: List<Frame>
 
     public constructor(format: ImageFormat, width: Int, height: Int, frames: List<Frame>) {
