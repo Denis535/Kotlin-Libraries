@@ -9,7 +9,22 @@ public class Keyboard : AutoCloseable {
     public var IsClosed: Boolean = false
         private set
 
-    public var OnKeyActionCallback: ((KeyboardKeyActionEvent) -> Unit)? = null
+    public var OnKeyCallback: ((KeyEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
+    public var OnTextCallback: ((TextEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -40,12 +55,18 @@ public class Keyboard : AutoCloseable {
 
 }
 
-public data class KeyboardKeyActionEvent(
+public data class KeyEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val Key: KeyboardKey,
     public val IsPressed: Boolean,
     public val IsRepeated: Boolean,
+)
+
+public data class TextEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+    public val Value: String,
 )
 
 public enum class KeyboardKey {

@@ -45,6 +45,21 @@ public class Touchscreen : AutoCloseable {
             field = value
         }
 
+    public var OnZoomCallback: ((ZoomEvent) -> Unit)? = null
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (field != null) {
+                require(value == null)
+            } else {
+                require(value != null)
+            }
+            field = value
+        }
+
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
         memScoped {
@@ -75,6 +90,13 @@ public data class TouchEvent(
     public val Pressure: Float, // [0..1]
 )
 
+public data class ZoomEvent(
+    public val Timestamp: Float,
+    public val WindowID: UInt,
+    public val State: ZoomState,
+    public val Value: Float, // value <= 1 or value >= 1
+)
+
 public data class Touch(
     public val ID: ULong,
     public val Point: Vector2, // [0..1]
@@ -86,4 +108,10 @@ public enum class TouchState {
     Changed,
     End,
     Canceled;
+}
+
+public enum class ZoomState {
+    Begin,
+    Changed,
+    End;
 }

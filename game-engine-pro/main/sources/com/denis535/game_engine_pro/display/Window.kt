@@ -183,14 +183,14 @@ public class Window : AutoCloseable {
             return flags and SDL_WINDOW_MOUSE_FOCUS != 0UL
         }
     @OptIn(ExperimentalForeignApi::class)
-    public val HasKeyboardFocus: Boolean
+    public val HasInputFocus: Boolean
         get() {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).SDL_CheckError()
             return flags and SDL_WINDOW_INPUT_FOCUS != 0UL
         }
 
-    public var OnCursorEnterCallback: ((CursorEnterEvent) -> Unit)? = null
+    public var OnMouseFocusCallback: ((MouseFocusEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -204,51 +204,7 @@ public class Window : AutoCloseable {
             }
             field = value
         }
-    public var OnCursorLeaveCallback: ((CursorLeaveEvent) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
-    public var OnKeyboardFocusCallback: ((KeyboardFocusEvent) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
-
-    public var OnZoomCallback: ((ZoomEvent) -> Unit)? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-            } else {
-                require(value != null)
-            }
-            field = value
-        }
-
-    public var OnTextCallback: ((TextEvent) -> Unit)? = null
+    public var OnInputFocusCallback: ((InputFocusEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -334,37 +290,14 @@ public enum class GraphicsApi {
     Vulkan;
 }
 
-public data class CursorEnterEvent(
-    public val Timestamp: Float,
-    public val WindowID: UInt,
-)
-
-public data class CursorLeaveEvent(
-    public val Timestamp: Float,
-    public val WindowID: UInt,
-)
-
-public data class KeyboardFocusEvent(
+public data class MouseFocusEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     public val IsFocusGained: Boolean,
 )
 
-public data class ZoomEvent(
+public data class InputFocusEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
-    public val State: ZoomState,
-    public val Value: Float, // value <= 1 or value >= 1
+    public val IsFocusGained: Boolean,
 )
-
-public data class TextEvent(
-    public val Timestamp: Float,
-    public val WindowID: UInt,
-    public val Value: String,
-)
-
-public enum class ZoomState {
-    Begin,
-    Changed,
-    End;
-}

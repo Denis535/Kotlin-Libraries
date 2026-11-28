@@ -138,6 +138,10 @@ public open class ClientEngine : Engine {
             }
             SDL_EVENT_WINDOW_HIDDEN -> {
             }
+            SDL_EVENT_WINDOW_MOVED -> {
+            }
+            SDL_EVENT_WINDOW_RESIZED -> {
+            }
             SDL_EVENT_WINDOW_EXPOSED -> {
             }
             SDL_EVENT_WINDOW_MINIMIZED -> {
@@ -145,10 +149,6 @@ public open class ClientEngine : Engine {
             SDL_EVENT_WINDOW_MAXIMIZED -> {
             }
             SDL_EVENT_WINDOW_RESTORED -> {
-            }
-            SDL_EVENT_WINDOW_MOVED -> {
-            }
-            SDL_EVENT_WINDOW_RESIZED -> {
             }
             SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED -> {
             }
@@ -162,8 +162,8 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = CursorEnterEvent(timestamp, windowID)
-                    this.Window.OnCursorEnterCallback?.invoke(event)
+                    val event = MouseFocusEvent(timestamp, windowID, true)
+                    this.Window.OnMouseFocusCallback?.invoke(event)
                 }
             }
             SDL_EVENT_WINDOW_MOUSE_LEAVE -> {
@@ -171,19 +171,17 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = CursorLeaveEvent(timestamp, windowID)
-                    this.Window.OnCursorLeaveCallback?.invoke(event)
+                    val event = MouseFocusEvent(timestamp, windowID, true)
+                    this.Window.OnMouseFocusCallback?.invoke(event)
                 }
             }
-
-            // Window
             SDL_EVENT_WINDOW_FOCUS_GAINED -> {
                 val evt = event.pointed.window
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = KeyboardFocusEvent(timestamp, windowID, true)
-                    this.Window.OnKeyboardFocusCallback?.invoke(event)
+                    val event = InputFocusEvent(timestamp, windowID, true)
+                    this.Window.OnInputFocusCallback?.invoke(event)
                 }
             }
             SDL_EVENT_WINDOW_FOCUS_LOST -> {
@@ -191,54 +189,8 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = KeyboardFocusEvent(timestamp, windowID, false)
-                    this.Window.OnKeyboardFocusCallback?.invoke(event)
-                }
-            }
-
-            // Window
-            SDL_EVENT_PINCH_BEGIN -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val value = evt.scale
-                if (windowID == this.Window.NativeWindowID) {
-                    val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, value)
-                    this.Window.OnZoomCallback?.invoke(event)
-                }
-            }
-            SDL_EVENT_PINCH_UPDATE -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val value = evt.scale
-                if (windowID == this.Window.NativeWindowID) {
-                    val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, value)
-                    this.Window.OnZoomCallback?.invoke(event)
-                }
-            }
-            SDL_EVENT_PINCH_END -> {
-                val evt = event.pointed.pinch
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val value = evt.scale
-                if (windowID == this.Window.NativeWindowID) {
-                    val event = ZoomEvent(timestamp, windowID, ZoomState.End, value)
-                    this.Window.OnZoomCallback?.invoke(event)
-                }
-            }
-
-            // Window
-            SDL_EVENT_TEXT_INPUT -> {
-                val evt = event.pointed.text
-                val timestamp = Frame.Time
-                val windowID = evt.windowID
-                val value = evt.text?.toKStringFromUtf8()
-                if (windowID == this.Window.NativeWindowID) {
-                    if (value != null) {
-                        val event = TextEvent(timestamp, windowID, value)
-                        this.Window.OnTextCallback?.invoke(event)
-                    }
+                    val event = InputFocusEvent(timestamp, windowID, false)
+                    this.Window.OnInputFocusCallback?.invoke(event)
                 }
             }
 
@@ -310,6 +262,38 @@ public open class ClientEngine : Engine {
                 }
             }
 
+            // Touchscreen
+            SDL_EVENT_PINCH_BEGIN -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val value = evt.scale
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.Begin, value)
+                    this.Touchscreen?.OnZoomCallback?.invoke(event)
+                }
+            }
+            SDL_EVENT_PINCH_UPDATE -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val value = evt.scale
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.Changed, value)
+                    this.Touchscreen?.OnZoomCallback?.invoke(event)
+                }
+            }
+            SDL_EVENT_PINCH_END -> {
+                val evt = event.pointed.pinch
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val value = evt.scale
+                if (windowID == this.Window.NativeWindowID) {
+                    val event = ZoomEvent(timestamp, windowID, ZoomState.End, value)
+                    this.Touchscreen?.OnZoomCallback?.invoke(event)
+                }
+            }
+
             // Mouse
             SDL_EVENT_MOUSE_MOTION -> {
                 val evt = event.pointed.motion
@@ -335,7 +319,7 @@ public open class ClientEngine : Engine {
                 val clickCount = evt.clicks.toInt()
                 if (windowID == this.Window.NativeWindowID) {
                     if (button != null) {
-                        val event = MouseButtonActionEvent(timestamp, windowID, nativeDeviceID, button, isPressed, clickCount)
+                        val event = MouseButtonEvent(timestamp, windowID, nativeDeviceID, button, isPressed, clickCount)
                         this.Mouse?.OnButtonActionCallback?.invoke(event)
                     }
                 }
@@ -361,8 +345,8 @@ public open class ClientEngine : Engine {
                     integerScrollY = -evt.integer_y
                 }
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = MouseWheelScrollEvent(timestamp, windowID, nativeDeviceID, Vector2(scrollX, scrollY), Vector2I(integerScrollX, integerScrollY))
-                    this.Mouse?.OnWheelScrollCallback?.invoke(event)
+                    val event = MouseScrollEvent(timestamp, windowID, nativeDeviceID, Vector2(scrollX, scrollY), Vector2I(integerScrollX, integerScrollY))
+                    this.Mouse?.OnScrollCallback?.invoke(event)
                 }
             }
 
@@ -376,8 +360,20 @@ public open class ClientEngine : Engine {
                 val isRepeated = evt.repeat
                 if (windowID == this.Window.NativeWindowID) {
                     if (key != null) {
-                        val event = KeyboardKeyActionEvent(timestamp, windowID, key, isPressed, isRepeated)
-                        this.Keyboard?.OnKeyActionCallback?.invoke(event)
+                        val event = KeyEvent(timestamp, windowID, key, isPressed, isRepeated)
+                        this.Keyboard?.OnKeyCallback?.invoke(event)
+                    }
+                }
+            }
+            SDL_EVENT_TEXT_INPUT -> {
+                val evt = event.pointed.text
+                val timestamp = Frame.Time
+                val windowID = evt.windowID
+                val value = evt.text?.toKStringFromUtf8()
+                if (windowID == this.Window.NativeWindowID) {
+                    if (value != null) {
+                        val event = TextEvent(timestamp, windowID, value)
+                        this.Keyboard?.OnTextCallback?.invoke(event)
                     }
                 }
             }
@@ -417,8 +413,8 @@ public open class ClientEngine : Engine {
                 val isPressed = evt.down
                 if (playerGamepad != null) {
                     if (button != null) {
-                        val event = GamepadButtonActionEvent(timestamp, nativeDeviceID, playerIndex, button, isPressed)
-                        playerGamepad.OnButtonActionCallback?.invoke(event)
+                        val event = GamepadButtonEvent(timestamp, nativeDeviceID, playerIndex, button, isPressed)
+                        playerGamepad.OnButtonCallback?.invoke(event)
                     }
                 }
             }
@@ -434,8 +430,8 @@ public open class ClientEngine : Engine {
                 }
                 if (playerGamepad != null) {
                     if (axis != null) {
-                        val event = GamepadAxisActionEvent(timestamp, nativeDeviceID, playerIndex, axis, value)
-                        playerGamepad.OnAxisActionCallback?.invoke(event)
+                        val event = GamepadAxisEvent(timestamp, nativeDeviceID, playerIndex, axis, value)
+                        playerGamepad.OnAxisCallback?.invoke(event)
                     }
                 }
             }

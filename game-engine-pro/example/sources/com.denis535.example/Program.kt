@@ -22,13 +22,10 @@ public fun Main(args: Array<String>) {
         this.OnStartCallback = {}
         this.OnStopCallback = {}
 
-        this.Window.OnCursorEnterCallback = { event ->
+        this.Window.OnMouseFocusCallback = { event ->
 //            println(event)
         }
-        this.Window.OnCursorLeaveCallback = { event ->
-//            println(event)
-        }
-        this.Window.OnKeyboardFocusCallback = { event ->
+        this.Window.OnInputFocusCallback = { event ->
 //            println(event)
         }
 
@@ -36,10 +33,10 @@ public fun Main(args: Array<String>) {
         }
         this.Mouse!!.OnButtonActionCallback = { event ->
         }
-        this.Mouse!!.OnWheelScrollCallback = { event ->
+        this.Mouse!!.OnScrollCallback = { event ->
         }
 
-        this.Keyboard!!.OnKeyActionCallback = { event ->
+        this.Keyboard!!.OnKeyCallback = { event ->
             if (event.Key == KeyboardKey.Enter && event.IsPressed && !event.IsRepeated && this.Keyboard!!.IsKeyPressed(KeyboardKey.RightAlt)) {
                 this.Window.IsFullScreen = !this.Window.IsFullScreen
             }

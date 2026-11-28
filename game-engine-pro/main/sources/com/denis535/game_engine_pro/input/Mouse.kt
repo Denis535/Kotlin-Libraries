@@ -23,7 +23,7 @@ public class Mouse : AutoCloseable {
             }
             field = value
         }
-    public var OnButtonActionCallback: ((MouseButtonActionEvent) -> Unit)? = null
+    public var OnButtonCallback: ((MouseButtonEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -37,7 +37,7 @@ public class Mouse : AutoCloseable {
             }
             field = value
         }
-    public var OnWheelScrollCallback: ((MouseWheelScrollEvent) -> Unit)? = null
+    public var OnScrollCallback: ((MouseScrollEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -98,7 +98,7 @@ public data class MouseMoveEvent(
     public val Delta: Vector2, // locked cursor only
 )
 
-public data class MouseButtonActionEvent(
+public data class MouseButtonEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     internal val NativeDeviceID: UInt,
@@ -107,7 +107,7 @@ public data class MouseButtonActionEvent(
     public val ClickCount: Int,
 )
 
-public data class MouseWheelScrollEvent(
+public data class MouseScrollEvent(
     public val Timestamp: Float,
     public val WindowID: UInt,
     internal val NativeDeviceID: UInt,

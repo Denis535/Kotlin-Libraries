@@ -36,6 +36,16 @@ public class Gamepad : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public val Name: String?
+        get() {
+            check(!this.IsClosed)
+            this.NativeDevice?.let {
+                return SDL_GetGamepadName(it).SDL_CheckError()?.toKString()
+            }
+            return null
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public val Vendor: UShort
         get() {
             check(!this.IsClosed)
@@ -44,7 +54,6 @@ public class Gamepad : AutoCloseable {
             }
             return 0U
         }
-
     @OptIn(ExperimentalForeignApi::class)
     public val Product: UShort
         get() {
@@ -54,7 +63,6 @@ public class Gamepad : AutoCloseable {
             }
             return 0U
         }
-
     @OptIn(ExperimentalForeignApi::class)
     public val ProductVersion: UShort
         get() {
@@ -65,17 +73,7 @@ public class Gamepad : AutoCloseable {
             return 0U
         }
 
-    @OptIn(ExperimentalForeignApi::class)
-    public val Name: String?
-        get() {
-            check(!this.IsClosed)
-            this.NativeDevice?.let {
-                return SDL_GetGamepadName(it).SDL_CheckError()?.toKString()
-            }
-            return null
-        }
-
-    public var OnButtonActionCallback: ((GamepadButtonActionEvent) -> Unit)? = null
+    public var OnButtonCallback: ((GamepadButtonEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -89,7 +87,7 @@ public class Gamepad : AutoCloseable {
             }
             field = value
         }
-    public var OnAxisActionCallback: ((GamepadAxisActionEvent) -> Unit)? = null
+    public var OnAxisCallback: ((GamepadAxisEvent) -> Unit)? = null
         get() {
             check(!this.IsClosed)
             return field
@@ -159,7 +157,7 @@ public class Gamepad : AutoCloseable {
 
 }
 
-public data class GamepadButtonActionEvent(
+public data class GamepadButtonEvent(
     public val Timestamp: Float,
     internal val NativeDeviceID: UInt,
     public val PlayerIndex: Int,
@@ -167,7 +165,7 @@ public data class GamepadButtonActionEvent(
     public val IsPressed: Boolean,
 )
 
-public data class GamepadAxisActionEvent(
+public data class GamepadAxisEvent(
     public val Timestamp: Float,
     internal val NativeDeviceID: UInt,
     public val PlayerIndex: Int,
