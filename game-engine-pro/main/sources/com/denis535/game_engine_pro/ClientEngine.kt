@@ -171,7 +171,7 @@ public open class ClientEngine : Engine {
                 val timestamp = Frame.Time
                 val windowID = evt.windowID
                 if (windowID == this.Window.NativeWindowID) {
-                    val event = MouseFocusEvent(timestamp, windowID, true)
+                    val event = MouseFocusEvent(timestamp, windowID, false)
                     this.Window.OnMouseFocusCallback?.invoke(event)
                 }
             }
