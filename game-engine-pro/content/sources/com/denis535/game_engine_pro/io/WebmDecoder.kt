@@ -27,7 +27,12 @@ public object WebmDecoder {
                     }
                     if (nestegg_init(nestegg.ptr, io, null, -1) == 0) {
                         try {
-                            return this@WebmDecoder.ReadVideoAndAudioClip(nestegg.value!!, isAlpha, isStereo)
+                            val videoTrackData = this@WebmDecoder.FindVideoTrackData(nestegg.value!!)
+                            val audioTrackData = this@WebmDecoder.FindAudioTrackData(nestegg.value!!)
+                            if (this@WebmDecoder.ReadPackets(nestegg.value!!, videoTrackData, audioTrackData)) {
+                                // todo
+                            }
+                            return null
                         } finally {
                             nestegg_destroy(nestegg.value)
                         }
@@ -36,16 +41,6 @@ public object WebmDecoder {
             } finally {
                 reader.dispose()
             }
-        }
-        return null
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private fun ReadVideoAndAudioClip(nestegg: CPointer<nestegg>, isAlpha: Boolean, isStereo: Boolean): Pair<VideoClip?, AudioClip?>? {
-        val videoTrackData = this.FindVideoTrackData(nestegg)
-        val audioTrackData = this.FindAudioTrackData(nestegg)
-        if (this.ReadPackets(nestegg, videoTrackData, audioTrackData)) {
-            // todo
         }
         return null
     }

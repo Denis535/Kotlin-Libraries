@@ -47,7 +47,7 @@ public object OggDecoder {
                         }
                     }
                 }
-                return AudioClip(AudioFormat.Stereo, 48000, frameCount.toInt(), frames)
+                return AudioClip(frameCount.toInt(), AudioFormat.Stereo, 48000, frames)
             } else {
                 val frames = ShortArray(frameCount.toInt())
                 memScoped {
@@ -62,7 +62,7 @@ public object OggDecoder {
                         }
                     }
                 }
-                return AudioClip(AudioFormat.Mono, 48000, frameCount.toInt(), frames)
+                return AudioClip(frameCount.toInt(), AudioFormat.Mono, 48000, frames)
             }
         }
         return null

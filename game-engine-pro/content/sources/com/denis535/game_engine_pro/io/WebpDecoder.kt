@@ -15,19 +15,20 @@ public object WebpDecoder {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
                 if (WebPGetInfo(dataPtr, dataSize, width.ptr, height.ptr) == 0) return null
-                if (isAlpha) {
-                    val pixelsPtr = WebPDecodeRGBA(dataPtr, dataSize, width.ptr, height.ptr) ?: return null
-                    try {
-                        val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 4)
-                        return Image(ImageFormat.RGBA, width.value, height.value, pixels)
-                    } finally {
-                        WebPFree(pixelsPtr)
+                run {
+                    val pixelsPtr = if (isAlpha) {
+                        WebPDecodeRGBA(dataPtr, dataSize, width.ptr, height.ptr) ?: return null
+                    } else {
+                        WebPDecodeRGB(dataPtr, dataSize, width.ptr, height.ptr) ?: return null
                     }
-                } else {
-                    val pixelsPtr = WebPDecodeRGB(dataPtr, dataSize, width.ptr, height.ptr) ?: return null
                     try {
-                        val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 3)
-                        return Image(ImageFormat.RGB, width.value, height.value, pixels)
+                        if (isAlpha) {
+                            val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 4)
+                            return Image(width.value, height.value, ImageFormat.RGBA, pixels)
+                        } else {
+                            val pixels = pixelsPtr.reinterpret<ByteVar>().readBytes(width.value * height.value * 3)
+                            return Image(width.value, height.value, ImageFormat.RGB, pixels)
+                        }
                     } finally {
                         WebPFree(pixelsPtr)
                     }
@@ -60,24 +61,28 @@ public object WebpDecoder {
                 try {
                     val info = this.alloc<WebPAnimInfo>()
                     if (WebPAnimDecoderGetInfo(decoder, info.ptr) == 0) return null
-                    val format = if (isAlpha) {
-                        ImageFormat.RGBA
-                    } else {
-                        ImageFormat.RGB
-                    }
                     val width = info.canvas_width.toInt()
                     val height = info.canvas_height.toInt()
-                    val frames = mutableListOf<AnimatedImage.Frame>()
-                    val framePtr = this.alloc<CPointerVar<UByteVar>>()
-                    val timestamp = this.alloc<IntVar>()
-                    while (WebPAnimDecoderHasMoreFrames(decoder) != 0) {
-                        if (WebPAnimDecoderGetNext(decoder, framePtr.ptr, timestamp.ptr) == 0) return null
-                        val pixels = framePtr.value!!.reinterpret<ByteVar>().readBytes(width * height * 4).let {
-                            if (isAlpha) it else RgbaToRgb(it)
+                    run {
+                        val frames = run {
+                            val result = mutableListOf<AnimatedImage.Frame>()
+                            val framePtr = this.alloc<CPointerVar<UByteVar>>()
+                            val timestamp = this.alloc<IntVar>()
+                            while (WebPAnimDecoderHasMoreFrames(decoder) != 0) {
+                                if (WebPAnimDecoderGetNext(decoder, framePtr.ptr, timestamp.ptr) == 0) return null
+                                val pixels = framePtr.value!!.reinterpret<ByteVar>().readBytes(width * height * 4).let {
+                                    if (isAlpha) it else RgbaToRgb(it)
+                                }
+                                result += AnimatedImage.Frame(timestamp.value, pixels)
+                            }
+                            result
                         }
-                        frames += AnimatedImage.Frame(timestamp.value, pixels)
+                        if (isAlpha) {
+                            return AnimatedImage(width, height, ImageFormat.RGBA, frames)
+                        } else {
+                            return AnimatedImage(width, height, ImageFormat.RGB, frames)
+                        }
                     }
-                    return AnimatedImage(format, width, height, frames)
                 } finally {
                     WebPAnimDecoderDelete(decoder)
                 }

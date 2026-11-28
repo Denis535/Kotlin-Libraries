@@ -8,84 +8,60 @@ public object WebpEncoder {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun EncodeImage(image: Image, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
-        val isAlpha = when (image.Format) {
-            ImageFormat.RGB -> false
-            ImageFormat.RGBA -> true
-        }
         val width = image.Width
         val height = image.Height
         val stride = when (image.Format) {
             ImageFormat.RGB -> image.Width * 3
             ImageFormat.RGBA -> image.Width * 4
         }
+        val isAlpha = when (image.Format) {
+            ImageFormat.RGB -> false
+            ImageFormat.RGBA -> true
+        }
+        val pixels = image.Pixels
         memScoped {
-            if (isAlpha) {
-                val dataPtr = this.alloc<CPointerVar<UByteVar>>()
-                try {
+            val dataPtr = this.alloc<CPointerVar<UByteVar>>()
+            try {
+                pixels.usePinned { pixels ->
+                    val pixelsPtr = pixels.addressOf(0).reinterpret<UByteVar>()
                     val dataSize = if (lossless) {
-                        image.Pixels.usePinned { pixels ->
-                            val pixelsPtr = pixels.addressOf(0).reinterpret<UByteVar>()
+                        if (isAlpha) {
                             WebPEncodeLosslessRGBA(pixelsPtr, width, height, stride, dataPtr.ptr)
-                        }
-                    } else {
-                        image.Pixels.usePinned { pixels ->
-                            val pixelsPtr = pixels.addressOf(0).reinterpret<UByteVar>()
-                            WebPEncodeRGBA(pixelsPtr, width, height, stride, quality.coerceIn(0f, 100f), dataPtr.ptr)
-                        }
-                    }
-                    if (dataPtr.value != null && dataSize > 0uL) {
-                        return dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
-                    }
-                    return null
-                } finally {
-                    WebPFree(dataPtr.value)
-                }
-            } else {
-                val dataPtr = this.alloc<CPointerVar<UByteVar>>()
-                try {
-                    val dataSize = if (lossless) {
-                        image.Pixels.usePinned { pixels ->
-                            val pixelsPtr = pixels.addressOf(0).reinterpret<UByteVar>()
+                        } else {
                             WebPEncodeLosslessRGB(pixelsPtr, width, height, stride, dataPtr.ptr)
                         }
                     } else {
-                        image.Pixels.usePinned { pixels ->
-                            val pixelsPtr = pixels.addressOf(0).reinterpret<UByteVar>()
+                        if (isAlpha) {
+                            WebPEncodeRGBA(pixelsPtr, width, height, stride, quality.coerceIn(0f, 100f), dataPtr.ptr)
+                        } else {
                             WebPEncodeRGB(pixelsPtr, width, height, stride, quality.coerceIn(0f, 100f), dataPtr.ptr)
                         }
                     }
-                    if (dataPtr.value != null && dataSize > 0uL) {
+                    if (dataSize > 0uL) {
                         return dataPtr.value!!.reinterpret<ByteVar>().readBytes(dataSize.toInt())
                     }
                     return null
-                } finally {
-                    WebPFree(dataPtr.value)
                 }
+            } finally {
+                WebPFree(dataPtr.value)
             }
         }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun EncodeAnimatedImage(image: AnimatedImage, lossless: Boolean = false, quality: Float = 80f): ByteArray? {
-        val isAlpha = when (image.Format) {
-            ImageFormat.RGB -> false
-            ImageFormat.RGBA -> true
-        }
         val width = image.Width
         val height = image.Height
         val stride = when (image.Format) {
             ImageFormat.RGB -> image.Width * 3
             ImageFormat.RGBA -> image.Width * 4
         }
+        val isAlpha = when (image.Format) {
+            ImageFormat.RGB -> false
+            ImageFormat.RGBA -> true
+        }
+        val frames = image.Frames
         memScoped {
-            val config = run {
-                val result = this.alloc<WebPConfig>()
-                if (WebPConfigInit(result.ptr) == 0) return null
-                result.lossless = if (lossless) 1 else 0
-                result.quality = quality.coerceIn(0f, 100f)
-                if (WebPValidateConfig(result.ptr) == 0) return null
-                result
-            }
             val encoder = run {
                 val options = run {
                     val result = this.alloc<WebPAnimEncoderOptions>()
@@ -95,10 +71,48 @@ public object WebpEncoder {
                 }
                 WebPAnimEncoderNew(width, height, options.ptr) ?: return null
             }
-            val output = this.alloc<WebPData>()
-            WebPDataInit(output.ptr)
+            val picture = run {
+                val result = this.alloc<WebPPicture>()
+                if (WebPPictureInit(result.ptr) == 0) return null
+                result.use_argb = 1
+                result.width = width
+                result.height = height
+                result
+            }
+            val config = run {
+                val result = this.alloc<WebPConfig>()
+                if (WebPConfigInit(result.ptr) == 0) return null
+                result.lossless = if (lossless) 1 else 0
+                result.quality = quality.coerceIn(0f, 100f)
+                if (WebPValidateConfig(result.ptr) == 0) return null
+                result
+            }
+            val output = run {
+                val result = this.alloc<WebPData>()
+                WebPDataInit(result.ptr)
+                result
+            }
             try {
-                return null
+                var prevTimestampMs = 0
+                for (frame in frames) {
+                    frame.Pixels.usePinned { pixels ->
+                        val pixelsPtr = pixels.addressOf(0).reinterpret<UByteVar>()
+                        try {
+                            if (isAlpha) {
+                                if (WebPPictureImportRGBA(picture.ptr, pixelsPtr, stride) == 0) return null
+                            } else {
+                                if (WebPPictureImportRGB(picture.ptr, pixelsPtr, stride) == 0) return null
+                            }
+                            if (WebPAnimEncoderAdd(encoder, picture.ptr, prevTimestampMs, config.ptr) == 0) return null
+                        } finally {
+                            WebPPictureFree(picture.ptr)
+                        }
+                    }
+                    prevTimestampMs = frame.TimestampMs
+                }
+                if (WebPAnimEncoderAdd(encoder, null, prevTimestampMs, null) == 0) return null
+                if (WebPAnimEncoderAssemble(encoder, output.ptr) == 0) return null
+                return output.bytes!!.reinterpret<ByteVar>().readBytes(output.size.toInt())
             } finally {
                 WebPDataClear(output.ptr)
                 WebPAnimEncoderDelete(encoder)

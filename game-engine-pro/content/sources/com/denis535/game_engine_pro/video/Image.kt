@@ -1,15 +1,15 @@
 package com.denis535.game_engine_pro.video
 
 public class Image {
-    public val Format: ImageFormat
     public val Width: Int
     public val Height: Int
+    public val Format: ImageFormat
     public val Pixels: ByteArray
 
-    public constructor(format: ImageFormat, width: Int, height: Int, pixels: ByteArray) {
-        this.Format = format
+    public constructor(width: Int, height: Int, format: ImageFormat, pixels: ByteArray) {
         this.Width = width
         this.Height = height
+        this.Format = format
         this.Pixels = pixels
     }
 
@@ -21,17 +21,17 @@ public class AnimatedImage {
         public val Pixels: ByteArray,
     )
 
-    public val Format: ImageFormat
     public val Width: Int
     public val Height: Int
     public val Duration: Double
         get() = this.Frames.last().TimestampMs / 1000.0
+    public val Format: ImageFormat
     public val Frames: List<Frame>
 
-    public constructor(format: ImageFormat, width: Int, height: Int, frames: List<Frame>) {
-        this.Format = format
+    public constructor(width: Int, height: Int, format: ImageFormat, frames: List<Frame>) {
         this.Width = width
         this.Height = height
+        this.Format = format
         this.Frames = frames
     }
 
